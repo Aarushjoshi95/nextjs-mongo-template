@@ -26,6 +26,14 @@ export default function Footer() {
               <li><Link href="/#offers" className="hover:text-[rgb(var(--accent))]">Growth Advisory</Link></li>
               <li><Link href="/#proof" className="hover:text-[rgb(var(--accent))]">Case studies</Link></li>
             </ul>
+            <h4 className="text-[13px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] mb-4 mt-8">Free tools</h4>
+            <ul className="space-y-2 text-[14px]">
+              <li><Link href="/tools/ai-visibility-checker" className="hover:text-[rgb(var(--accent))]">AI Visibility Checker</Link></li>
+              <li><Link href="/tools/revenue-impact-calculator" className="hover:text-[rgb(var(--accent))]">Revenue Impact Calculator</Link></li>
+              <li><Link href="/tools/traffic-drop-loss-calculator" className="hover:text-[rgb(var(--accent))]">Traffic Drop Loss Calculator</Link></li>
+              <li><Link href="/tools/ctr-position-opportunity-calculator" className="hover:text-[rgb(var(--accent))]">CTR / Position Opportunity</Link></li>
+              <li><Link href="/tools" className="hover:text-[rgb(var(--accent))]">All tools</Link></li>
+            </ul>
           </div>
           <div>
             <h4 className="text-[13px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] mb-4">Contact</h4>

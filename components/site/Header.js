@@ -10,6 +10,7 @@ const nav = [
   { label: 'Case studies', href: '/#proof' },
   { label: 'How it works', href: '/#how' },
   { label: 'FAQ', href: '/#faq' },
+  { label: 'Free tools', href: '/tools' },
   { label: 'About', href: '/#about' },
 ];
 

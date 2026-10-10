@@ -1,15 +1,15 @@
 'use client';
 
 import { useState } from 'react';
+import VisibilityChecker from '@/components/tools/VisibilityChecker';
 
 const engines = ['ChatGPT', 'Claude', 'Gemini', 'Perplexity'];
 
-export default function PromptDemo() {
+function Illustration() {
   const [after, setAfter] = useState(false);
   const [engine, setEngine] = useState(0);
-
   return (
-    <div className="card-surface p-6 lg:p-7">
+    <>
       <div className="flex items-center justify-between mb-5 gap-3 flex-wrap">
         <div className="flex gap-1 p-1 bg-[rgb(var(--line))]/40 rounded-full">
           {engines.map((e, i) => (
@@ -34,6 +34,24 @@ export default function PromptDemo() {
         {after ? 'Named + cited' : 'Not mentioned'}
       </div>
       <p className="text-[11px] text-[rgb(var(--muted))] mt-5 pt-4 border-t border-[rgb(var(--line))]">Illustrative. &ldquo;YourBrand&rdquo; stands in for your company.</p>
+    </>
+  );
+}
+
+export default function PromptDemo() {
+  const [mode, setMode] = useState('live');
+  return (
+    <div className="card-surface p-6 lg:p-7" data-testid="prompt-demo">
+      <div className="flex items-center justify-between gap-3 mb-5">
+        <div className="flex gap-1 p-1 bg-[rgb(var(--line))]/40 rounded-full" role="tablist">
+          <button role="tab" aria-selected={mode === 'live'} onClick={() => setMode('live')} className={`text-[12px] px-3 py-1 rounded-full transition-colors flex items-center gap-1.5 ${mode === 'live' ? 'bg-[rgb(var(--surface))] text-[rgb(var(--ink))] shadow-sm' : 'text-[rgb(var(--muted))]'}`} data-testid="demo-tab-live">
+            <span className="pulse-dot" />Live check
+          </button>
+          <button role="tab" aria-selected={mode === 'demo'} onClick={() => setMode('demo')} className={`text-[12px] px-3 py-1 rounded-full transition-colors ${mode === 'demo' ? 'bg-[rgb(var(--surface))] text-[rgb(var(--ink))] shadow-sm' : 'text-[rgb(var(--muted))]'}`} data-testid="demo-tab-illustration">Before / after</button>
+        </div>
+        {mode === 'live' ? <span className="text-[11px] font-mono text-[rgb(var(--muted))]">Gemini · free</span> : null}
+      </div>
+      {mode === 'live' ? <VisibilityChecker compact /> : <Illustration />}
     </div>
   );
 }

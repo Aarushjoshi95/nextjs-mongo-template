@@ -15,3 +15,11 @@ Single-page lead-gen site for Aarush (GEO/AEO consultant). Next.js App Router + 
 - Real Cal.com link (currently https://cal.com/aarush placeholder).
 - SEO: JSON-LD, sitemap, robots, llms.txt, OG images.
 - Clean up orphaned /app/app/case-studies routes if unused.
+
+## Update — tools, security & AI round
+- Shipped /tools hub: AI Visibility Checker (live Gemini 2.5 Flash via Emergent key + Jev scoring), Revenue Impact Calculator (cluster-level), Traffic Drop Loss Calculator, CTR/Position Opportunity Calculator. INR default + USD toggle, share links, CSV, copy summary; calculators are client-side only.
+- Hero PromptDemo now defaults to the live checker; before/after illustration kept as a tab.
+- Security: admin-only GET /api/enquiries + /api/status (Bearer ADMIN_TOKEN in memory/test_credentials.md), 5/10min per-IP rate limit + 16KB cap on form POSTs, X-Frame-Options SAMEORIGIN / frame-ancestors 'self'.
+- Jev enrichment on enquiries: leadScore/leadLabel, serviceIntent, industry, spam flag (stored as status 'spam', hidden from submitter).
+- Env added: ADMIN_TOKEN, EMERGENT_LLM_KEY.
+- Blocked on user: Razorpay keys + what is sold; ElevenLabs key + purpose; Perplexity key; file storage purpose; Spin logo; email alerts (user said leave open). Frontend testing agent not yet run (needs permission).
