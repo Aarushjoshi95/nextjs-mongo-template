@@ -156,6 +156,9 @@ frontend:
       - working: "NA"
         agent: "main"
         comment: "12 brands with favicon marks + monogram fallback. Verified via screenshot."
+      - working: "NA"
+        agent: "main"
+        comment: "Replaced Google/Clearbit favicons with official brand logo files served locally from /public/logos (Traya, Kama Ayurveda, Forest Essentials, Zee Zest, QS, Emeritus, Ramco, Nestle, Scaler, Eureka Forbes, Schneider Electric). Spin keeps monogram fallback (no official asset identified). Card layout changed to logo-on-top. metadataBase set to https://aarushjoshi.in. Verified via desktop + mobile screenshots, no overflow."
 
 metadata:
   created_by: "main_agent"

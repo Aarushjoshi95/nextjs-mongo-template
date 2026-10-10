@@ -2,7 +2,7 @@ import './globals.css'
 import { Providers } from './providers'
 
 export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://aarush.seo'),
+  metadataBase: new URL('https://aarushjoshi.in'),
   title: {
     default: 'Aarush · SEO that reports to revenue, not rankings',
     template: '%s · Aarush',
