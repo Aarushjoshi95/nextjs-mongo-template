@@ -101,3 +101,78 @@
 #====================================================================================================
 # Testing Data - Main Agent and testing sub agent both should log testing data below this section
 #====================================================================================================
+user_problem_statement: "Aarush AI Search Visibility single-page site. New in this session: (1) Pepper-style 'Book a discovery call' pop-up form wired to all booking CTAs, storing submissions via POST /api/enquiries in MongoDB; (2) Brand logo wall section 'Growth teams I've worked with, building greater outcomes' with 12 brands above the case studies."
+
+backend:
+  - task: "POST /api/enquiries - store discovery-call form submissions"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Validates firstName, lastName, email (regex), countryCode (+digits), phone (6-15 digits after stripping spaces/dashes), source (required), message (<=2000). Returns 201 {ok, enquiry} with uuid id, status 'new', createdAt. 400 {error:'Validation failed', errors:{field:msg}} on invalid. Honeypot: body.website_url non-empty -> 200 {ok:true} without storing. Invalid JSON -> 400."
+      - working: true
+        agent: "testing"
+        comment: "✅ All tests passed. Tested: (1) Valid payload returns 201 with correct structure, uuid id, no _id field, email lowercased, phone stripped to digits only. (2) Missing required fields returns 400 with validation errors for firstName, lastName, email, countryCode, phone, source. (3) Invalid email format rejected with 400. (4) Invalid phone (too short <6 digits, contains letters) rejected with 400. (5) Invalid countryCode (missing + prefix) rejected with 400. (6) Message >2000 chars rejected with 400. (7) Honeypot field (website_url) returns 200 but does NOT store in database (verified). (8) Invalid JSON body returns 400 with 'Invalid JSON body' error."
+  - task: "GET /api/enquiries - list submissions newest first"
+    implemented: true
+    working: true
+    file: "/app/app/api/[[...path]]/route.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Returns {count, enquiries[]} without _id, sorted by createdAt desc, limit 200."
+      - working: true
+        agent: "testing"
+        comment: "✅ All tests passed. Returns 200 with {count, enquiries:[]} structure. Verified: (1) count matches array length, (2) no _id fields in response, (3) sorted by createdAt descending (newest first), (4) includes enquiry created in POST test (verified by id match)."
+
+frontend:
+  - task: "Booking pop-up form (BookingModal) opened from header/hero/offers/book-section/footer CTAs"
+    implemented: true
+    working: "NA"
+    file: "/app/components/site/BookingModal.js"
+    stuck_count: 0
+    priority: "high"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "Verified via screenshot on desktop and mobile. Not yet tested by frontend testing agent (awaiting user permission)."
+  - task: "Brand wall section 'Growth teams I've worked with'"
+    implemented: true
+    working: "NA"
+    file: "/app/components/site/BrandWall.js"
+    stuck_count: 0
+    priority: "medium"
+    needs_retesting: false
+    status_history:
+      - working: "NA"
+        agent: "main"
+        comment: "12 brands with favicon marks + monogram fallback. Verified via screenshot."
+
+metadata:
+  created_by: "main_agent"
+  version: "1.0"
+  test_sequence: 2
+  run_ui: false
+
+test_plan:
+  current_focus:
+    - "POST /api/enquiries - store discovery-call form submissions"
+    - "GET /api/enquiries - list submissions newest first"
+  stuck_tasks: []
+  test_all: false
+  test_priority: "high_first"
+
+agent_communication:
+  - agent: "main"
+    message: "Please test the two enquiries endpoints only (backend). No auth required. Use NEXT_PUBLIC_BASE_URL from /app/.env + /api."
+  - agent: "testing"
+    message: "✅ Backend testing complete. All 10 tests passed (POST /api/enquiries with 8 scenarios + GET /api/enquiries + GET /api/root sanity check). Both enquiry endpoints are working correctly with proper validation, error handling, honeypot protection, and data persistence. No issues found. Ready for main agent to summarize and finish."

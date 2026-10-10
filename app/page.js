@@ -4,6 +4,8 @@ import Header from '@/components/site/Header';
 import Footer from '@/components/site/Footer';
 import PromptDemo from '@/components/site/PromptDemo';
 import FAQ from '@/components/site/FAQ';
+import BrandWall from '@/components/site/BrandWall';
+import { BookButton, CAL_LINK } from '@/components/site/BookingModal';
 
 export const metadata = {
   title: 'Aarush · Get recommended when buyers ask AI',
@@ -89,7 +91,7 @@ export default function HomePage() {
                   {['Founders', 'CMOs', 'Heads of Growth', 'SEO leads'].map((r) => <span key={r} className="pill">{r}</span>)}
                 </div>
                 <div className="flex flex-wrap items-center gap-3">
-                  <Link href="#book" className="btn-primary">Book a visibility audit<ArrowRight className="w-4 h-4" /></Link>
+                  <BookButton className="btn-primary" data-testid="hero-book-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
                   <Link href="#proof" className="btn-ghost">See the proof</Link>
                 </div>
                 <p className="text-[14px] text-[rgb(var(--muted))] mt-8 max-w-md">8+ years in organic growth. Now focused on one question: <span className="text-[rgb(var(--ink))] font-medium">when your buyer asks an AI, does it name you?</span></p>
@@ -163,7 +165,7 @@ export default function HomePage() {
                   <h3 className="text-[24px] font-semibold tracking-tight mb-4">{o.title}</h3>
                   <p className="text-[rgb(var(--muted))] text-[15px] leading-relaxed mb-5 flex-1">{o.body}</p>
                   <p className="text-[14px] text-[rgb(var(--ink))] mb-6"><strong>Best for:</strong> {o.fit}</p>
-                  <Link href="#book" className="link-underline mt-auto">{o.cta} <ArrowRight className="w-3.5 h-3.5" /></Link>
+                  <BookButton className="link-underline mt-auto self-start">{o.cta} <ArrowRight className="w-3.5 h-3.5" /></BookButton>
                 </div>
               ))}
             </div>
@@ -201,10 +203,15 @@ export default function HomePage() {
         {/* CASE STUDIES */}
         <section id="proof" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
           <div className="container-max">
-            <div className="max-w-2xl mb-14">
+            <div className="max-w-3xl mb-12">
               <span className="eyebrow mb-6">Proof, not theory</span>
-              <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Case studies</h2>
-              <p className="text-[rgb(var(--muted))] text-[17px] mt-5">Each one shows the constraint, what changed, and the business number it moved.</p>
+              <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Growth teams I&rsquo;ve worked with, building <span className="text-[rgb(var(--accent))]">greater outcomes</span>.</h2>
+              <p className="text-[rgb(var(--muted))] text-[17px] mt-5 max-w-2xl">From D2C beauty to enterprise and edtech. Below the brands: the case studies, each showing the constraint, what changed, and the business number it moved.</p>
+            </div>
+            <BrandWall />
+            <div className="flex items-center gap-4 mt-16 mb-8">
+              <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))] shrink-0">Case studies</span>
+              <span className="h-px flex-1 bg-[rgb(var(--line))]" />
             </div>
             <div className="grid lg:grid-cols-2 gap-5">
               {cases.map((c) => (
@@ -298,10 +305,13 @@ export default function HomePage() {
         <section id="book" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
           <div className="container-max">
             <div className="max-w-3xl">
-              <span className="eyebrow mb-6">Book a visibility audit call</span>
+              <span className="eyebrow mb-6">Book a discovery call</span>
               <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.05] tracking-tight mb-6">Find out what ChatGPT says about you before your buyers do.</h2>
               <p className="text-[rgb(var(--muted))] text-[18px] mb-8 max-w-2xl">30 minutes. You leave with a read on where you stand across four engines, whether or not we work together.</p>
-              <a href="https://cal.com/aarush" target="_blank" rel="noreferrer noopener" className="btn-primary">Book a 30-minute call<ArrowRight className="w-4 h-4" /></a>
+              <div className="flex flex-wrap items-center gap-3">
+                <BookButton className="btn-primary" data-testid="book-section-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
+                <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="btn-ghost">Or pick a slot directly</a>
+              </div>
               <ol className="mt-14 grid md:grid-cols-3 gap-8">
                 {[
                   { k: 'Before the call.', v: 'I run your top buying prompts across ChatGPT, Claude, Gemini and Perplexity.' },

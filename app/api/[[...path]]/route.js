@@ -47,6 +47,67 @@ async function handleRoute(request, { params }) {
       return handleCORS(NextResponse.json({ message: "Hello World" }))
     }
 
+    // Discovery call enquiries - POST /api/enquiries
+    if (route === '/enquiries' && method === 'POST') {
+      let body
+      try {
+        body = await request.json()
+      } catch {
+        return handleCORS(NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 }))
+      }
+
+      // Honeypot: bots fill this hidden field. Silently accept but do not store.
+      if (body.website_url) {
+        return handleCORS(NextResponse.json({ ok: true, id: uuidv4() }))
+      }
+
+      const str = (v) => (typeof v === 'string' ? v.trim() : '')
+      const enquiry = {
+        firstName: str(body.firstName),
+        lastName: str(body.lastName),
+        email: str(body.email).toLowerCase(),
+        company: str(body.company),
+        country: str(body.country),
+        countryCode: str(body.countryCode),
+        phone: str(body.phone).replace(/[\s\-().]/g, ''),
+        source: str(body.source),
+        message: str(body.message),
+      }
+
+      const errors = {}
+      if (!enquiry.firstName) errors.firstName = 'First name is required'
+      if (!enquiry.lastName) errors.lastName = 'Last name is required'
+      if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(enquiry.email)) errors.email = 'Enter a valid email address'
+      if (!/^\+\d{1,4}$/.test(enquiry.countryCode)) errors.countryCode = 'Select a country code'
+      if (!/^\d{6,15}$/.test(enquiry.phone)) errors.phone = 'Enter a valid contact number (6–15 digits)'
+      if (!enquiry.source) errors.source = 'Tell me how you heard about me'
+      if (enquiry.message.length > 2000) errors.message = 'Keep the note under 2000 characters'
+
+      if (Object.keys(errors).length) {
+        return handleCORS(NextResponse.json({ error: 'Validation failed', errors }, { status: 400 }))
+      }
+
+      const doc = {
+        id: uuidv4(),
+        ...enquiry,
+        status: 'new',
+        createdAt: new Date().toISOString(),
+      }
+      await db.collection('enquiries').insertOne(doc)
+      const { _id, ...clean } = doc
+      return handleCORS(NextResponse.json({ ok: true, enquiry: clean }, { status: 201 }))
+    }
+
+    // Discovery call enquiries - GET /api/enquiries
+    if (route === '/enquiries' && method === 'GET') {
+      const items = await db.collection('enquiries')
+        .find({}, { projection: { _id: 0 } })
+        .sort({ createdAt: -1 })
+        .limit(200)
+        .toArray()
+      return handleCORS(NextResponse.json({ count: items.length, enquiries: items }))
+    }
+
     // Status endpoints - POST /api/status
     if (route === '/status' && method === 'POST') {
       const body = await request.json()

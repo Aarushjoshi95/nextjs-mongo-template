@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { BookButton } from '@/components/site/BookingModal';
 
 export default function Footer() {
   const year = new Date().getFullYear();
@@ -31,7 +32,7 @@ export default function Footer() {
             <ul className="space-y-2 text-[14px]">
               <li><a href="mailto:hello@aarush.consulting" className="hover:text-[rgb(var(--accent))]">hello@aarush.consulting</a></li>
               <li><a href="https://www.linkedin.com" target="_blank" rel="noreferrer noopener" className="hover:text-[rgb(var(--accent))]">LinkedIn</a></li>
-              <li><Link href="/#book" className="hover:text-[rgb(var(--accent))]">Book a call</Link></li>
+              <li><BookButton className="hover:text-[rgb(var(--accent))]">Book a discovery call</BookButton></li>
             </ul>
           </div>
         </div>

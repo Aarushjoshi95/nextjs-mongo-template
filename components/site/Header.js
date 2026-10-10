@@ -3,6 +3,7 @@
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { BookButton } from '@/components/site/BookingModal';
 
 const nav = [
   { label: 'AI visibility services', href: '/#offers' },
@@ -43,7 +44,7 @@ export default function Header() {
           </nav>
 
           <div className="flex items-center gap-3">
-            <Link href="/#book" className="hidden sm:inline-flex btn-primary text-sm">Book a visibility audit</Link>
+            <BookButton className="hidden sm:inline-flex btn-primary text-sm" data-testid="header-book-button">Book a discovery call</BookButton>
             <button className="lg:hidden" onClick={() => setMobileOpen(!mobileOpen)} aria-label="Toggle menu">
               {mobileOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -56,7 +57,7 @@ export default function Header() {
               {nav.map((item) => (
                 <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block py-2 text-[15px]">{item.label}</Link>
               ))}
-              <Link href="/#book" onClick={() => setMobileOpen(false)} className="btn-primary mt-3">Book a visibility audit</Link>
+              <BookButton onClick={() => setMobileOpen(false)} className="btn-primary mt-3" data-testid="mobile-book-button">Book a discovery call</BookButton>
             </nav>
           </div>
         )}

@@ -3,6 +3,7 @@
 // Client-only context wrapper. QueryClient is created once at module load.
 
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { BookingProvider } from '@/components/site/BookingModal';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -14,5 +15,5 @@ const queryClient = new QueryClient({
 });
 
 export function Providers({ children }) {
-  return <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>;
+  return <QueryClientProvider client={queryClient}><BookingProvider>{children}</BookingProvider></QueryClientProvider>;
 }
