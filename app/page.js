@@ -6,6 +6,7 @@ import PromptDemo from '@/components/site/PromptDemo';
 import FAQ from '@/components/site/FAQ';
 import BrandWall from '@/components/site/BrandWall';
 import ProofResults from '@/components/site/ProofResults';
+import CaseStudyCarousel from '@/components/site/CaseStudyCarousel';
 import { BookButton, CAL_LINK } from '@/components/site/BookingModal';
 
 export const metadata = {
@@ -217,36 +218,7 @@ export default function HomePage() {
               <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))] shrink-0">Case studies</span>
               <span className="h-px flex-1 bg-[rgb(var(--line))]" />
             </div>
-            <div className="grid lg:grid-cols-2 gap-5">
-              {cases.map((c) => (
-                <Link key={c.slug} href={`/case-studies/${c.slug}`} className="card-surface p-8 group flex flex-col">
-                  <div className="flex flex-wrap gap-1.5 mb-5">
-                    {c.tags.map((t) => <span key={t} className="pill text-[11px]">{t}</span>)}
-                  </div>
-                  <h3 className="text-[22px] font-semibold leading-[1.2] tracking-tight mb-6">{c.title}</h3>
-                  <div className="flex items-baseline gap-3 mb-6">
-                    <span className="font-mono text-[36px] font-medium text-[rgb(var(--accent))] leading-none">{c.headline}</span>
-                    <span className="text-[13px] text-[rgb(var(--muted))]">{c.headlineLabel}</span>
-                  </div>
-                  <div className="grid grid-cols-2 gap-3 mb-6">
-                    <div className="rounded-md border border-[rgb(var(--line))] p-4">
-                      <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] mb-1">{c.beforeLabel} · Before</div>
-                      <div className="font-mono text-[20px]">{c.beforeValue}</div>
-                    </div>
-                    <div className="rounded-md border border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05] p-4">
-                      <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--accent))] mb-1">{c.afterLabel} · After</div>
-                      <div className="font-mono text-[20px] text-[rgb(var(--accent))]">{c.afterValue}</div>
-                    </div>
-                  </div>
-                  <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[rgb(var(--muted))] mb-6">
-                    {c.chips.map((ch, i) => (
-                      <div key={i} className="flex items-baseline gap-2"><span className="font-mono text-[rgb(var(--ink))] font-medium">{ch.k}</span>{ch.v}</div>
-                    ))}
-                  </div>
-                  <span className="link-underline mt-auto text-[14px]">Read the breakdown <ArrowRight className="w-3.5 h-3.5" /></span>
-                </Link>
-              ))}
-            </div>
+            <CaseStudyCarousel cases={cases} />
           </div>
         </section>
 

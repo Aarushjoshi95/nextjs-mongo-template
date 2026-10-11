@@ -4,6 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
+import { proofData, realSeries, niceTicks } from '@/lib/content/proofData';
 
 /* ------------------------------------------------------------------ */
 /*  Deterministic series builders (no Math.random => SSR-safe)         */
@@ -212,6 +213,22 @@ const TABS = [
   },
 ];
 
+// Swap in real numbers from lib/content/proofData.js wherever they exist.
+TABS.forEach((t) => {
+  const real = realSeries(proofData[t.id]);
+  if (!real) return;
+  const max = Math.max(...real.pts.map((p) => p.v));
+  t.chart = {
+    ...t.chart,
+    series: real.pts,
+    yTicks: niceTicks(max),
+    labels: real.labels,
+    endLabel: real.endLabel || t.chart.fmt(real.pts[real.pts.length - 1].v),
+    source: 'Actual figures',
+    real: true,
+  };
+});
+
 /* ------------------------------------------------------------------ */
 /*  Hooks                                                              */
 /* ------------------------------------------------------------------ */
@@ -265,7 +282,7 @@ const EASE = [0.22, 1, 0.36, 1];
 /* ------------------------------------------------------------------ */
 function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
   const [hover, setHover] = useState(null);
-  const { series, yTicks, xEvery, fmt, fmtAxis, endLabel, dots } = tab.chart;
+  const { series, yTicks, xEvery, fmt, fmtAxis, endLabel, dots, labels } = tab.chart;
 
   const compact = width < 560;
   const height = Math.max(compact ? 240 : 330, Math.floor(availHeight));
@@ -289,9 +306,10 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
     const last = afterPts[afterPts.length - 1];
     const area = `${line(afterPts)} L${last.x.toFixed(1)} ${baseY} L${afterPts[0].x.toFixed(1)} ${baseY} Z`;
 
-    const raw = [{ t: t0, label: `${t0} mo` }, { t: 0, label: 'Kick-off' }];
-    for (let t = xEvery; t <= t1 + 1e-9; t += xEvery) raw.push({ t, label: `+${t} mo` });
-    if (raw[raw.length - 1].t < t1 - 1e-9) raw.push({ t: t1, label: `+${t1} mo` });
+    const lab = (t, fallback) => (labels && labels[t] != null ? labels[t] : fallback);
+    const raw = [{ t: t0, label: lab(t0, `${t0} mo`) }, { t: 0, label: labels ? `${lab(0, 'Kick-off')} \u00b7 start` : 'Kick-off' }];
+    for (let t = xEvery; t <= t1 + 1e-9; t += xEvery) raw.push({ t, label: lab(t, `+${t} mo`) });
+    if (raw[raw.length - 1].t < t1 - 1e-9) raw.push({ t: t1, label: lab(t1, `+${t1} mo`) });
     const minGap = compact ? 62 : 52;
     const lastX = x(t1);
     const xTicks = [];
@@ -309,7 +327,7 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
       xTicks.push(tk);
     });
     return { iw, ih, pts, startIdx, beforePath: line(beforePts), afterPath: line(afterPts), area, xTicks, x, y, baseY, last, start: pts[startIdx], afterPts };
-  }, [width, height, series, yTicks, xEvery, compact, m.left, m.right, m.top, m.bottom]);
+  }, [width, height, series, yTicks, xEvery, compact, labels, m.left, m.right, m.top, m.bottom]);
 
   const onMove = useCallback((e) => {
     if (!geo) return;
@@ -494,7 +512,9 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
           data-testid="proof-chart-tooltip"
         >
           <div className="text-[10.5px] uppercase tracking-[0.1em] font-mono" style={{ color: 'rgb(var(--bg) / 0.6)' }}>
-            {hp.t > 0 ? `+${fmtT(hp.t)} mo` : hp.t === 0 ? 'Kick-off' : `${fmtT(hp.t)} mo · before`}
+            {labels && labels[hp.t] != null
+              ? `${labels[hp.t]}${hp.t <= 0 ? ' · before' : ''}`
+              : hp.t > 0 ? `+${fmtT(hp.t)} mo` : hp.t === 0 ? 'Kick-off' : `${fmtT(hp.t)} mo · before`}
           </div>
           <div className="font-mono text-[15px] font-medium leading-tight mt-0.5" style={{ color: hp.t > 0 ? 'color-mix(in srgb, rgb(var(--accent)) 55%, white)' : PAPER }}>
             {fmt(hp.v)}
@@ -761,7 +781,9 @@ export default function ProofResults() {
             Read the case studies <ArrowRight className="w-4 h-4" />
           </Link>
           <span className="text-[12px] leading-relaxed max-w-[52ch] text-[rgb(var(--muted))]">
-            Click curves traced from Google Search Console. Revenue curves show shape, not monthly actuals.
+            {TABS.some((t) => t.chart.real)
+              ? 'Charts marked \u201cActual figures\u201d plot reported monthly data. Others show the shape of the curve, not monthly actuals.'
+              : 'Click curves traced from Google Search Console. Revenue curves show shape, not monthly actuals.'}
           </span>
         </div>
       </div>
