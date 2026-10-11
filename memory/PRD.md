@@ -23,3 +23,8 @@ Single-page lead-gen site for Aarush (GEO/AEO consultant). Next.js App Router + 
 - Jev enrichment on enquiries: leadScore/leadLabel, serviceIntent, industry, spam flag (stored as status 'spam', hidden from submitter).
 - Env added: ADMIN_TOKEN, EMERGENT_LLM_KEY.
 - Blocked on user: Razorpay keys + what is sold; ElevenLabs key + purpose; Perplexity key; file storage purpose; Spin logo; email alerts (user said leave open). Frontend testing agent not yet run (needs permission).
+
+## Update — interactive "Proof, not just theory" section
+- Rebuilt /app/components/site/ProofResults.js (client component, framer-motion) to match the user's reference video: 4 pill tabs (Traya Revenue, Traya Non-brand traffic, EdTech Revenue, EdTech Organic share), left stat panel with count-up metric + before/after boxes, right large SVG chart with grey pre-engagement line, "A" brand marker at kick-off (pulsing), blue growth line drawing in with gradient fill, data dots, hover/tap crosshair + tooltip, smart X-tick thinning on mobile.
+- Uses site tokens only: bg rgb(var(--ink)), accent rgb(var(--accent)), Inter Tight / JetBrains Mono. Reduced-motion safe. Data series are deterministic (SSR-safe) shapes, not actuals (footnote states this).
+- Verified via screenshots at 1920 and 390 widths. Section id stays #results; CTA links to #proof (case studies).
