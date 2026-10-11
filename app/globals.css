@@ -263,6 +263,11 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
+  @keyframes proof-progress {
+    from { width: 0; }
+    to { width: 100%; }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     .fade-in { animation: none; }
     .pulse-dot::after { animation: none; }

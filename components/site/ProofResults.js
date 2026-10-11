@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, Pause, Play } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
 
 /* ------------------------------------------------------------------ */
@@ -427,8 +427,14 @@ function GrowthChart({ tab, width, play, reduced }) {
 /* ------------------------------------------------------------------ */
 /*  Section                                                            */
 /* ------------------------------------------------------------------ */
+const ROTATE_MS = 6500;
+
 export default function ProofResults() {
   const [active, setActive] = useState(0);
+  const [autoplay, setAutoplay] = useState(true); // turns off for good once a visitor picks a tab
+  const [hovering, setHovering] = useState(false);
+  const [hidden, setHidden] = useState(false);
+  const [cycle, setCycle] = useState(0); // restarts the pill progress bar
   const [chartRef, chartWidth] = useElementWidth();
   const sectionRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-15% 0px -15% 0px' });
@@ -437,11 +443,36 @@ export default function ProofResults() {
 
   const metricVal = useCountUp(tab.metric.value, { start: inView, reduced });
 
+  const rotating = autoplay && inView && !hovering && !hidden && !reduced;
+
+  // pause when the browser tab is in the background
+  useEffect(() => {
+    const onVis = () => setHidden(document.visibilityState === 'hidden');
+    onVis();
+    document.addEventListener('visibilitychange', onVis);
+    return () => document.removeEventListener('visibilitychange', onVis);
+  }, []);
+
+  // advance every ROTATE_MS while rotating
+  useEffect(() => {
+    if (!rotating) return undefined;
+    const id = setTimeout(() => {
+      setActive((a) => (a + 1) % TABS.length);
+      setCycle((c) => c + 1);
+    }, ROTATE_MS);
+    return () => clearTimeout(id);
+  }, [rotating, active, cycle]);
+
+  const pickTab = (i) => {
+    setAutoplay(false);
+    setActive(i);
+  };
+
   const onTabKey = (e) => {
     if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
     e.preventDefault();
     const next = e.key === 'ArrowRight' ? (active + 1) % TABS.length : (active - 1 + TABS.length) % TABS.length;
-    setActive(next);
+    pickTab(next);
     e.currentTarget.parentElement?.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
@@ -475,11 +506,21 @@ export default function ProofResults() {
           </p>
         </div>
 
+        {/* interactive area: hovering / focusing anything inside pauses the auto-rotation */}
+        <div
+          onPointerEnter={() => setHovering(true)}
+          onPointerLeave={() => setHovering(false)}
+          onFocusCapture={() => setHovering(true)}
+          onBlurCapture={(e) => { if (!e.currentTarget.contains(e.relatedTarget)) setHovering(false); }}
+          data-testid="proof-interactive"
+          data-rotating={rotating ? 'true' : 'false'}
+        >
         {/* tabs */}
+        <div className="mt-10 lg:mt-12 flex items-center gap-2">
         <div
           role="tablist"
           aria-label="Growth metrics"
-          className="mt-10 lg:mt-12 flex gap-2 overflow-x-auto -mx-6 px-6 pb-1 lg:mx-0 lg:px-0 lg:flex-wrap"
+          className="flex gap-2 overflow-x-auto pb-1 pr-4 lg:pr-0 lg:flex-wrap min-w-0 flex-1 [mask-image:linear-gradient(to_right,black_90%,transparent)] lg:[mask-image:none]"
           style={{ scrollbarWidth: 'none' }}
           data-testid="proof-tabs"
         >
@@ -492,10 +533,10 @@ export default function ProofResults() {
                 role="tab"
                 aria-selected={isActive}
                 tabIndex={isActive ? 0 : -1}
-                onClick={() => setActive(i)}
+                onClick={() => pickTab(i)}
                 onKeyDown={onTabKey}
                 data-testid={`proof-tab-${t.id}`}
-                className={`shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))] ${
+                className={`relative overflow-hidden shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))] ${
                   isActive
                     ? 'bg-[rgb(var(--accent))] text-white shadow-[0_8px_24px_-8px_rgb(var(--accent)_/_0.8)]'
                     : 'bg-white/[0.05] text-[rgb(var(--bg))]/80 border border-white/10 hover:bg-white/[0.1] hover:text-[rgb(var(--bg))]'
@@ -503,9 +544,31 @@ export default function ProofResults() {
               >
                 <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-[rgb(var(--accent))]'}`} />
                 {t.pill}
+                {isActive && autoplay && !reduced && (
+                  <span
+                    key={`${active}-${cycle}`}
+                    aria-hidden
+                    className="absolute left-0 bottom-0 h-[2px] bg-white/80"
+                    style={{ animation: `proof-progress ${ROTATE_MS}ms linear forwards`, animationPlayState: rotating ? 'running' : 'paused' }}
+                    data-testid="proof-tab-progress"
+                  />
+                )}
               </button>
             );
           })}
+        </div>
+          <button
+            type="button"
+            onClick={() => setAutoplay((v) => !v)}
+            aria-pressed={!autoplay}
+            aria-label={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
+            title={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
+            data-testid="proof-autoplay-toggle"
+            className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.05] hover:bg-white/[0.1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))]"
+            style={{ color: 'rgb(250 250 247 / 0.7)' }}
+          >
+            {autoplay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 translate-x-px" />}
+          </button>
         </div>
 
         {/* content */}
@@ -584,6 +647,7 @@ export default function ProofResults() {
               <span className="hidden sm:inline">{tab.chart.caption.startsWith('Daily') ? 'Traced from GSC' : 'Shape, not monthly actuals'}</span>
             </div>
           </div>
+        </div>
         </div>
 
         {/* footer */}
