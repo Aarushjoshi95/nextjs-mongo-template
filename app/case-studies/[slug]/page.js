@@ -10,6 +10,8 @@ import CaseStudyChart from '@/components/site/CaseStudyChart';
 import EvidenceGallery from '@/components/site/EvidenceGallery';
 import StickyTOC from '@/components/site/StickyTOC';
 import { getCaseStudy, getNextCaseStudy, caseStudies } from '@/lib/content/caseStudies';
+import JsonLd from '@/components/site/JsonLd';
+import { jsonLd, caseStudySchema, breadcrumbSchema } from '@/lib/seo';
 
 export function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
@@ -45,6 +47,7 @@ export default async function CaseStudyPage({ params }) {
 
   return (
     <>
+      <JsonLd data={jsonLd(caseStudySchema(s), breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Case studies', url: '/case-studies' }, { name: s.client, url: `/case-studies/${s.slug}` }]))} />
       <AnnouncementBar />
       <Header />
       <main id="main">

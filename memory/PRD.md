@@ -51,3 +51,8 @@ Single-page lead-gen site for Aarush (GEO/AEO consultant). Next.js App Router + 
 - BrandWall: added Luminous (monogram fallback, no public logo found), Max Life Insurance (/public/logos/max-life-insurance.svg — Axis Max Life mark from Wikimedia), Care Health Insurance (/public/logos/care-health-insurance.png). 15 brands now (grid shows 3 in last row of 4).
 - CAL_LINK in components/site/BookingModal.js → https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call (used by modal "Pick a slot", footer, hero, booking section).
 - Resend enquiry alerts still BLOCKED on user's API key + recipient email.
+
+## Update — Calendly embed + SEO essentials
+- BookingModal: right panel has a "Tell me about you | Pick a time" toggle; "Pick a time" renders a Calendly inline iframe (CAL_LINK + themed params, prefilled name/email from the form). Success state's "Pick a slot now" and the form's "Pick a slot on my calendar" switch to the inline calendar; external-link fallback kept.
+- SEO: app/sitemap.js (home, /case-studies, /tools, published case studies, tools), app/robots.js (allow all incl. AI bots, disallow /api/, sitemap), public/llms.txt, lib/seo.js JSON-LD builders + components/site/JsonLd.js. Layout emits ProfessionalService+Person+WebSite; case-study pages emit Article+BreadcrumbList; ToolShell emits WebApplication+FAQPage+BreadcrumbList. Layout metadata gained canonical + robots. All verified via curl.
+- Still pending from user: Resend API key + alert inbox (email alerts); 16th brand name/logo; Luminous logo file.

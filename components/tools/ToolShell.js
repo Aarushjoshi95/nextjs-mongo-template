@@ -4,13 +4,20 @@ import Header from '@/components/site/Header';
 import Footer from '@/components/site/Footer';
 import { BookButton } from '@/components/site/BookingModal';
 import { tools } from '@/lib/content/tools';
+import JsonLd from '@/components/site/JsonLd';
+import { jsonLd, toolSchema, breadcrumbSchema } from '@/lib/seo';
 
 // Server-rendered chrome for every tool page: header, breadcrumb, intro, the
 // client calculator (children), a "how to read this" block and a soft CTA.
 export default function ToolShell({ tool, children, how = [], faq = [] }) {
   const others = tools.filter((t) => t.slug !== tool.slug);
+  const faqSchema = faq.length > 0 ? {
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+  } : null;
   return (
     <>
+      <JsonLd data={jsonLd(toolSchema(tool), faqSchema, breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Free tools', url: '/tools' }, { name: tool.name, url: `/tools/${tool.slug}` }]))} />
       <Header />
       <main id="main">
         <section className="pt-8 lg:pt-12 pb-10">

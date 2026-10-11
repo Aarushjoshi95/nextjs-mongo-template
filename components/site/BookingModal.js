@@ -4,6 +4,44 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { ArrowRight, ArrowUpRight, Check, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
+/** Calendly inline-embed URL, themed to the site and prefilled where possible. */
+function calendlyEmbedUrl({ name, email } = {}) {
+  const u = new URL(CAL_LINK);
+  u.searchParams.set('hide_gdpr_banner', '1');
+  u.searchParams.set('hide_event_type_details', '1');
+  u.searchParams.set('background_color', 'ffffff');
+  u.searchParams.set('text_color', '111214');
+  u.searchParams.set('primary_color', '1f5eff');
+  u.searchParams.set('embed_type', 'Inline');
+  if (typeof window !== 'undefined') u.searchParams.set('embed_domain', window.location.host);
+  if (name) u.searchParams.set('name', name);
+  if (email) u.searchParams.set('email', email);
+  return u.toString();
+}
+
+function CalendlyInline({ name, email }) {
+  const [loaded, setLoaded] = useState(false);
+  const src = useMemo(() => calendlyEmbedUrl({ name, email }), [name, email]);
+  return (
+    <div className="relative rounded-xl border border-[rgb(var(--line))] overflow-hidden bg-white" data-testid="booking-calendly">
+      {!loaded && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[rgb(var(--muted))] text-[13px]">
+          <span className="w-8 h-8 rounded-full border-2 border-[rgb(var(--line))] border-t-[rgb(var(--accent))] animate-spin" />
+          Loading calendar…
+        </div>
+      )}
+      <iframe
+        title="Book a 30-minute SEO growth strategy call"
+        src={src}
+        onLoad={() => setLoaded(true)}
+        className="w-full block"
+        style={{ height: 'min(720px, calc(100vh - 220px))', minHeight: 560, border: 0 }}
+        allow="payment"
+      />
+    </div>
+  );
+}
+
 export const CAL_LINK = 'https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call';
 
 // ---------- Context ----------
@@ -84,11 +122,12 @@ export function BookingDialog({ open, onOpenChange }) {
   const [errors, setErrors] = useState({});
   const [status, setStatus] = useState('idle'); // idle | submitting | success | error
   const [serverError, setServerError] = useState('');
+  const [view, setView] = useState('form'); // form | calendar
 
   useEffect(() => {
     if (!open) {
       // Reset after the close animation so a re-open starts clean.
-      const t = setTimeout(() => { setStatus('idle'); setErrors({}); setServerError(''); setForm(initialForm); }, 250);
+      const t = setTimeout(() => { setStatus('idle'); setErrors({}); setServerError(''); setForm(initialForm); setView('form'); }, 250);
       return () => clearTimeout(t);
     }
   }, [open]);
@@ -158,15 +197,38 @@ export function BookingDialog({ open, onOpenChange }) {
             </div>
           </div>
 
-          {/* RIGHT — form */}
+          {/* RIGHT — form / calendar */}
           <div className="p-7 sm:p-9 lg:p-11">
-            {status === 'success' ? (
+            <div className="inline-flex p-1 rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--bg))] mb-7" role="tablist" aria-label="How would you like to book?">
+              {[{ id: 'form', label: 'Tell me about you' }, { id: 'calendar', label: 'Pick a time' }].map((t) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  role="tab"
+                  aria-selected={view === t.id}
+                  onClick={() => setView(t.id)}
+                  data-testid={`booking-view-${t.id}`}
+                  className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${view === t.id ? 'bg-[rgb(var(--ink))] text-[rgb(var(--bg))]' : 'text-[rgb(var(--muted))] hover:text-[rgb(var(--ink))]'}`}
+                >
+                  {t.label}
+                </button>
+              ))}
+            </div>
+
+            {view === 'calendar' ? (
+              <div data-testid="booking-calendar-view">
+                <h3 className="text-[24px] font-semibold tracking-tight">Pick a 30-minute slot.</h3>
+                <p className="text-[14px] text-[rgb(var(--muted))] mt-2 mb-5">Times show in your timezone. You will get a calendar invite with the video link.</p>
+                <CalendlyInline name={[form.firstName, form.lastName].filter(Boolean).join(' ')} email={form.email} />
+                <p className="text-[12px] text-[rgb(var(--muted))] mt-4">Calendar not loading? <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="underline underline-offset-2 hover:text-[rgb(var(--ink))]" data-testid="booking-cal-fallback">Open it in a new tab</a>.</p>
+              </div>
+            ) : status === 'success' ? (
               <div className="h-full flex flex-col justify-center min-h-[420px]" data-testid="booking-success">
                 <span className="w-12 h-12 rounded-full bg-[rgb(var(--positive))]/15 text-[rgb(var(--positive))] flex items-center justify-center mb-6"><Check className="w-6 h-6" /></span>
                 <h3 className="text-[28px] font-semibold tracking-tight leading-tight">Thanks, {form.firstName}. You are on my list.</h3>
                 <p className="text-[rgb(var(--muted))] text-[15px] leading-relaxed mt-4 max-w-md">I will reach out at <span className="text-[rgb(var(--ink))] font-medium">{form.email}</span> within one working day. Before we talk, I will run your top buying prompts across the four engines.</p>
                 <div className="mt-8 flex flex-wrap gap-3">
-                  <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="btn-primary" data-testid="booking-pick-slot">Pick a slot now<ArrowUpRight className="w-4 h-4" /></a>
+                  <button type="button" onClick={() => setView('calendar')} className="btn-primary" data-testid="booking-pick-slot">Pick a slot now<ArrowUpRight className="w-4 h-4" /></button>
                   <button type="button" className="btn-ghost" onClick={() => onOpenChange(false)}>Close</button>
                 </div>
               </div>
@@ -244,7 +306,7 @@ export function BookingDialog({ open, onOpenChange }) {
                   {status === 'submitting' ? <><Loader2 className="w-4 h-4 animate-spin" />Sending…</> : <>Request my discovery call<ArrowRight className="w-4 h-4" /></>}
                 </button>
                 <p className="text-center text-[12px] text-[rgb(var(--muted))] mt-4">
-                  Prefer to skip the form? <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="underline underline-offset-2 hover:text-[rgb(var(--ink))]" data-testid="booking-cal-link">Pick a slot on my calendar</a>.
+                  Prefer to skip the form? <button type="button" onClick={() => setView('calendar')} className="underline underline-offset-2 hover:text-[rgb(var(--ink))]" data-testid="booking-cal-link">Pick a slot on my calendar</button>.
                 </p>
               </form>
             )}
