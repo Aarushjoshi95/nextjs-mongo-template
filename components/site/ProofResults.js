@@ -19,25 +19,36 @@ function rng(seed) {
 }
 
 /**
- * Builds a time series in months. t <= 0 is the pre-engagement period, t > 0 is post kick-off.
- * Post kick-off values follow base + (end - base) * p^curve with optional multiplicative noise.
+ * Builds a time series in months that passes EXACTLY through the reported anchor points.
+ * t <= anchors[0].t is the pre-engagement period (flat at the first anchor, with optional noise).
+ * Between anchors the curve follows v0 + (v1 - v0) * p^curve, with optional noise that fades out
+ * near each anchor so the anchors themselves are never altered.
  */
-function buildSeries({ before, after, step = 1, base = 0, end, curve = 2, noise = 0, beforeNoise = 0, seed = 1 }) {
+function buildFromAnchors({ before, anchors, step = 1, curve = 2, noise = 0, beforeNoise = 0, seed = 1 }) {
   const r = rng(seed);
-  const pts = [];
-  for (let t = -before; t <= after + 1e-9; t += step) {
-    let v;
-    if (t <= 0) {
-      v = base + (beforeNoise ? (r() - 0.5) * 2 * beforeNoise * (base || 1) : 0);
-    } else {
-      const p = t / after;
-      v = base + (end - base) * Math.pow(p, curve);
-      if (noise) v *= 1 + (r() - 0.5) * 2 * noise * (1 - 0.35 * p);
+  const first = anchors[0];
+  const last = anchors[anchors.length - 1];
+  const ts = new Set();
+  for (let t = first.t - before; t <= last.t + 1e-9; t += step) ts.add(+t.toFixed(3));
+  anchors.forEach((a) => ts.add(+a.t.toFixed(3)));
+  const sorted = Array.from(ts).sort((a, b) => a - b);
+  const anchorAt = new Map(anchors.map((a) => [+a.t.toFixed(3), a]));
+  return sorted.map((t) => {
+    const hit = anchorAt.get(t);
+    if (hit) return { t, v: hit.v, anchor: hit };
+    if (t < first.t) {
+      const v = first.v * (1 + (beforeNoise ? (r() - 0.5) * 2 * beforeNoise : 0));
+      return { t, v: Math.max(0, v) };
     }
-    pts.push({ t: +t.toFixed(3), v: Math.max(0, v) });
-  }
-  pts[pts.length - 1].v = end;
-  return pts;
+    let i = 0;
+    while (i < anchors.length - 2 && t > anchors[i + 1].t) i += 1;
+    const a = anchors[i];
+    const b = anchors[i + 1];
+    const p = (t - a.t) / (b.t - a.t);
+    let v = a.v + (b.v - a.v) * Math.pow(p, curve);
+    if (noise) v *= 1 + (r() - 0.5) * 2 * noise * Math.sin(Math.PI * p); // fades to 0 at both anchors
+    return { t, v: Math.max(0, v) };
+  });
 }
 
 const fmtRevenue = (v) => `$${Math.round(v)}K`;
@@ -45,6 +56,8 @@ const axisRevenue = (v) => (v === 0 ? '$0' : `$${v}K`);
 const fmtClicksDay = (v) => (v >= 1 ? `${v.toFixed(1)}K/day` : `${Math.round(v * 1000)}/day`);
 const fmtK = (v) => `${Math.round(v)}K`;
 const axisK = (v) => (v === 0 ? '0' : `${v}K`);
+const fmtM = (v) => `${v.toFixed(1)}M`;
+const axisM = (v) => (v === 0 ? '0' : `${v}M`);
 
 const TABS = [
   {
@@ -64,10 +77,13 @@ const TABS = [
       xEvery: 6,
       fmt: fmtRevenue,
       fmtAxis: axisRevenue,
-      endLabel: '$450K',
       dots: true,
-      source: 'Shape, not monthly actuals',
-      series: buildSeries({ before: 4, after: 24, end: 450, curve: 2.2, seed: 11 }),
+      series: buildFromAnchors({
+        before: 4,
+        anchors: [{ t: 0, v: 0, label: '$0 at kick-off' }, { t: 24, v: 450, label: '$450K' }],
+        curve: 2.2,
+        seed: 11,
+      }),
     },
   },
   {
@@ -87,10 +103,16 @@ const TABS = [
       xEvery: 4,
       fmt: fmtClicksDay,
       fmtAxis: axisK,
-      endLabel: '15K+/day',
       dots: false,
-      source: 'Traced from GSC',
-      series: buildSeries({ before: 5, after: 16, step: 0.25, base: 1, end: 15.4, curve: 1.9, noise: 0.11, beforeNoise: 0.09, seed: 23 }),
+      series: buildFromAnchors({
+        before: 5,
+        step: 0.25,
+        anchors: [{ t: 0, v: 1, label: '1K/day' }, { t: 16, v: 15.4, label: '15K+/day' }],
+        curve: 1.9,
+        noise: 0.11,
+        beforeNoise: 0.09,
+        seed: 23,
+      }),
     },
   },
   {
@@ -110,10 +132,13 @@ const TABS = [
       xEvery: 2,
       fmt: fmtRevenue,
       fmtAxis: axisRevenue,
-      endLabel: '$700K+',
       dots: true,
-      source: 'Shape, not monthly actuals',
-      series: buildSeries({ before: 3, after: 8, end: 700, curve: 1.8, seed: 7 }),
+      series: buildFromAnchors({
+        before: 3,
+        anchors: [{ t: 0, v: 0, label: '$0 at kick-off' }, { t: 8, v: 700, label: '$700K+' }],
+        curve: 1.8,
+        seed: 7,
+      }),
     },
   },
   {
@@ -133,10 +158,16 @@ const TABS = [
       xEvery: 2,
       fmt: fmtClicksDay,
       fmtAxis: axisK,
-      endLabel: '24K/day',
       dots: false,
-      source: 'Traced from GSC',
-      series: buildSeries({ before: 3, after: 8, step: 0.125, base: 0.15, end: 24, curve: 2.4, noise: 0.14, beforeNoise: 0.35, seed: 41 }),
+      series: buildFromAnchors({
+        before: 3,
+        step: 0.125,
+        anchors: [{ t: 0, v: 0.15, label: '~0 at kick-off' }, { t: 8, v: 24, label: '24K/day' }],
+        curve: 2.4,
+        noise: 0.14,
+        beforeNoise: 0.35,
+        seed: 41,
+      }),
     },
   },
   {
@@ -151,16 +182,22 @@ const TABS = [
     before: { label: 'Blog clicks · quarter', value: '78.7K' },
     after: { label: 'Blog clicks · quarter', value: '203K' },
     chart: {
-      caption: 'Monthly blog clicks · Google Search Console',
+      caption: 'Blog clicks · trailing 3 months (GSC, /blogs/)',
       window: '6 months',
-      yTicks: [0, 25, 50, 75],
+      yTicks: [0, 75, 150, 225],
       xEvery: 2,
       fmt: fmtK,
       fmtAxis: axisK,
-      endLabel: '68K/mo',
       dots: false,
-      source: 'Traced from GSC, /blogs/',
-      series: buildSeries({ before: 3, after: 6, step: 0.25, base: 26, end: 68, curve: 1.5, noise: 0.07, beforeNoise: 0.06, seed: 59 }),
+      series: buildFromAnchors({
+        before: 3,
+        step: 0.25,
+        anchors: [{ t: 0, v: 78.7, label: '78.7K / qtr' }, { t: 6, v: 203, label: '203K / qtr' }],
+        curve: 1.5,
+        noise: 0.05,
+        beforeNoise: 0.04,
+        seed: 59,
+      }),
     },
   },
   {
@@ -181,10 +218,16 @@ const TABS = [
       xEvery: 2,
       fmt: fmtK,
       fmtAxis: axisK,
-      endLabel: '397K/mo',
       dots: true,
-      source: 'GA + GSC, shape indexed to reported totals',
-      series: buildSeries({ before: 3, after: 6, step: 0.5, base: 260, end: 397, curve: 1.35, noise: 0.025, beforeNoise: 0.02, seed: 73 }),
+      series: buildFromAnchors({
+        before: 3,
+        step: 0.5,
+        anchors: [{ t: 0, v: 260, label: '260K / mo' }, { t: 6, v: 397, label: '397K / mo' }],
+        curve: 1.35,
+        noise: 0.02,
+        beforeNoise: 0.02,
+        seed: 73,
+      }),
     },
   },
   {
@@ -195,23 +238,36 @@ const TABS = [
     sector: 'Lifestyle publisher, DR < 25',
     slug: 'google-discover-1m-traffic-3-months',
     metric: { value: 164, prefix: '', suffix: 'K' },
-    body: 'Discover clicks in 3 months (2.2M impressions) on a sub-DR-25 site — AMP Web Stories, an automated trend engine and a stack built for speed.',
-    before: { label: 'Discover · before', value: '~0' },
-    after: { label: 'Discover · 3 mo', value: '164K' },
+    body: 'Discover clicks in 3 months (2.2M impressions) on a sub-DR-25 site — and quarterly search impressions up 414%, from 4.7M to 24.3M.',
+    before: { label: 'Impressions · Q1 ’22', value: '4.7M' },
+    after: { label: 'Impressions · Q1 ’23', value: '24.3M' },
     chart: {
-      caption: 'Cumulative Discover clicks · top 10 articles',
-      window: '3 months',
-      yTicks: [0, 60, 120, 180],
-      xEvery: 1,
-      fmt: fmtK,
-      fmtAxis: axisK,
-      endLabel: '164K',
-      dots: false,
-      source: 'Traced from GSC Discover report',
-      series: buildSeries({ before: 1, after: 3, step: 0.125, base: 0.4, end: 164, curve: 2.1, noise: 0.05, beforeNoise: 0.4, seed: 97 }),
+      caption: 'Search impressions · trailing quarter (GSC)',
+      window: '12 months',
+      yTicks: [0, 10, 20, 30],
+      xEvery: 3,
+      fmt: fmtM,
+      fmtAxis: axisM,
+      dots: true,
+      series: buildFromAnchors({
+        before: 3,
+        step: 0.5,
+        anchors: [{ t: 0, v: 4.7, label: '4.7M · Q1 ’22' }, { t: 12, v: 24.3, label: '24.3M · Q1 ’23' }],
+        curve: 1.6,
+        noise: 0.03,
+        beforeNoise: 0.03,
+        seed: 97,
+      }),
     },
   },
 ];
+
+// Every tab is anchored to the figures reported in its case study.
+TABS.forEach((t) => {
+  const last = t.chart.series[t.chart.series.length - 1];
+  t.chart.endLabel = t.chart.endLabel || (last.anchor ? last.anchor.label : t.chart.fmt(last.v));
+  t.chart.source = 'Anchored to reported figures';
+});
 
 // Swap in real numbers from lib/content/proofData.js wherever they exist.
 TABS.forEach((t) => {
@@ -482,11 +538,44 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
           animate={play ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4, delay: reduced ? 0 : 0.45 + drawDur }}
         >
-          <circle cx={geo.last.x} cy={geo.last.y} r="4.5" style={{ fill: ACCENT, stroke: SURFACE }} strokeWidth="2" />
-          <text x={geo.last.x - 12} y={geo.last.y - 10} textAnchor="end" className="font-mono" fontSize="12.5" fontWeight="500" style={{ fill: INK }}>
+          <circle cx={geo.last.x} cy={geo.last.y} r="7" fill="none" style={{ stroke: INK }} strokeWidth="1.5" />
+          <circle cx={geo.last.x} cy={geo.last.y} r="3.5" style={{ fill: ACCENT, stroke: SURFACE }} strokeWidth="1.5" />
+          <text x={geo.last.x - 14} y={geo.last.y - 10} textAnchor="end" className="font-mono" fontSize="12.5" fontWeight="500" style={{ fill: INK }}>
             {endLabel}
           </text>
+          <text x={geo.last.x - 14} y={geo.last.y + 4} textAnchor="end" className="font-mono" fontSize="9.5" letterSpacing="0.08em" style={{ fill: MUTED }}>
+            REPORTED
+          </text>
         </motion.g>
+
+        {/* reported-figure anchors (kick-off and any mid-points) */}
+        {geo.pts.filter((p) => p.anchor && p.t !== geo.last.t).map((p) => {
+          const atStart = p.t === 0;
+          const lx = atStart ? p.x - 20 : p.x;
+          const anchorPos = atStart ? 'end' : 'middle';
+          const ly = atStart ? p.y - 20 : p.y - 16;
+          return (
+            <motion.g
+              key={`anchor-${p.t}`}
+              initial={{ opacity: 0 }}
+              animate={play ? { opacity: 1 } : {}}
+              transition={{ duration: 0.4, delay: reduced ? 0 : 0.7 }}
+            >
+              {!atStart && (
+                <>
+                  <circle cx={p.x} cy={p.y} r="7" fill="none" style={{ stroke: INK }} strokeWidth="1.5" />
+                  <circle cx={p.x} cy={p.y} r="3.5" style={{ fill: ACCENT, stroke: SURFACE }} strokeWidth="1.5" />
+                </>
+              )}
+              <text x={lx} y={ly} textAnchor={anchorPos} className="font-mono" fontSize="11.5" fontWeight="500" style={{ fill: INK }}>
+                {p.anchor.label}
+              </text>
+              <text x={lx} y={ly + 12} textAnchor={anchorPos} className="font-mono" fontSize="9.5" letterSpacing="0.08em" style={{ fill: MUTED }}>
+                REPORTED
+              </text>
+            </motion.g>
+          );
+        })}
 
         {/* hover crosshair */}
         {hp && (
@@ -758,6 +847,7 @@ export default function ProofResults() {
                 <div className="flex items-center gap-4 text-[11.5px] text-[rgb(var(--muted))]">
                   <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--muted))]/60" />Before</span>
                   <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--accent))]" />With the SEO engine</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-flex w-3 h-3 rounded-full border-[1.5px] border-[rgb(var(--ink))] items-center justify-center"><span className="w-1 h-1 rounded-full bg-[rgb(var(--accent))]" /></span>Reported figure</span>
                 </div>
               </div>
 
@@ -781,9 +871,7 @@ export default function ProofResults() {
             Read the case studies <ArrowRight className="w-4 h-4" />
           </Link>
           <span className="text-[12px] leading-relaxed max-w-[52ch] text-[rgb(var(--muted))]">
-            {TABS.some((t) => t.chart.real)
-              ? 'Charts marked \u201cActual figures\u201d plot reported monthly data. Others show the shape of the curve, not monthly actuals.'
-              : 'Click curves traced from Google Search Console. Revenue curves show shape, not monthly actuals.'}
+            Ringed markers are the figures reported in each case study (Google Search Console / analytics). The curve between markers is interpolated to show the shape of growth, not month-by-month actuals.
           </span>
         </div>
       </div>
