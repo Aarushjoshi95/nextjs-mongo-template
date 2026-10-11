@@ -5,6 +5,7 @@ import Footer from '@/components/site/Footer';
 import PromptDemo from '@/components/site/PromptDemo';
 import FAQ from '@/components/site/FAQ';
 import BrandWall from '@/components/site/BrandWall';
+import ProofResults from '@/components/site/ProofResults';
 import { BookButton, CAL_LINK } from '@/components/site/BookingModal';
 
 export const metadata = {
@@ -200,11 +201,14 @@ export default function HomePage() {
           </div>
         </section>
 
+        {/* RESULTS BAND — Proof, not just theory */}
+        <ProofResults />
+
         {/* CASE STUDIES */}
         <section id="proof" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
           <div className="container-max">
             <div className="max-w-3xl mb-12">
-              <span className="eyebrow mb-6">Proof, not theory</span>
+              <span className="eyebrow mb-6">Brands &amp; breakdowns</span>
               <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Growth teams I&rsquo;ve worked with, building <span className="text-[rgb(var(--accent))]">greater outcomes</span>.</h2>
               <p className="text-[rgb(var(--muted))] text-[17px] mt-5 max-w-2xl">From D2C beauty to enterprise and edtech. Below the brands: the case studies, each showing the constraint, what changed, and the business number it moved.</p>
             </div>
