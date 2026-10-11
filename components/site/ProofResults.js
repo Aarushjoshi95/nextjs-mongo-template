@@ -336,7 +336,7 @@ const EASE = [0.22, 1, 0.36, 1];
 /* ------------------------------------------------------------------ */
 /*  Chart                                                              */
 /* ------------------------------------------------------------------ */
-function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
+function GrowthChart({ tab, width, availHeight = 0, play, reduced, onScrub }) {
   const [hover, setHover] = useState(null);
   const { series, yTicks, xEvery, fmt, fmtAxis, endLabel, dots, labels } = tab.chart;
 
@@ -397,6 +397,12 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
     }
     setHover(best);
   }, [geo]);
+
+  const hoverPt = geo && hover != null ? geo.pts[hover] : null;
+  useEffect(() => {
+    if (!onScrub) return;
+    onScrub(hoverPt ? { t: hoverPt.t, v: hoverPt.v, label: labels && labels[hoverPt.t] != null ? labels[hoverPt.t] : null } : null);
+  }, [hoverPt, onScrub, labels]);
 
   if (!geo) return <div style={{ height }} />;
 
@@ -634,6 +640,22 @@ export default function ProofResults() {
 
   const metricVal = useCountUp(tab.metric.value, { start: inView, reduced });
 
+  // live reading while a visitor scrubs along the chart
+  const [scrub, setScrub] = useState(null);
+  const onScrub = useCallback((pt) => setScrub(pt), []);
+  useEffect(() => { setScrub(null); }, [active]);
+  const scrubWhen = scrub
+    ? scrub.label
+      ? `${scrub.label}${scrub.t <= 0 ? ' \u00b7 before' : ''}`
+      : scrub.t > 0 ? `+${Math.round(scrub.t * 10) / 10} mo` : scrub.t === 0 ? 'Kick-off' : `${Math.round(scrub.t * 10) / 10} mo \u00b7 before`
+    : null;
+  const kickoff = tab.chart.series.find((p) => p.t === 0);
+  const scrubDelta = scrub && kickoff && kickoff.v > 0 && scrub.t > 0
+    ? (scrub.v / kickoff.v >= 2 ? `${(scrub.v / kickoff.v).toFixed(1)}\u00d7 vs kick-off` : `${scrub.v >= kickoff.v ? '+' : ''}${Math.round(((scrub.v - kickoff.v) / kickoff.v) * 100)}% vs kick-off`)
+    : null;
+
+  const metricText = scrub ? tab.chart.fmt(scrub.v) : `${tab.metric.prefix}${Math.round(metricVal)}${tab.metric.suffix}`;
+
   const rotating = autoplay && inView && !hovering && !hidden && !reduced;
 
   // pause when the browser tab is in the background
@@ -808,11 +830,19 @@ export default function ProofResults() {
                 <span className="text-[12px] text-[rgb(var(--muted))]">{tab.sector}</span>
               </div>
 
-              <div
-                className="font-mono text-[clamp(50px,5.6vw,72px)] font-medium leading-none tracking-[-0.04em] mt-7 text-[rgb(var(--accent))]"
-                data-testid="proof-metric"
-              >
-                {tab.metric.prefix}{Math.round(metricVal)}{tab.metric.suffix}
+              <div className="mt-7">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] h-4" data-testid="proof-metric-caption">
+                  {scrub ? `Reading \u00b7 ${scrubWhen}` : ''}
+                </div>
+                <div
+                  className={`font-mono font-medium leading-none tracking-[-0.04em] mt-1 whitespace-nowrap ${
+                    metricText.length <= 5 ? 'text-[clamp(50px,5.6vw,72px)]' : metricText.length <= 8 ? 'text-[clamp(40px,4.4vw,56px)]' : 'text-[clamp(30px,3.2vw,42px)]'
+                  } ${scrub && scrub.t <= 0 ? 'text-[rgb(var(--ink))]' : 'text-[rgb(var(--accent))]'}`}
+                  data-testid="proof-metric"
+                  aria-live="polite"
+                >
+                  {metricText}
+                </div>
               </div>
 
               <p className="text-[15px] leading-relaxed mt-5 text-[rgb(var(--muted))]">
@@ -824,9 +854,12 @@ export default function ProofResults() {
                   <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] leading-tight mb-1">{tab.before.label}</div>
                   <div className="font-mono text-[18px]">{tab.before.value}</div>
                 </div>
-                <div className="rounded-md border border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05] p-4">
-                  <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--accent))] leading-tight mb-1">{tab.after.label}</div>
-                  <div className="font-mono text-[18px] text-[rgb(var(--accent))]">{tab.after.value}</div>
+                <div className={`rounded-md border p-4 transition-colors ${scrub ? 'border-[rgb(var(--ink))] bg-[rgb(var(--ink))] text-[rgb(var(--bg))]' : 'border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05]'}`} data-testid="proof-after-box">
+                  <div className={`text-[11px] uppercase tracking-wider leading-tight mb-1 ${scrub ? 'text-[rgb(var(--bg))]/60' : 'text-[rgb(var(--accent))]'}`}>
+                    {scrub ? `Live \u00b7 ${scrubWhen}` : tab.after.label}
+                  </div>
+                  <div className={`font-mono text-[18px] ${scrub ? '' : 'text-[rgb(var(--accent))]'}`}>{scrub ? tab.chart.fmt(scrub.v) : tab.after.value}</div>
+                  {scrub && scrubDelta && <div className="font-mono text-[11px] mt-1 text-[rgb(var(--bg))]/70">{scrubDelta}</div>}
                 </div>
               </div>
 
@@ -853,12 +886,12 @@ export default function ProofResults() {
 
               <div ref={chartRef} className="w-full flex-1">
                 {chartWidth > 0 && (
-                  <GrowthChart key={tab.id} tab={tab} width={chartWidth} availHeight={chartAvailH} play={inView} reduced={!!reduced} />
+                  <GrowthChart key={tab.id} tab={tab} width={chartWidth} availHeight={chartAvailH} play={inView} reduced={!!reduced} onScrub={onScrub} />
                 )}
               </div>
 
               <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t border-[rgb(var(--line))] font-mono text-[10.5px] tracking-[0.04em] text-[rgb(var(--muted))]">
-                <span>Hover or tap the curve to read each month</span>
+                <span>Drag along the curve — the headline number follows</span>
                 <span className="hidden sm:inline">{tab.chart.source}</span>
               </div>
             </div>

@@ -18,6 +18,9 @@ const brands = [
   { name: 'Scaler', logo: '/logos/scaler.svg', sector: 'Edtech · Tech upskilling', color: '#2563eb', scale: 0.9 },
   { name: 'Eureka Forbes', logo: '/logos/eureka-forbes.svg', sector: 'Consumer durables', color: '#003594', scale: 0.9 },
   { name: 'Schneider Electric', logo: '/logos/schneider-electric.svg', sector: 'Enterprise · Energy', color: '#3dcd58', scale: 1 },
+  { name: 'Luminous', logo: null, sector: 'Consumer durables · Power & solar', color: '#1a4f9c', scale: 1 },
+  { name: 'Max Life Insurance', logo: '/logos/max-life-insurance.svg', sector: 'BFSI · Life insurance', color: '#b5121b', scale: 1.1 },
+  { name: 'Care Health Insurance', logo: '/logos/care-health-insurance.png', sector: 'BFSI · Health insurance', color: '#00a651', scale: 1.5 },
 ];
 
 function BrandMark({ brand }) {
@@ -57,7 +60,7 @@ export default function BrandWall() {
     <div data-testid="brand-wall">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
         <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))]">Trusted by growth teams at</span>
-        <span className="text-[12px] text-[rgb(var(--muted))]">{brands.length} brands · D2C, edtech, enterprise, media · India, US, UK, UAE</span>
+        <span className="text-[12px] text-[rgb(var(--muted))]">{brands.length} brands · D2C, edtech, BFSI, enterprise, media · India, US, UK, UAE</span>
       </div>
       <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {brands.map((b) => (

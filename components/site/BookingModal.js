@@ -4,7 +4,7 @@ import React, { createContext, useCallback, useContext, useEffect, useMemo, useS
 import { ArrowRight, ArrowUpRight, Check, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
 
-export const CAL_LINK = 'https://cal.com/aarush';
+export const CAL_LINK = 'https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call';
 
 // ---------- Context ----------
 const BookingContext = createContext({ open: false, openBooking: () => {}, closeBooking: () => {} });

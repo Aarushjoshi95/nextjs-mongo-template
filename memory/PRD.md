@@ -41,3 +41,13 @@ Single-page lead-gen site for Aarush (GEO/AEO consultant). Next.js App Router + 
 
 ## Update — charts anchored to reported figures (user decision: no monthly data needed)
 - ProofResults: series built via buildFromAnchors() so every curve passes exactly through the figures reported in the case-study docs (Traya $0→$450K, 1K→15K+/day; EdTech $0→$700K+, ~0→24K/day; Beauty 78.7K→203K blog clicks/qtr; Luxury 260K→397K non-brand/mo; Publisher 4.7M→24.3M impressions/qtr). Anchors drawn as ringed markers with a "REPORTED" caption, legend item added, source label "Anchored to reported figures", footnote explains interpolation. proofData.js slots remain available but unused.
+
+## Update — scrubbing, evidence gallery, email alerts (pending key)
+- ProofResults: live scrubbing — hovering/dragging the chart swaps the headline metric for the value at that month (type scales by string length), after-box flips to an inverse "Live · +N mo" reading with ×/% vs kick-off; resets on leave/tab change.
+- EvidenceGallery (components/site/EvidenceGallery.js) added to /case-studies/[slug] evidence section: "Search Console proof shots" (blurred-at-source GSC screenshots from the user's docx files) + "Supporting figures"; lightbox with arrow keys/Esc. Images exported from docx → /public/case-studies/<slug>/*.webp. `evidence` arrays added to beauty, luxury and Discover entries in lib/content/caseStudies.js.
+- Enquiry email alerts: Resend playbook fetched (save first, best-effort send, RESEND_API_KEY / RESEND_FROM / RESEND_TO env). BLOCKED on user providing Resend API key + recipient address (+ verified domain or accept resend.dev → owner-only recipient).
+
+## Update — brands + Calendly
+- BrandWall: added Luminous (monogram fallback, no public logo found), Max Life Insurance (/public/logos/max-life-insurance.svg — Axis Max Life mark from Wikimedia), Care Health Insurance (/public/logos/care-health-insurance.png). 15 brands now (grid shows 3 in last row of 4).
+- CAL_LINK in components/site/BookingModal.js → https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call (used by modal "Pick a slot", footer, hero, booking section).
+- Resend enquiry alerts still BLOCKED on user's API key + recipient email.

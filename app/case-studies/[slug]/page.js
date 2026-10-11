@@ -7,6 +7,7 @@ import Footer from '@/components/site/Footer';
 import CTABand from '@/components/site/CTABand';
 import { StatStrip } from '@/components/site/StatBlock';
 import CaseStudyChart from '@/components/site/CaseStudyChart';
+import EvidenceGallery from '@/components/site/EvidenceGallery';
 import StickyTOC from '@/components/site/StickyTOC';
 import { getCaseStudy, getNextCaseStudy, caseStudies } from '@/lib/content/caseStudies';
 
@@ -140,12 +141,13 @@ export default async function CaseStudyPage({ params }) {
           </div>
 
           {/* Evidence (full width inside container) */}
-          {(s.chart || s.beforeAfter?.length > 0) && (
+          {(s.chart || s.beforeAfter?.length > 0 || s.evidence?.length > 0) && (
             <section id="evidence" className="scroll-mt-24 mb-20 pt-12 border-t border-[rgb(var(--line))]">
               <div className="max-w-3xl mb-10">
                 <span className="eyebrow mb-5">04 · Evidence</span>
                 <h2 className="text-[clamp(28px,3.5vw,40px)] font-semibold tracking-tight">The receipts.</h2>
               </div>
+              {s.evidence?.length > 0 && <EvidenceGallery items={s.evidence} />}
               {s.chart && <div className="mb-10"><CaseStudyChart title={s.chart.title} series={s.chart.series} note={s.chart.note} /></div>}
               {s.beforeAfter?.length > 0 && (
                 <div className="card-surface overflow-hidden">
