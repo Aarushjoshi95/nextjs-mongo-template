@@ -23,19 +23,19 @@ const offers = [
 // Case study cards — real numbers from Aarush's Fueler portfolio.
 const cases = [
   {
-    tags: ['D2C · Beauty', 'ChatGPT', 'Perplexity', 'Gemini'],
-    title: '157% clicks growth in 3 months for a leading beauty brand',
-    headline: '+157.94%', headlineLabel: 'clicks in a single quarter',
+    tags: ['D2C · Beauty', 'Content velocity', 'Technical', 'Links'],
+    title: '157% blog clicks growth in one quarter for India’s leading beauty brand',
+    headline: '+157.94%', headlineLabel: 'blog clicks, Q/Q (78.7K → 203K)',
     beforeLabel: 'Traffic', beforeValue: '26K/mo', afterLabel: 'Traffic', afterValue: '66K/mo',
-    chips: [{ k: '~17,000', v: 'ranking keywords' }, { k: '+20%', v: 'CTR' }, { k: '3 months', v: 'to compound' }],
+    chips: [{ k: '+121.94%', v: 'impressions' }, { k: '25–80%', v: 'leads lift' }, { k: '17.1 → 13.4', v: 'avg. position' }],
     slug: 'd2c-beauty-brand-157-percent-growth',
   },
   {
-    tags: ['D2C · Luxury', 'Google', 'AI Overviews'],
-    title: 'PDPs moved from positions 30–40 to top 5 — revenue +40%/mo',
-    headline: '+40%', headlineLabel: 'direct attributable revenue / mo',
-    beforeLabel: 'Non-brand', beforeValue: '260K', afterLabel: 'Non-brand', afterValue: '397K',
-    chips: [{ k: '+45K', v: 'organic visits / mo' }, { k: '−20%', v: 'index bloat' }, { k: '6 months', v: 'arc' }],
+    tags: ['D2C · Luxury', 'Money pages', 'Hub & spoke', 'Technical'],
+    title: 'Money pages from positions 30–40 into the top 5 — revenue +30% a month',
+    headline: '+30%/mo', headlineLabel: 'direct attributable revenue',
+    beforeLabel: 'Non-brand', beforeValue: '260K/mo', afterLabel: 'Non-brand', afterValue: '397K/mo',
+    chips: [{ k: '+43%', v: 'sessions (350K → 500K)' }, { k: '~48K', v: 'extra money-page clicks in 28 days' }, { k: '−20%', v: 'index bloat' }],
     slug: 'luxury-d2c-48-percent-growth-6-months',
   },
   {
@@ -47,11 +47,11 @@ const cases = [
     slug: 'news-media-108-percent-organic-growth',
   },
   {
-    tags: ['Publishing', 'AMP Web Stories', 'Discover'],
-    title: '1M+ Google Discover sessions in 3 months — on a sub-DR-25 site',
-    headline: '1M+', headlineLabel: 'Discover sessions in 90 days',
-    beforeLabel: 'Discover', beforeValue: '~0', afterLabel: 'Discover', afterValue: '1M+',
-    chips: [{ k: '<25', v: 'starting DR' }, { k: '100%', v: 'AMP-validated' }, { k: '3 months', v: 'to scale' }],
+    tags: ['Publishing · Lifestyle', 'AMP Web Stories', 'Discover'],
+    title: '2.2M Google Discover impressions in 3 months — on a sub-DR-25 lifestyle site',
+    headline: '164K', headlineLabel: 'Discover clicks, top 10 articles, in 3 months',
+    beforeLabel: 'Impressions / qtr', beforeValue: '4.7M', afterLabel: 'Impressions / qtr', afterValue: '24.3M',
+    chips: [{ k: '+414%', v: 'quarterly search impressions' }, { k: '5.2×', v: 'top-10 keywords' }, { k: '99.1%', v: 'good mobile URLs (from 0%)' }],
     slug: 'google-discover-1m-traffic-3-months',
   },
   {

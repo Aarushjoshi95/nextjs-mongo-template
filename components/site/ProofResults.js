@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
-import { ArrowRight, Pause, Play } from 'lucide-react';
+import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
 
 /* ------------------------------------------------------------------ */
@@ -33,16 +33,17 @@ function buildSeries({ before, after, step = 1, base = 0, end, curve = 2, noise 
       v = base + (end - base) * Math.pow(p, curve);
       if (noise) v *= 1 + (r() - 0.5) * 2 * noise * (1 - 0.35 * p);
     }
-    pts.push({ t: +t.toFixed(2), v: Math.max(0, v) });
+    pts.push({ t: +t.toFixed(3), v: Math.max(0, v) });
   }
   pts[pts.length - 1].v = end;
   return pts;
 }
 
 const fmtRevenue = (v) => `$${Math.round(v)}K`;
-const fmtClicks = (v) => (v >= 1 ? `${v.toFixed(1)}K/day` : `${Math.round(v * 1000)}/day`);
 const axisRevenue = (v) => (v === 0 ? '$0' : `$${v}K`);
-const axisClicks = (v) => (v === 0 ? '0' : `${v}K`);
+const fmtClicksDay = (v) => (v >= 1 ? `${v.toFixed(1)}K/day` : `${Math.round(v * 1000)}/day`);
+const fmtK = (v) => `${Math.round(v)}K`;
+const axisK = (v) => (v === 0 ? '0' : `${v}K`);
 
 const TABS = [
   {
@@ -64,6 +65,7 @@ const TABS = [
       fmtAxis: axisRevenue,
       endLabel: '$450K',
       dots: true,
+      source: 'Shape, not monthly actuals',
       series: buildSeries({ before: 4, after: 24, end: 450, curve: 2.2, seed: 11 }),
     },
   },
@@ -82,10 +84,11 @@ const TABS = [
       window: '16 months',
       yTicks: [0, 4, 8, 12, 16],
       xEvery: 4,
-      fmt: fmtClicks,
-      fmtAxis: axisClicks,
+      fmt: fmtClicksDay,
+      fmtAxis: axisK,
       endLabel: '15K+/day',
       dots: false,
+      source: 'Traced from GSC',
       series: buildSeries({ before: 5, after: 16, step: 0.25, base: 1, end: 15.4, curve: 1.9, noise: 0.11, beforeNoise: 0.09, seed: 23 }),
     },
   },
@@ -108,6 +111,7 @@ const TABS = [
       fmtAxis: axisRevenue,
       endLabel: '$700K+',
       dots: true,
+      source: 'Shape, not monthly actuals',
       series: buildSeries({ before: 3, after: 8, end: 700, curve: 1.8, seed: 7 }),
     },
   },
@@ -126,11 +130,84 @@ const TABS = [
       window: '8 months',
       yTicks: [0, 8, 16, 24],
       xEvery: 2,
-      fmt: fmtClicks,
-      fmtAxis: axisClicks,
+      fmt: fmtClicksDay,
+      fmtAxis: axisK,
       endLabel: '24K/day',
       dots: false,
+      source: 'Traced from GSC',
       series: buildSeries({ before: 3, after: 8, step: 0.125, base: 0.15, end: 24, curve: 2.4, noise: 0.14, beforeNoise: 0.35, seed: 41 }),
+    },
+  },
+  {
+    id: 'beauty-blog-clicks',
+    chapter: 'Client',
+    client: 'Beauty D2C',
+    pill: 'Beauty brand · Blog clicks',
+    sector: 'India’s leading beauty brand',
+    slug: 'd2c-beauty-brand-157-percent-growth',
+    metric: { value: 158, prefix: '+', suffix: '%' },
+    body: 'blog clicks quarter over quarter (78.7K → 203K) from a product-led SEO engine built on content, technical and link velocity — leads up 25–80%.',
+    before: { label: 'Blog clicks · quarter', value: '78.7K' },
+    after: { label: 'Blog clicks · quarter', value: '203K' },
+    chart: {
+      caption: 'Monthly blog clicks · Google Search Console',
+      window: '6 months',
+      yTicks: [0, 25, 50, 75],
+      xEvery: 2,
+      fmt: fmtK,
+      fmtAxis: axisK,
+      endLabel: '68K/mo',
+      dots: false,
+      source: 'Traced from GSC, /blogs/',
+      series: buildSeries({ before: 3, after: 6, step: 0.25, base: 26, end: 68, curve: 1.5, noise: 0.07, beforeNoise: 0.06, seed: 59 }),
+    },
+  },
+  {
+    id: 'luxury-nonbrand',
+    chapter: 'Client',
+    client: 'Luxury D2C',
+    pill: 'Luxury D2C · Non-brand traffic',
+    sector: 'India’s leading luxury D2C brand',
+    slug: 'luxury-d2c-48-percent-growth-6-months',
+    metric: { value: 53, prefix: '+', suffix: '%' },
+    body: 'non-brand traffic (260K → 397K/mo) by moving money pages from positions 30–40 into the top 5 — direct attributable revenue up 30% a month.',
+    before: { label: 'Non-brand · before', value: '260K/mo' },
+    after: { label: 'Non-brand · after', value: '397K/mo' },
+    chart: {
+      caption: 'Monthly non-brand sessions',
+      window: '6 months',
+      yTicks: [0, 150, 300, 450],
+      xEvery: 2,
+      fmt: fmtK,
+      fmtAxis: axisK,
+      endLabel: '397K/mo',
+      dots: true,
+      source: 'GA + GSC, shape indexed to reported totals',
+      series: buildSeries({ before: 3, after: 6, step: 0.5, base: 260, end: 397, curve: 1.35, noise: 0.025, beforeNoise: 0.02, seed: 73 }),
+    },
+  },
+  {
+    id: 'publisher-discover',
+    chapter: 'Client',
+    client: 'Lifestyle publisher',
+    pill: 'Publisher · Google Discover',
+    sector: 'Lifestyle publisher, DR < 25',
+    slug: 'google-discover-1m-traffic-3-months',
+    metric: { value: 164, prefix: '', suffix: 'K' },
+    body: 'Discover clicks in 3 months (2.2M impressions) on a sub-DR-25 site — AMP Web Stories, an automated trend engine and a stack built for speed.',
+    before: { label: 'Discover · before', value: '~0' },
+    after: { label: 'Discover · 3 mo', value: '164K' },
+    chart: {
+      caption: 'Cumulative Discover clicks · top 10 articles',
+      window: '3 months',
+      yTicks: [0, 60, 120, 180],
+      xEvery: 1,
+      fmt: fmtK,
+      fmtAxis: axisK,
+      endLabel: '164K',
+      dots: false,
+      source: 'Traced from GSC Discover report',
+      series: buildSeries({ before: 1, after: 3, step: 0.125, base: 0.4, end: 164, curve: 2.1, noise: 0.05, beforeNoise: 0.4, seed: 97 }),
     },
   },
 ];
@@ -157,34 +234,41 @@ function useCountUp(target, { start, reduced, duration = 1300 }) {
   return val;
 }
 
-function useElementWidth() {
+function useElementSize() {
   const ref = useRef(null);
-  const [width, setWidth] = useState(0);
+  const [size, setSize] = useState({ width: 0, height: 0 });
   useEffect(() => {
     const el = ref.current;
     if (!el) return undefined;
-    const update = () => setWidth(el.clientWidth);
+    const update = () => setSize({ width: el.clientWidth, height: el.clientHeight });
     update();
     const ro = new ResizeObserver(update);
     ro.observe(el);
     return () => ro.disconnect();
   }, []);
-  return [ref, width];
+  return [ref, size.width, size.height];
 }
+
+/* ------------------------------------------------------------------ */
+/*  Theme tokens (all derived from globals.css variables)              */
+/* ------------------------------------------------------------------ */
+const INK = 'rgb(var(--ink))';
+const PAPER = 'rgb(var(--bg))';
+const SURFACE = 'rgb(var(--surface))';
+const ACCENT = 'rgb(var(--accent))';
+const MUTED = 'rgb(var(--muted))';
+const LINE = 'rgb(var(--line))';
+const EASE = [0.22, 1, 0.36, 1];
 
 /* ------------------------------------------------------------------ */
 /*  Chart                                                              */
 /* ------------------------------------------------------------------ */
-const ACCENT = 'rgb(var(--accent))';
-const PAPER = 'rgb(var(--bg))';
-const EASE = [0.22, 1, 0.36, 1];
-
-function GrowthChart({ tab, width, play, reduced }) {
+function GrowthChart({ tab, width, availHeight = 0, play, reduced }) {
   const [hover, setHover] = useState(null);
   const { series, yTicks, xEvery, fmt, fmtAxis, endLabel, dots } = tab.chart;
 
   const compact = width < 560;
-  const height = compact ? 240 : 330;
+  const height = Math.max(compact ? 240 : 330, Math.floor(availHeight));
   const m = { top: 22, right: compact ? 14 : 22, bottom: 32, left: compact ? 42 : 56 };
 
   const geo = useMemo(() => {
@@ -204,10 +288,10 @@ function GrowthChart({ tab, width, play, reduced }) {
     const baseY = m.top + ih;
     const last = afterPts[afterPts.length - 1];
     const area = `${line(afterPts)} L${last.x.toFixed(1)} ${baseY} L${afterPts[0].x.toFixed(1)} ${baseY} Z`;
+
     const raw = [{ t: t0, label: `${t0} mo` }, { t: 0, label: 'Kick-off' }];
     for (let t = xEvery; t <= t1 + 1e-9; t += xEvery) raw.push({ t, label: `+${t} mo` });
     if (raw[raw.length - 1].t < t1 - 1e-9) raw.push({ t: t1, label: `+${t1} mo` });
-    // thin out labels that would collide (always keep Kick-off and the final tick)
     const minGap = compact ? 62 : 52;
     const lastX = x(t1);
     const xTicks = [];
@@ -247,6 +331,7 @@ function GrowthChart({ tab, width, play, reduced }) {
   const tipRight = hp ? hp.x > width - 150 : false;
   const drawDur = reduced ? 0 : 1.5;
   const beforeW = geo.x(0) - geo.x(series[0].t);
+  const fmtT = (t) => Math.round(t * 10) / 10;
 
   return (
     <div className="relative" data-testid="proof-chart">
@@ -263,18 +348,15 @@ function GrowthChart({ tab, width, play, reduced }) {
       >
         <defs>
           <linearGradient id={gradId} x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" style={{ stopColor: ACCENT, stopOpacity: 0.42 }} />
+            <stop offset="0%" style={{ stopColor: ACCENT, stopOpacity: 0.26 }} />
             <stop offset="100%" style={{ stopColor: ACCENT, stopOpacity: 0 }} />
           </linearGradient>
-          <clipPath id={`${gradId}-clip`}>
-            <rect x={geo.x(0)} y={0} width={Math.max(0, width - geo.x(0))} height={height} />
-          </clipPath>
         </defs>
 
         {/* pre-engagement shading */}
-        <rect x={m.left} y={m.top} width={beforeW} height={geo.ih} fill="rgb(255 255 255 / 0.025)" />
+        <rect x={m.left} y={m.top} width={beforeW} height={geo.ih} style={{ fill: 'rgb(var(--ink) / 0.03)' }} />
         {beforeW > 70 && (
-          <text x={m.left + beforeW / 2} y={m.top + 14} textAnchor="middle" className="font-mono" fontSize="10" letterSpacing="0.1em" fill="rgb(250 250 247 / 0.35)">
+          <text x={m.left + beforeW / 2} y={m.top + 14} textAnchor="middle" className="font-mono" fontSize="10" letterSpacing="0.1em" style={{ fill: 'rgb(var(--muted) / 0.7)' }}>
             BEFORE
           </text>
         )}
@@ -282,8 +364,8 @@ function GrowthChart({ tab, width, play, reduced }) {
         {/* grid + y labels */}
         {yTicks.map((v) => (
           <g key={v}>
-            <line x1={m.left} x2={width - m.right} y1={geo.y(v)} y2={geo.y(v)} stroke="rgb(255 255 255 / 0.08)" strokeDasharray={v === 0 ? '0' : '2 4'} />
-            <text x={m.left - 10} y={geo.y(v) + 4} textAnchor="end" className="font-mono" fontSize="11" fill="rgb(250 250 247 / 0.45)">
+            <line x1={m.left} x2={width - m.right} y1={geo.y(v)} y2={geo.y(v)} style={{ stroke: v === 0 ? 'rgb(var(--ink) / 0.18)' : LINE }} strokeDasharray={v === 0 ? '0' : '2 4'} />
+            <text x={m.left - 10} y={geo.y(v) + 4} textAnchor="end" className="font-mono" fontSize="11" style={{ fill: MUTED }}>
               {fmtAxis(v)}
             </text>
           </g>
@@ -298,7 +380,7 @@ function GrowthChart({ tab, width, play, reduced }) {
             textAnchor={tk.t === series[0].t ? 'start' : tk.t >= series[series.length - 1].t - 0.01 ? 'end' : 'middle'}
             className="font-mono"
             fontSize="11"
-            fill={tk.t === 0 ? 'rgb(250 250 247 / 0.85)' : 'rgb(250 250 247 / 0.45)'}
+            style={{ fill: tk.t === 0 ? INK : MUTED }}
             fontWeight={tk.t === 0 ? 500 : 400}
           >
             {tk.label}
@@ -306,13 +388,13 @@ function GrowthChart({ tab, width, play, reduced }) {
         ))}
 
         {/* kick-off divider */}
-        <line x1={geo.x(0)} x2={geo.x(0)} y1={m.top} y2={geo.baseY} stroke="rgb(255 255 255 / 0.14)" strokeDasharray="3 4" />
+        <line x1={geo.x(0)} x2={geo.x(0)} y1={m.top} y2={geo.baseY} style={{ stroke: 'rgb(var(--ink) / 0.22)' }} strokeDasharray="3 4" />
 
         {/* before line */}
         <motion.path
           d={geo.beforePath}
           fill="none"
-          stroke="rgb(250 250 247 / 0.42)"
+          style={{ stroke: 'rgb(var(--muted) / 0.6)' }}
           strokeWidth="1.75"
           strokeLinecap="round"
           strokeLinejoin="round"
@@ -350,8 +432,7 @@ function GrowthChart({ tab, width, play, reduced }) {
             cx={p.x}
             cy={p.y}
             r="3"
-            fill="rgb(var(--ink))"
-            style={{ stroke: ACCENT }}
+            style={{ fill: SURFACE, stroke: ACCENT }}
             strokeWidth="1.75"
             initial={{ opacity: 0 }}
             animate={play ? { opacity: 1 } : {}}
@@ -359,7 +440,7 @@ function GrowthChart({ tab, width, play, reduced }) {
           />
         ))}
 
-        {/* kick-off brand marker */}
+        {/* kick-off brand marker (mirrors the header logo) */}
         <motion.g
           initial={{ opacity: 0 }}
           animate={play ? { opacity: 1 } : {}}
@@ -371,8 +452,8 @@ function GrowthChart({ tab, width, play, reduced }) {
               <animate attributeName="opacity" from="0.55" to="0" dur="2.2s" repeatCount="indefinite" />
             </circle>
           )}
-          <circle cx={geo.start.x} cy={geo.start.y} r="13" style={{ fill: ACCENT }} />
-          <text x={geo.start.x} y={geo.start.y + 4.5} textAnchor="middle" fontSize="13" fontWeight="600" fill="#fff" style={{ fontFamily: 'Inter Tight, Inter, sans-serif' }}>
+          <circle cx={geo.start.x} cy={geo.start.y} r="13" style={{ fill: INK }} />
+          <text x={geo.start.x} y={geo.start.y + 4.5} textAnchor="middle" fontSize="13" fontWeight="600" style={{ fill: PAPER, fontFamily: 'Inter Tight, Inter, sans-serif' }}>
             A
           </text>
         </motion.g>
@@ -383,8 +464,8 @@ function GrowthChart({ tab, width, play, reduced }) {
           animate={play ? { opacity: 1, y: 0 } : {}}
           transition={{ duration: 0.4, delay: reduced ? 0 : 0.45 + drawDur }}
         >
-          <circle cx={geo.last.x} cy={geo.last.y} r="4.5" style={{ fill: ACCENT }} stroke="rgb(var(--ink))" strokeWidth="2" />
-          <text x={geo.last.x - 12} y={geo.last.y - 10} textAnchor="end" className="font-mono" fontSize="12.5" fontWeight="500" fill="rgb(250 250 247)">
+          <circle cx={geo.last.x} cy={geo.last.y} r="4.5" style={{ fill: ACCENT, stroke: SURFACE }} strokeWidth="2" />
+          <text x={geo.last.x - 12} y={geo.last.y - 10} textAnchor="end" className="font-mono" fontSize="12.5" fontWeight="500" style={{ fill: INK }}>
             {endLabel}
           </text>
         </motion.g>
@@ -392,14 +473,14 @@ function GrowthChart({ tab, width, play, reduced }) {
         {/* hover crosshair */}
         {hp && (
           <g style={{ pointerEvents: 'none' }}>
-            <line x1={hp.x} x2={hp.x} y1={m.top} y2={geo.baseY} stroke="rgb(250 250 247 / 0.35)" strokeDasharray="2 3" />
-            <circle cx={hp.x} cy={hp.y} r="9" style={{ fill: hp.t > 0 ? ACCENT : 'rgb(250 250 247)' }} opacity="0.18" />
-            <circle cx={hp.x} cy={hp.y} r="4.5" style={{ fill: hp.t > 0 ? ACCENT : 'rgb(250 250 247 / 0.7)' }} stroke="rgb(var(--ink))" strokeWidth="2" />
+            <line x1={hp.x} x2={hp.x} y1={m.top} y2={geo.baseY} style={{ stroke: 'rgb(var(--ink) / 0.35)' }} strokeDasharray="2 3" />
+            <circle cx={hp.x} cy={hp.y} r="9" style={{ fill: hp.t > 0 ? ACCENT : MUTED }} opacity="0.16" />
+            <circle cx={hp.x} cy={hp.y} r="4.5" style={{ fill: hp.t > 0 ? ACCENT : MUTED, stroke: SURFACE }} strokeWidth="2" />
           </g>
         )}
       </svg>
 
-      {/* tooltip */}
+      {/* tooltip (inverse, like the site's primary button) */}
       {hp && (
         <div
           className="pointer-events-none absolute z-10 rounded-lg px-3 py-2 shadow-lg"
@@ -407,15 +488,15 @@ function GrowthChart({ tab, width, play, reduced }) {
             left: tipRight ? hp.x - 12 : hp.x + 12,
             top: Math.max(0, hp.y - 50),
             transform: tipRight ? 'translateX(-100%)' : 'none',
-            backgroundColor: PAPER,
-            color: 'rgb(var(--ink))',
+            backgroundColor: INK,
+            color: PAPER,
           }}
           data-testid="proof-chart-tooltip"
         >
-          <div className="text-[10.5px] uppercase tracking-[0.1em] font-mono" style={{ color: 'rgb(var(--muted))' }}>
-            {hp.t > 0 ? `+${Math.round(hp.t * 10) / 10} mo` : hp.t === 0 ? 'Kick-off' : `${Math.round(hp.t * 10) / 10} mo · before`}
+          <div className="text-[10.5px] uppercase tracking-[0.1em] font-mono" style={{ color: 'rgb(var(--bg) / 0.6)' }}>
+            {hp.t > 0 ? `+${fmtT(hp.t)} mo` : hp.t === 0 ? 'Kick-off' : `${fmtT(hp.t)} mo · before`}
           </div>
-          <div className="font-mono text-[15px] font-medium leading-tight mt-0.5" style={{ color: hp.t > 0 ? ACCENT : 'rgb(var(--ink))' }}>
+          <div className="font-mono text-[15px] font-medium leading-tight mt-0.5" style={{ color: hp.t > 0 ? 'color-mix(in srgb, rgb(var(--accent)) 55%, white)' : PAPER }}>
             {fmt(hp.v)}
           </div>
         </div>
@@ -435,8 +516,9 @@ export default function ProofResults() {
   const [hovering, setHovering] = useState(false);
   const [hidden, setHidden] = useState(false);
   const [cycle, setCycle] = useState(0); // restarts the pill progress bar
-  const [chartRef, chartWidth] = useElementWidth();
+  const [chartRef, chartWidth, chartAvailH] = useElementSize();
   const sectionRef = useRef(null);
+  const stripRef = useRef(null);
   const inView = useInView(sectionRef, { once: true, margin: '-15% 0px -15% 0px' });
   const reduced = useReducedMotion();
   const tab = TABS[active];
@@ -463,9 +545,19 @@ export default function ProofResults() {
     return () => clearTimeout(id);
   }, [rotating, active, cycle]);
 
+  // keep the active pill visible inside the carousel strip
+  useEffect(() => {
+    const strip = stripRef.current;
+    if (!strip) return;
+    const pill = strip.querySelectorAll('[role="tab"]')[active];
+    if (!pill) return;
+    const target = pill.offsetLeft - (strip.clientWidth - pill.offsetWidth) / 2;
+    strip.scrollTo({ left: Math.max(0, target), behavior: reduced ? 'auto' : 'smooth' });
+  }, [active, reduced]);
+
   const pickTab = (i) => {
     setAutoplay(false);
-    setActive(i);
+    setActive((i + TABS.length) % TABS.length);
   };
 
   const onTabKey = (e) => {
@@ -476,33 +568,27 @@ export default function ProofResults() {
     e.currentTarget.parentElement?.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
-  const soft = 'rgb(250 250 247 / 0.62)';
-  const dim = 'rgb(250 250 247 / 0.42)';
-  const rule = 'rgb(255 255 255 / 0.1)';
+  const iconBtn = 'shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink))] hover:border-[rgb(var(--ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2';
 
   return (
     <section
       id="results"
       ref={sectionRef}
-      className="relative overflow-hidden bg-[rgb(var(--ink))] text-[rgb(var(--bg))]"
+      className="relative overflow-clip section-y border-t border-[rgb(var(--line))]"
       data-testid="proof-results-section"
     >
-      {/* ambient accent glow */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 right-[-10%] w-[520px] h-[520px] rounded-full bg-[rgb(var(--accent))]/[0.14] blur-3xl" />
-      <div aria-hidden className="pointer-events-none absolute -bottom-56 left-[-10%] w-[480px] h-[480px] rounded-full bg-[rgb(var(--accent))]/[0.08] blur-3xl" />
+      {/* soft accent glow, same treatment as the booking modal */}
+      <div aria-hidden className="pointer-events-none absolute -top-40 right-[-10%] w-[560px] h-[560px] rounded-full bg-[rgb(var(--accent))]/[0.06] blur-3xl" />
 
-      <div className="container-max section-y relative">
+      <div className="container-max relative">
         {/* heading */}
         <div className="max-w-3xl">
-          <span className="inline-flex items-center gap-2 text-[13px] uppercase tracking-[0.12em] font-medium" style={{ color: soft }}>
-            <span className="inline-block h-px w-6 bg-[rgb(var(--accent))]" />
-            Receipts, not theory
-          </span>
-          <h2 className="text-[clamp(34px,5.2vw,60px)] font-semibold leading-[1.04] tracking-tight mt-5 text-[rgb(var(--bg))]">
-            Proof, not just theory.
+          <span className="eyebrow mb-6">Receipts, not theory</span>
+          <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">
+            Proof, not just <span className="text-[rgb(var(--accent))]">theory</span>.
           </h2>
-          <p className="text-[17px] mt-5 leading-relaxed max-w-[56ch]" style={{ color: soft }}>
-            Two chapters, both starting at zero. One in-house, one client-facing — each tied to revenue the business could count.
+          <p className="text-[rgb(var(--muted))] text-[17px] mt-5 max-w-2xl">
+            Seven chapters, in-house and client-side. Each one tied to a number the business could count — revenue, non-brand traffic or a channel built from zero.
           </p>
         </div>
 
@@ -515,151 +601,166 @@ export default function ProofResults() {
           data-testid="proof-interactive"
           data-rotating={rotating ? 'true' : 'false'}
         >
-        {/* tabs */}
-        <div className="mt-10 lg:mt-12 flex items-center gap-2">
-        <div
-          role="tablist"
-          aria-label="Growth metrics"
-          className="flex gap-2 overflow-x-auto pb-1 pr-4 lg:pr-0 lg:flex-wrap min-w-0 flex-1 [mask-image:linear-gradient(to_right,black_90%,transparent)] lg:[mask-image:none]"
-          style={{ scrollbarWidth: 'none' }}
-          data-testid="proof-tabs"
-        >
-          {TABS.map((t, i) => {
-            const isActive = i === active;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                role="tab"
-                aria-selected={isActive}
-                tabIndex={isActive ? 0 : -1}
-                onClick={() => pickTab(i)}
-                onKeyDown={onTabKey}
-                data-testid={`proof-tab-${t.id}`}
-                className={`relative overflow-hidden shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))] ${
-                  isActive
-                    ? 'bg-[rgb(var(--accent))] text-white shadow-[0_8px_24px_-8px_rgb(var(--accent)_/_0.8)]'
-                    : 'bg-white/[0.05] text-[rgb(var(--bg))]/80 border border-white/10 hover:bg-white/[0.1] hover:text-[rgb(var(--bg))]'
-                }`}
-              >
-                <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-white' : 'bg-[rgb(var(--accent))]'}`} />
-                {t.pill}
-                {isActive && autoplay && !reduced && (
-                  <span
-                    key={`${active}-${cycle}`}
-                    aria-hidden
-                    className="absolute left-0 bottom-0 h-[2px] bg-white/80"
-                    style={{ animation: `proof-progress ${ROTATE_MS}ms linear forwards`, animationPlayState: rotating ? 'running' : 'paused' }}
-                    data-testid="proof-tab-progress"
-                  />
-                )}
-              </button>
-            );
-          })}
-        </div>
-          <button
-            type="button"
-            onClick={() => setAutoplay((v) => !v)}
-            aria-pressed={!autoplay}
-            aria-label={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
-            title={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
-            data-testid="proof-autoplay-toggle"
-            className="shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.05] hover:bg-white/[0.1] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))]"
-            style={{ color: 'rgb(250 250 247 / 0.7)' }}
-          >
-            {autoplay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 translate-x-px" />}
-          </button>
-        </div>
-
-        {/* content */}
-        <div className="mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-10 items-stretch">
-          {/* stat panel */}
-          <motion.div
-            key={`stat-${tab.id}`}
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: reduced ? 0 : 0.45, ease: EASE }}
-            className="lg:col-span-4 flex flex-col rounded-2xl p-6 sm:p-7 border"
-            style={{ borderColor: rule, backgroundColor: 'rgb(255 255 255 / 0.03)' }}
-            data-testid="proof-stat-panel"
-          >
-            <div className="flex flex-wrap items-center gap-2">
-              <span
-                className="inline-flex items-center rounded-full px-3 py-1 text-[12px] font-medium"
-                style={{
-                  border: `1px solid ${tab.chapter === 'Client' ? 'rgb(var(--accent) / 0.5)' : rule}`,
-                  color: tab.chapter === 'Client' ? 'color-mix(in srgb, rgb(var(--accent)) 55%, white)' : 'rgb(250 250 247 / 0.85)',
-                }}
-              >
-                {tab.chapter} · {tab.client}
-              </span>
-              <span className="text-[12px]" style={{ color: dim }}>{tab.sector}</span>
-            </div>
-
+          {/* carousel strip */}
+          <div className="mt-10 lg:mt-12 flex items-center gap-2">
+            <button type="button" onClick={() => pickTab(active - 1)} aria-label="Previous result" className={`${iconBtn} hidden sm:inline-flex`} data-testid="proof-prev">
+              <ChevronLeft className="w-4 h-4" />
+            </button>
             <div
-              className="font-mono text-[clamp(52px,6vw,76px)] font-semibold leading-none tracking-[-0.04em] mt-7"
-              style={{ color: 'color-mix(in srgb, rgb(var(--accent)) 58%, white)' }}
-              data-testid="proof-metric"
+              ref={stripRef}
+              role="tablist"
+              aria-label="Growth metrics"
+              className="flex gap-2 overflow-x-auto pb-1 pr-4 min-w-0 flex-1 [mask-image:linear-gradient(to_right,black_92%,transparent)]"
+              style={{ scrollbarWidth: 'none' }}
+              data-testid="proof-tabs"
             >
-              {tab.metric.prefix}{Math.round(metricVal)}{tab.metric.suffix}
+              {TABS.map((t, i) => {
+                const isActive = i === active;
+                return (
+                  <button
+                    key={t.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={isActive}
+                    tabIndex={isActive ? 0 : -1}
+                    onClick={() => pickTab(i)}
+                    onKeyDown={onTabKey}
+                    data-testid={`proof-tab-${t.id}`}
+                    className={`relative overflow-hidden shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 ${
+                      isActive
+                        ? 'bg-[rgb(var(--ink))] border-[rgb(var(--ink))] text-[rgb(var(--bg))]'
+                        : 'bg-[rgb(var(--surface))] border-[rgb(var(--line))] text-[rgb(var(--muted))] hover:border-[rgb(var(--ink))] hover:text-[rgb(var(--ink))]'
+                    }`}
+                  >
+                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[rgb(var(--accent))]' : 'bg-[rgb(var(--line))]'}`} />
+                    {t.pill}
+                    {isActive && autoplay && !reduced && (
+                      <span
+                        key={`${active}-${cycle}`}
+                        aria-hidden
+                        className="absolute left-0 bottom-0 h-[2px] bg-[rgb(var(--accent))]"
+                        style={{ animation: `proof-progress ${ROTATE_MS}ms linear forwards`, animationPlayState: rotating ? 'running' : 'paused' }}
+                        data-testid="proof-tab-progress"
+                      />
+                    )}
+                  </button>
+                );
+              })}
             </div>
+            <button type="button" onClick={() => pickTab(active + 1)} aria-label="Next result" className={`${iconBtn} hidden sm:inline-flex`} data-testid="proof-next">
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setAutoplay((v) => !v)}
+              aria-pressed={!autoplay}
+              aria-label={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
+              title={autoplay ? 'Pause auto-rotation' : 'Resume auto-rotation'}
+              data-testid="proof-autoplay-toggle"
+              className={iconBtn}
+            >
+              {autoplay ? <Pause className="w-3.5 h-3.5" /> : <Play className="w-3.5 h-3.5 translate-x-px" />}
+            </button>
+          </div>
 
-            <p className="text-[15px] leading-relaxed mt-5" style={{ color: soft }}>
-              {tab.body}
-            </p>
-
-            <div className="grid grid-cols-2 gap-2.5 mt-auto pt-7">
-              <div className="rounded-xl p-3.5 border" style={{ borderColor: rule }}>
-                <div className="text-[10px] uppercase tracking-[0.1em] leading-tight" style={{ color: dim }}>{tab.before.label}</div>
-                <div className="font-mono text-[17px] font-medium mt-1 text-[rgb(var(--bg))]">{tab.before.value}</div>
-              </div>
-              <div className="rounded-xl p-3.5 border border-[rgb(var(--accent))]/50 bg-[rgb(var(--accent))]/[0.14]">
-                <div className="text-[10px] uppercase tracking-[0.1em] leading-tight" style={{ color: 'color-mix(in srgb, rgb(var(--accent)) 55%, white)' }}>{tab.after.label}</div>
-                <div className="font-mono text-[17px] font-medium mt-1 text-[rgb(var(--bg))]">{tab.after.value}</div>
-              </div>
+          {/* position + counter */}
+          <div className="mt-3 flex items-center gap-3">
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))]" data-testid="proof-counter">
+              {String(active + 1).padStart(2, '0')} / {String(TABS.length).padStart(2, '0')}
+            </span>
+            <div className="flex items-center gap-1.5" aria-hidden>
+              {TABS.map((t, i) => (
+                <button
+                  key={t.id}
+                  type="button"
+                  tabIndex={-1}
+                  onClick={() => pickTab(i)}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === active ? 'w-6 bg-[rgb(var(--ink))]' : 'w-1.5 bg-[rgb(var(--line))] hover:bg-[rgb(var(--muted))]'}`}
+                />
+              ))}
             </div>
-          </motion.div>
+          </div>
 
-          {/* chart panel */}
-          <div
-            className="lg:col-span-8 rounded-2xl border p-4 sm:p-6 flex flex-col"
-            style={{ borderColor: rule, backgroundColor: 'rgb(255 255 255 / 0.02)' }}
-          >
-            <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 mb-3">
-              <div className="text-[13px] font-medium" style={{ color: 'rgb(250 250 247 / 0.9)' }}>
-                {tab.chart.caption}
-                <span className="font-mono text-[11px] ml-2 uppercase tracking-[0.08em]" style={{ color: dim }}>{tab.chart.window}</span>
+          {/* content */}
+          <div className="mt-6 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+            {/* stat panel */}
+            <motion.div
+              key={`stat-${tab.id}`}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduced ? 0 : 0.45, ease: EASE }}
+              className="lg:col-span-4 card-surface p-7 sm:p-8 flex flex-col"
+              data-testid="proof-stat-panel"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <span className={`pill ${tab.chapter === 'Client' ? 'pill-coming' : ''}`}>
+                  {tab.chapter} · {tab.client}
+                </span>
+                <span className="text-[12px] text-[rgb(var(--muted))]">{tab.sector}</span>
               </div>
-              <div className="flex items-center gap-4 text-[11.5px]" style={{ color: dim }}>
-                <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full" style={{ backgroundColor: 'rgb(250 250 247 / 0.42)' }} />Before</span>
-                <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--accent))]" />With the SEO engine</span>
-              </div>
-            </div>
 
-            <div ref={chartRef} className="w-full flex-1">
-              {chartWidth > 0 && (
-                <GrowthChart key={tab.id} tab={tab} width={chartWidth} play={inView} reduced={!!reduced} />
+              <div
+                className="font-mono text-[clamp(50px,5.6vw,72px)] font-medium leading-none tracking-[-0.04em] mt-7 text-[rgb(var(--accent))]"
+                data-testid="proof-metric"
+              >
+                {tab.metric.prefix}{Math.round(metricVal)}{tab.metric.suffix}
+              </div>
+
+              <p className="text-[15px] leading-relaxed mt-5 text-[rgb(var(--muted))]">
+                {tab.body}
+              </p>
+
+              <div className="grid grid-cols-2 gap-3 mt-auto pt-7">
+                <div className="rounded-md border border-[rgb(var(--line))] p-4">
+                  <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] leading-tight mb-1">{tab.before.label}</div>
+                  <div className="font-mono text-[18px]">{tab.before.value}</div>
+                </div>
+                <div className="rounded-md border border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05] p-4">
+                  <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--accent))] leading-tight mb-1">{tab.after.label}</div>
+                  <div className="font-mono text-[18px] text-[rgb(var(--accent))]">{tab.after.value}</div>
+                </div>
+              </div>
+
+              {tab.slug && (
+                <Link href={`/case-studies/${tab.slug}`} className="link-underline mt-6 text-[14px] self-start" data-testid="proof-case-link">
+                  Read the full case study <ArrowRight className="w-3.5 h-3.5" />
+                </Link>
               )}
-            </div>
+            </motion.div>
 
-            <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t font-mono text-[10.5px] tracking-[0.04em]" style={{ borderColor: rule, color: dim }}>
-              <span>Hover or tap the curve to read each month</span>
-              <span className="hidden sm:inline">{tab.chart.caption.startsWith('Daily') ? 'Traced from GSC' : 'Shape, not monthly actuals'}</span>
+            {/* chart panel */}
+            <div className="lg:col-span-8 card-surface p-4 sm:p-6 flex flex-col">
+              <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 mb-3">
+                <div className="text-[13px] font-medium">
+                  {tab.chart.caption}
+                  <span className="font-mono text-[11px] ml-2 uppercase tracking-[0.08em] text-[rgb(var(--muted))]">{tab.chart.window}</span>
+                </div>
+                <div className="flex items-center gap-4 text-[11.5px] text-[rgb(var(--muted))]">
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--muted))]/60" />Before</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--accent))]" />With the SEO engine</span>
+                </div>
+              </div>
+
+              <div ref={chartRef} className="w-full flex-1">
+                {chartWidth > 0 && (
+                  <GrowthChart key={tab.id} tab={tab} width={chartWidth} availHeight={chartAvailH} play={inView} reduced={!!reduced} />
+                )}
+              </div>
+
+              <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t border-[rgb(var(--line))] font-mono text-[10.5px] tracking-[0.04em] text-[rgb(var(--muted))]">
+                <span>Hover or tap the curve to read each month</span>
+                <span className="hidden sm:inline">{tab.chart.source}</span>
+              </div>
             </div>
           </div>
         </div>
-        </div>
 
         {/* footer */}
-        <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-4 mt-12 lg:mt-14 pt-7 border-t" style={{ borderColor: rule }}>
-          <Link
-            href="#proof"
-            className="inline-flex items-center gap-2 rounded-full px-5 py-3 text-[15px] font-medium transition-colors bg-[rgb(var(--bg))] text-[rgb(var(--ink))] hover:bg-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 focus-visible:ring-offset-[rgb(var(--ink))]"
-            data-testid="proof-cta"
-          >
+        <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-4 mt-12 lg:mt-14 pt-7 border-t border-[rgb(var(--line))]">
+          <Link href="#proof" className="btn-primary" data-testid="proof-cta">
             Read the case studies <ArrowRight className="w-4 h-4" />
           </Link>
-          <span className="text-[12px] leading-relaxed max-w-[52ch]" style={{ color: dim }}>
+          <span className="text-[12px] leading-relaxed max-w-[52ch] text-[rgb(var(--muted))]">
             Click curves traced from Google Search Console. Revenue curves show shape, not monthly actuals.
           </span>
         </div>
