@@ -9,7 +9,8 @@ Personal site for Aarush (aarushjoshi.in), an SEO / organic growth advisor. Next
 
 ```
 npm install          # npm locally; package-lock.json is committed
-npm run dev          # http://localhost:3000 (works on Windows via cross-env)
+npm run dev          # http://localhost:3000, no heap cap
+npm run dev:capped   # same with a 512 MB heap cap (Emergent container); OOMs locally on calculator pages
 npm run build        # must pass before every PR
 npm run start        # serve the production build
 ```

@@ -1,5 +1,9 @@
+const path = require('path');
+
 const nextConfig = {
   output: 'standalone',
+  // Pin the workspace root so a stray lockfile in a parent folder isn't picked up.
+  outputFileTracingRoot: path.join(__dirname),
   images: {
     unoptimized: true,
     remotePatterns: [
