@@ -119,15 +119,6 @@ async function handleRoute(request, { params }) {
   try {
     const db = await connectToMongo()
 
-    // Root endpoint - GET /api/root (since /api/ is not accessible with catch-all)
-    if (route === '/root' && method === 'GET') {
-      return handleCORS(NextResponse.json({ message: "Hello World" }))
-    }
-    // Root endpoint - GET /api/root (since /api/ is not accessible with catch-all)
-    if (route === '/' && method === 'GET') {
-      return handleCORS(NextResponse.json({ message: "Hello World" }))
-    }
-
     // Discovery call enquiries - POST /api/enquiries
     if (route === '/enquiries' && method === 'POST') {
       const limited = rateLimit(request, 'enquiries')
@@ -254,52 +245,6 @@ async function handleRoute(request, { params }) {
         .limit(200)
         .toArray()
       return handleCORS(NextResponse.json({ count: items.length, enquiries: items }))
-    }
-
-    // Status endpoints - POST /api/status
-    if (route === '/status' && method === 'POST') {
-      const limited = rateLimit(request, 'status')
-      if (limited) {
-        const res = NextResponse.json({ error: limited.error }, { status: 429 })
-        res.headers.set('Retry-After', String(limited.retryAfter))
-        return handleCORS(res)
-      }
-      const parsed = await readJson(request)
-      if (parsed.error) {
-        return handleCORS(NextResponse.json({ error: parsed.error }, { status: parsed.status }))
-      }
-      const body = parsed.body
-      
-      if (!body.client_name || typeof body.client_name !== 'string') {
-        return handleCORS(NextResponse.json(
-          { error: "client_name is required" }, 
-          { status: 400 }
-        ))
-      }
-
-      const statusObj = {
-        id: uuidv4(),
-        client_name: body.client_name.slice(0, 200),
-        timestamp: new Date()
-      }
-
-      await db.collection('status_checks').insertOne(statusObj)
-      return handleCORS(NextResponse.json(statusObj))
-    }
-
-    // Status endpoints - GET /api/status (admin only)
-    if (route === '/status' && method === 'GET') {
-      const denied = requireAdmin(request)
-      if (denied) return handleCORS(NextResponse.json({ error: denied.error }, { status: denied.status }))
-      const statusChecks = await db.collection('status_checks')
-        .find({})
-        .limit(1000)
-        .toArray()
-
-      // Remove MongoDB's _id field from response
-      const cleanedStatusChecks = statusChecks.map(({ _id, ...rest }) => rest)
-      
-      return handleCORS(NextResponse.json(cleanedStatusChecks))
     }
 
     // Route not found
