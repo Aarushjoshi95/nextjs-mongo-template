@@ -191,7 +191,7 @@ export default function CtrOpportunityCalculator() {
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={chart} layout="vertical" margin={{ top: 4, right: 16, left: 0, bottom: 0 }}>
                 <CartesianGrid horizontal={false} stroke="rgba(0,0,0,0.06)" />
-                <XAxis type="number" tick={{ fontSize: 11, fill: '#5e636b', fontFamily: 'JetBrains Mono' }} axisLine={false} tickLine={false} tickFormatter={(v) => fmtMoney(v, currency, { compact: true })} />
+                <XAxis type="number" tick={{ fontSize: 11, fill: '#5e636b', style: { fontFamily: 'var(--font-mono)' } }} axisLine={false} tickLine={false} tickFormatter={(v) => fmtMoney(v, currency, { compact: true })} />
                 <YAxis type="category" dataKey="name" width={150} tick={{ fontSize: 11, fill: '#111214' }} axisLine={false} tickLine={false} />
                 <Tooltip formatter={(v) => fmtMoney(v, currency)} contentStyle={{ fontSize: 12, borderRadius: 10, border: '1px solid #e6e4de' }} cursor={{ fill: 'rgba(31,94,255,0.05)' }} />
                 <Bar dataKey="Revenue" fill="#1f5eff" radius={[0, 4, 4, 0]} />

@@ -96,7 +96,7 @@ export function Panel({ title, eyebrow, children, className = '', actions }) {
         <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
           <div>
             {eyebrow ? <span className="text-[11px] uppercase tracking-[0.12em] font-mono text-[rgb(var(--muted))] block mb-1.5">{eyebrow}</span> : null}
-            {title ? <h2 className="text-[20px] font-semibold tracking-tight" style={{ fontFamily: 'Inter Tight' }}>{title}</h2> : null}
+            {title ? <h2 className="text-[20px] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2> : null}
           </div>
           {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
         </div>

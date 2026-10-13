@@ -9,7 +9,7 @@ export default function Footer() {
         <div className="grid md:grid-cols-3 gap-12">
           <div className="md:col-span-1">
             <Link href="/#top" className="flex items-center gap-3 mb-4">
-              <span className="w-9 h-9 rounded-full bg-[rgb(var(--ink))] text-[rgb(var(--bg))] flex items-center justify-center font-semibold text-lg" style={{fontFamily:'Inter Tight'}}>A</span>
+              <span className="w-9 h-9 rounded-full bg-[rgb(var(--ink))] text-[rgb(var(--bg))] flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
               <span className="flex flex-col leading-tight">
                 <span className="text-[15px] font-semibold">Aarush</span>
                 <span className="text-[11px] text-[rgb(var(--muted))] -mt-0.5">AI Search Visibility</span>

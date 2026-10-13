@@ -41,7 +41,7 @@ export default function ToolsPage() {
                       <span className="font-mono text-[13px] text-[rgb(var(--muted))]">0{i + 1}</span>
                       {t.eyebrow ? <span className="pill pill-published text-[11px]"><span className="pulse-dot" />{t.eyebrow}</span> : null}
                     </div>
-                    <h2 className="text-[22px] font-semibold tracking-tight leading-[1.2] mb-3" style={{ fontFamily: 'Inter Tight' }}>{t.name}</h2>
+                    <h2 className="text-[22px] font-semibold tracking-tight leading-[1.2] mb-3" style={{ fontFamily: 'var(--font-display)' }}>{t.name}</h2>
                     <p className="text-[14.5px] text-[rgb(var(--muted))] leading-relaxed mb-6 flex-1">{t.description}</p>
                     <div className="flex flex-wrap gap-1.5 mb-6">
                       {t.tags.map((tag) => <span key={tag} className="pill text-[11px]">{tag}</span>)}

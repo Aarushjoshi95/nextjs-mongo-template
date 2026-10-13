@@ -1,7 +1,12 @@
 import './globals.css'
+import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import { Providers } from './providers'
 import JsonLd from '@/components/site/JsonLd'
 import { jsonLd, personSchema, organizationSchema, websiteSchema } from '@/lib/seo'
+
+const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap', variable: '--font-sans' })
+const interTight = Inter_Tight({ subsets: ['latin'], weight: ['500', '600', '700'], display: 'swap', variable: '--font-display' })
+const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap', variable: '--font-mono' })
 
 export const metadata = {
   metadataBase: new URL('https://aarushjoshi.in'),
@@ -26,7 +31,7 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    <html lang="en" className={`${inter.variable} ${interTight.variable} ${jetbrainsMono.variable}`}>
       <head>
         <script dangerouslySetInnerHTML={{__html:'window.addEventListener("error",function(e){if(e.error instanceof DOMException&&e.error.name==="DataCloneError"&&e.message&&e.message.includes("PerformanceServerTiming")){e.stopImmediatePropagation();e.preventDefault()}},true);'}} />
       </head>

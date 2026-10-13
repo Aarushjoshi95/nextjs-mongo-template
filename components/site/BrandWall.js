@@ -35,7 +35,7 @@ function BrandMark({ brand }) {
         style={{ backgroundColor: `${brand.color}14`, color: brand.color }}
         aria-hidden
       >
-        <span className="font-semibold text-[17px] tracking-tight" style={{ fontFamily: 'Inter Tight' }}>{initial}</span>
+        <span className="font-semibold text-[17px] tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>{initial}</span>
       </span>
     );
   }
@@ -72,7 +72,7 @@ export default function BrandWall() {
             <BrandMark brand={b} />
             <span className="min-w-0 leading-tight flex items-end justify-between gap-3">
               <span className="min-w-0">
-                <span className="block text-[14px] font-semibold tracking-tight leading-tight" style={{ fontFamily: 'Inter Tight' }}>{b.name}</span>
+                <span className="block text-[14px] font-semibold tracking-tight leading-tight" style={{ fontFamily: 'var(--font-display)' }}>{b.name}</span>
                 <span className="block text-[11.5px] text-[rgb(var(--muted))] mt-1 truncate">{b.sector}</span>
               </span>
               <span aria-hidden className="shrink-0 mb-1 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition" style={{ backgroundColor: b.color }} />

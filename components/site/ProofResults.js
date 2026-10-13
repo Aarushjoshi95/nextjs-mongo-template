@@ -533,7 +533,7 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced, onScrub }) {
             </circle>
           )}
           <circle cx={geo.start.x} cy={geo.start.y} r="13" style={{ fill: INK }} />
-          <text x={geo.start.x} y={geo.start.y + 4.5} textAnchor="middle" fontSize="13" fontWeight="600" style={{ fill: PAPER, fontFamily: 'Inter Tight, Inter, sans-serif' }}>
+          <text x={geo.start.x} y={geo.start.y + 4.5} textAnchor="middle" fontSize="13" fontWeight="600" style={{ fill: PAPER, fontFamily: 'var(--font-display)' }}>
             A
           </text>
         </motion.g>

@@ -31,7 +31,7 @@ export default function Header() {
       <header className={`sticky top-0 z-40 transition-all duration-200 ${scrolled ? 'backdrop-blur-md bg-[rgb(var(--bg))]/80 border-b border-[rgb(var(--line))]' : 'bg-transparent'}`}>
         <div className="container-max flex items-center justify-between h-16 lg:h-20">
           <Link href="/#top" className="flex items-center gap-3 group" aria-label="Aarush home">
-            <span className="w-9 h-9 rounded-full bg-[rgb(var(--ink))] text-[rgb(var(--bg))] flex items-center justify-center font-semibold text-lg" style={{fontFamily:'Inter Tight'}}>A</span>
+            <span className="w-9 h-9 rounded-full bg-[rgb(var(--ink))] text-[rgb(var(--bg))] flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
             <span className="flex flex-col leading-tight">
               <span className="text-[15px] font-semibold tracking-tight">Aarush</span>
               <span className="text-[11px] text-[rgb(var(--muted))] -mt-0.5">AI Search Visibility</span>

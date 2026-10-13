@@ -214,7 +214,7 @@ export default function RevenueImpactCalculator() {
               <BarChart data={chartData} margin={{ top: 8, right: 8, left: 0, bottom: 0 }} barGap={4}>
                 <CartesianGrid vertical={false} stroke="rgba(0,0,0,0.06)" />
                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#5e636b' }} axisLine={false} tickLine={false} interval={0} />
-                <YAxis unit="%" tick={{ fontSize: 11, fill: '#5e636b', fontFamily: 'JetBrains Mono' }} axisLine={false} tickLine={false} width={44} />
+                <YAxis unit="%" tick={{ fontSize: 11, fill: '#5e636b', style: { fontFamily: 'var(--font-mono)' } }} axisLine={false} tickLine={false} width={44} />
                 <Tooltip formatter={(v) => `${v}%`} contentStyle={{ fontSize: 12, borderRadius: 10, border: '1px solid #e6e4de' }} cursor={{ fill: 'rgba(31,94,255,0.05)' }} />
                 <Legend wrapperStyle={{ fontSize: 12 }} />
                 <Bar dataKey="Traffic share" fill={COLORS[1]} radius={[4, 4, 0, 0]} fillOpacity={0.25} />

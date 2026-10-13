@@ -136,7 +136,7 @@ export default function TrafficDropCalculator() {
                 </defs>
                 <CartesianGrid vertical={false} stroke="rgba(0,0,0,0.06)" />
                 <XAxis dataKey="name" tick={{ fontSize: 11, fill: '#5e636b' }} axisLine={false} tickLine={false} />
-                <YAxis tick={{ fontSize: 11, fill: '#5e636b', fontFamily: 'JetBrains Mono' }} axisLine={false} tickLine={false} width={64} tickFormatter={(v) => fmtMoney(v, currency, { compact: true })} />
+                <YAxis tick={{ fontSize: 11, fill: '#5e636b', style: { fontFamily: 'var(--font-mono)' } }} axisLine={false} tickLine={false} width={64} tickFormatter={(v) => fmtMoney(v, currency, { compact: true })} />
                 <Tooltip formatter={(v) => fmtMoney(v, currency)} contentStyle={{ fontSize: 12, borderRadius: 10, border: '1px solid #e6e4de' }} />
                 <Area type="monotone" dataKey="Cumulative loss" stroke="#1f5eff" strokeWidth={2} fill="url(#cum)" />
                 <Area type="monotone" dataKey="Monthly loss" stroke="#111214" strokeWidth={1.5} strokeDasharray="4 3" fill="transparent" />
