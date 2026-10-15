@@ -96,6 +96,7 @@ app/
   (site)/case-studies/[slug]/
   (site)/insights/[slug]/    future articles, same pattern
   (site)/services/[slug]/    future service pages
+  (site)/consulting/         hub + /consulting/[slug], about 10 landing pages (ARCHITECTURE.md)
   (site)/tools/
   (site)/privacy, terms/
   api/enquiries/route.ts     one file per endpoint
@@ -103,15 +104,17 @@ app/
   sitemap.ts, robots.ts, llms.txt/route.ts, opengraph-image.tsx
 content/
   case-studies/*.mdx         frontmatter = stats, client, SEO fields
+  consulting/*.mdx           ordered block list per consulting page
+  pages/home.mdx             homepage block list
   insights/*.mdx
   services/*.mdx
 config/
   site.ts                    name, positioning, headline stats, contact, socials
-  nav.ts                     header + footer links
+  nav.ts                     Services · Consulting · Case studies · Free tools · FAQ
   tools.ts                   tools registry (exists today)
 components/
   ui/                        only primitives in use
-  sections/                  Hero, StatStrip, FAQ, CTA, BrandWall, Proof…
+  sections/                  shared blocks: hero, brandStrip, comparisonTable, problemCards, serviceGrid, caseStudyCards, engagements, deliverableTable, steps, fit, faq, relatedConsulting, ctaBand
   tools/                     the interactive calculators (client)
 lib/
   content.ts                 load + validate MDX, fail the build on missing fields
@@ -150,16 +153,20 @@ Six phases, each on its own branch cut from `rebuild` and merged back into it; t
 - [ ] Move Header, Footer and AnnouncementBar into a `(site)` route-group layout; strip them from every page
 - [ ] Fix Tailwind colour mapping to RGB tokens; replace `[rgb(var(--x))]` classes with semantic ones
 - [ ] Add real Privacy and Terms pages, real LinkedIn, consistent contact email
+- [ ] Set the nav in `config/nav.ts` to Services · Consulting · Case studies · Free tools · FAQ, with footer links read from the same file. Until their pages exist, Services and FAQ point to homepage anchors (confirm the anchors when Phase 2 starts)
 
 **Phase 3 — Content as files (1–2 days)**
 
 - [ ] Convert the five case studies to `content/case-studies/*.mdx` with validated frontmatter
 - [ ] Make homepage cards, ProofResults anchors and `llms.txt` read from the same case-study data
-- [ ] Move homepage copy (offers, FAQ, how-it-works) into content/config; split `app/page.js` into `components/sections/*`
+- [ ] Build the shared block library in `components/sections/*`: hero (with proof card), brandStrip, comparisonTable, problemCards, serviceGrid, caseStudyCards, engagements, deliverableTable, steps, fit, faq, relatedConsulting, ctaBand. Each block takes props only and holds no copy
+- [ ] Move homepage copy (offers, FAQ, how-it-works) into `content/pages/home.mdx` as a block list; `app/page.js` renders those blocks and holds no copy. `ProofResults` and the visibility checker stay client islands inside their blocks
+- [ ] Content check in `lib/content.ts`, run as `prebuild`: validates frontmatter, block types and required fields; resolves case-study, consulting and logo references; fails the build on any `[PLACEHOLDER]` text in `content/` or `config/` (exact, case-sensitive match)
 - [ ] Generate `sitemap.ts` and `llms.txt` from content, not by hand
 
 **Phase 4 — Scale-ready extras (1–2 days)**
 
+- [ ] Consulting template: `/consulting` hub and `/consulting/[slug]` rendering the ordered block list from `content/consulting/*.mdx` (about 10 pages). Metadata, JSON-LD, sitemap and llms.txt come from the same files
 - [ ] Add `insights/` and `services/` templates so new page types are just new MDX files
 - [ ] Listing pages with tags, related-content links and a `redirects` map
 - [ ] OG images via `next/og` from frontmatter; per-type JSON-LD from `lib/seo.ts`
@@ -169,16 +176,16 @@ Six phases, each on its own branch cut from `rebuild` and merged back into it; t
 **Phase 5 — Polish and quality gates (2–3 days, then ongoing)**
 
 - [ ] Define the type, spacing, radius and motion scales in the Tailwind config; remove remaining one-off sizes
-- [ ] Build `/styleguide` showing every section and component state; fix inconsistencies it exposes
+- [ ] Build `/styleguide` showing every block and component in every state; fix inconsistencies it exposes
 - [ ] Redesign the tool UIs (four calculators, `ToolShell`, AI visibility checker) to the new design system: tokens, shared classes and semantic colours only
 - [ ] Turn on Next.js image optimisation (currently disabled) and set image sizes per slot
 - [ ] Design proper 404, error and loading states, favicon set and OG templates
 - [ ] GitHub Actions on every PR: build, lint, typecheck, content validation, broken-link check
-- [ ] Playwright screenshot tests of each template at 375, 768 and 1440 px, plus an axe accessibility scan
+- [ ] Playwright screenshot tests of each template (homepage, consulting hub and a landing page, case study, tool) at 375, 768 and 1440 px, plus an axe accessibility scan
 - [ ] Lighthouse CI budgets: 95+ performance and accessibility, LCP under 2.0 s, JS size limit per page type
 - [ ] Copy pass: one voice, consistent numbers, sentence case, no placeholder text
 
-After Phase 4, adding a case study, article or service page is one MDX file. Adding a tool is one registry entry plus its component.
+After Phase 4, adding a case study, article, service page or consulting page is one MDX file. Adding a tool is one registry entry plus its component.
 
 ## Working rules
 
@@ -198,3 +205,4 @@ After Phase 4, adding a case study, article or service page is one MDX file. Add
 4. **Repo visibility:** public or private?
 5. **What the 100 pages are:** rough split of case studies, articles, service pages and tools.
 6. **Lead alerts:** Resend key and inbox still pending.
+7. **Services vs consulting:** what goes on `/services` and what goes on `/consulting`. Until `/services` exists, the Services nav item points to a homepage anchor.

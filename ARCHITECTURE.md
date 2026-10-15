@@ -51,6 +51,8 @@ app/
   (site)/case-studies/[slug]/
   (site)/insights/[slug]/    articles, same pattern
   (site)/services/[slug]/    service pages
+  (site)/consulting/page.tsx     consulting hub, generated from content/consulting
+  (site)/consulting/[slug]/      consulting landing pages, one template
   (site)/tools/
   (site)/privacy, terms/
   api/enquiries/route.ts     one file per endpoint
@@ -58,19 +60,21 @@ app/
   sitemap.ts, robots.ts, llms.txt/route.ts, opengraph-image.tsx
 content/
   case-studies/*.mdx         frontmatter = stats, client, SEO fields
+  consulting/*.mdx           ordered block list per consulting page (see below)
+  pages/home.mdx             homepage block list
   insights/*.mdx
   services/*.mdx
 config/
   site.ts                    name, positioning, headline stats, contact, socials
-  nav.ts                     header + footer links
+  nav.ts                     header + footer links: Services · Consulting · Case studies · Free tools · FAQ
   tools.ts                   tools registry
   redirects                  renamed URLs never 404
 components/
   ui/                        only primitives in use (today: dialog)
-  sections/                  Hero, StatStrip, FAQ, CTA, BrandWall, Proof…
+  sections/                  shared blocks: one component per block type (below)
   tools/                     interactive calculators (client)
 lib/
-  content.ts                 load + validate MDX; build fails on missing fields
+  content.ts                 load + validate MDX and block lists; build fails on errors
   seo.ts                     metadata + JSON-LD from config and frontmatter
   ai/                        provider-agnostic Gemini + lead scoring
   calc/                      calculator maths, separate from UI
@@ -87,6 +91,51 @@ config/*.ts  ──┼─> lib/content.ts (validate) ─┬─> pages (thin temp
 ```
 
 Nothing downstream holds its own copy of a fact.
+
+### Page types
+
+| Page type | Route | Content file | Built from |
+| --- | --- | --- | --- |
+| Homepage | `/` | `content/pages/home.mdx` | block list |
+| Consulting hub | `/consulting` | `content/consulting/*.mdx` | generated listing |
+| Consulting landing (about 10) | `/consulting/[slug]` | `content/consulting/<slug>.mdx` | block list |
+| Case study (5) | `/case-studies/[slug]` | `content/case-studies/<slug>.mdx` | case-study template |
+| Service | `/services/[slug]` | `content/services/*.mdx` | Phase 4; may reuse blocks |
+| Tool | `/tools/*` | registry entry + component | tools template |
+
+Consulting pages and the homepage count towards the 100-page ceiling.
+
+### Consulting landing pages and blocks
+
+A consulting page is one file, `content/consulting/<slug>.mdx`. Its frontmatter holds the SEO fields and an ordered `blocks` list. The template renders the blocks top to bottom in that order. There is no free-form body in v1: all copy sits in frontmatter, so the content check can validate it.
+
+The homepage works the same way: `content/pages/home.mdx` lists its blocks, and `app/(site)/page.tsx` renders them.
+
+**Block library** (`components/sections/`, one component per type, props validated in `lib/content.ts`):
+
+| Block (`type`) | Content it takes |
+| --- | --- |
+| `hero` | eyebrow, headline, subhead, primary CTA, optional proof card that points to a case-study slug |
+| `brandStrip` | logo names from `public/logos/` |
+| `comparisonTable` | column headers and rows |
+| `problemCards` | title and body, repeated |
+| `serviceGrid` | title, body, optional internal link, repeated |
+| `caseStudyCards` | list of case-study slugs; stats and client are read from the case-study file |
+| `engagements` | name, duration, what is included, repeated |
+| `deliverableTable` | deliverable, format, timing |
+| `steps` | ordered title and body |
+| `fit` | "good fit" and "not a fit" lists |
+| `faq` | question and answer pairs; also feeds `FAQPage` JSON-LD |
+| `relatedConsulting` | slugs of other consulting pages |
+| `ctaBand` | headline and button; opens the booking modal through `BookButton` |
+
+Rules:
+
+- **Reference, don't copy.** Case-study numbers come from the case-study file via its slug. Booking goes through `BookButton` and `CAL_LINK`. Contact details come from `config/site.ts`.
+- **Blocks are data-driven.** Blocks render props only and hold no copy. Only `faq` (accordion) and `ctaBand` (modal) need client code; keep those islands small.
+- **Validation fails the build** on: an unknown block type, a missing required field, an unresolved slug or logo, or `[PLACEHOLDER]` text anywhere in `content/` or `config/`. The check is case-sensitive and exact.
+- **Hub** `/consulting` lists the consulting files from content. Nothing is hand-maintained.
+- **Metadata and JSON-LD** come from frontmatter through `lib/seo.ts`: `Service` on each landing page, `FAQPage` when a `faq` block is present, `BreadcrumbList` on every page. Each page gets one `h1` from its hero.
 
 ### Design system
 
@@ -113,4 +162,5 @@ Every PR runs build, lint, typecheck, content validation and a broken-link check
 1. **Hosting:** stay on Emergent, or move to Vercel / Cloudflare Pages (needs own Gemini key and MongoDB Atlas). Until decided, `.emergent/`, yarn metadata in `package.json` and the Emergent AI proxy stay.
 2. **Positioning line:** "Get recommended when buyers ask AI" vs "SEO that reports to revenue, not rankings".
 3. **Repo visibility:** public or private.
-4. **Page mix:** rough split of case studies, articles, service pages and tools within the 100.
+4. **Page mix:** rough split of case studies, articles, service pages, consulting pages and tools within the 100.
+5. **Services vs consulting:** what belongs on `/services` and what belongs on `/consulting`. Until `/services` exists, the nav's Services item points to a homepage anchor.
