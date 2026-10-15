@@ -67,6 +67,7 @@ export function useBooking() {
 }
 
 // Any CTA on the site that should open the pop-up form.
+/** @param {{ children?: import('react').ReactNode, className?: string, onClick?: (e: any) => void, [key: string]: any }} props */
 export function BookButton({ children, className = 'btn-primary', onClick, ...rest }) {
   const { openBooking } = useBooking();
   return (

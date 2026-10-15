@@ -29,6 +29,9 @@ export const site = {
   } as { text: string; href: string } | null,
 } as const;
 
+/** Fields content can insert as {token}, e.g. "For {audience}". */
+export type SiteToken = keyof typeof site;
+
 /** Joins a list as "a, b, c and d". */
 export function listText(items: readonly string[]): string {
   return items.length < 2 ? items.join('') : `${items.slice(0, -1).join(', ')} and ${items[items.length - 1]}`;

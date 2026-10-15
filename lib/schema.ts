@@ -114,3 +114,166 @@ export type ProofTab = z.infer<typeof proofTab>;
 export type CaseStudyCard = z.infer<typeof card>;
 export type CaseStudy = z.infer<typeof caseStudy>;
 export type PublishedCaseStudy = z.infer<typeof publishedCaseStudy>;
+
+// ---------------------------------------------------------------------------
+// Blocks: the ordered sections of the homepage (and, from Phase 4, consulting pages).
+// Copy may use {token} for a config/site field, ==text== for accent and **text** for emphasis.
+// ---------------------------------------------------------------------------
+
+// Shared section options. `border` is the top rule; `tone` the background.
+const sectionFields = {
+  id: z.string().regex(/^[a-z][a-z0-9-]*$/, 'lowercase id').optional(),
+  tone: z.enum(['paper', 'surface']).optional(),
+  border: z.boolean().optional(),
+};
+
+const cta = z.object({ label: text }).strict();
+const link = z.object({ label: text, href: text }).strict();
+
+const heroBlock = z.object({
+  type: z.literal('hero'),
+  ...sectionFields,
+  eyebrow: text,
+  // Omit to use the site positioning line, with its last word in the accent colour.
+  headline: text.optional(),
+  subhead: text,
+  pills: z.array(text).optional(),
+  primaryCta: cta,
+  secondaryCta: link.optional(),
+  footnote: text.optional(),
+  aside: z.union([z.literal('promptDemo'), z.object({ proofCard: text }).strict()]),
+}).strict();
+
+const statStripBlock = z.object({ type: z.literal('statStrip'), ...sectionFields }).strict();
+
+const problemCardsBlock = z.object({
+  type: z.literal('problemCards'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  intro: text.optional(),
+  cards: z.array(z.object({
+    eyebrow: text.optional(),
+    title: text,
+    body: text.optional(),
+    items: z.array(text).optional(),
+    highlight: z.boolean().optional(),
+  }).strict()).min(1),
+}).strict();
+
+const engagementsBlock = z.object({
+  type: z.literal('engagements'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  fitLabel: text,
+  items: z.array(z.object({
+    tag: text,
+    title: text,
+    body: text,
+    fit: text,
+    cta: text,
+    highlight: z.boolean().optional(),
+  }).strict()).min(1),
+}).strict();
+
+const fitBlock = z.object({
+  type: z.literal('fit'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  good: z.object({ title: text, items: z.array(text).min(1) }).strict(),
+  bad: z.object({ title: text, items: z.array(text).min(1) }).strict(),
+}).strict();
+
+const proofResultsBlock = z.object({
+  type: z.literal('proofResults'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  intro: text.optional(),
+  // Every proof tab of each listed case study, in this order.
+  caseStudies: z.array(text).min(1),
+  cta: link,
+  footnote: text,
+}).strict();
+
+const brandStripFields = {
+  label: text,
+  // {count} is the number of brands shown.
+  caption: text,
+  // Brand names from config/brands; omit for all.
+  brands: z.array(text).optional(),
+};
+
+const brandStripBlock = z.object({ type: z.literal('brandStrip'), ...sectionFields, ...brandStripFields }).strict();
+
+const caseStudyCardsBlock = z.object({
+  type: z.literal('caseStudyCards'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  intro: text.optional(),
+  brandStrip: z.object(brandStripFields).strict().optional(),
+  listLabel: text,
+  caseStudies: z.array(text).min(1),
+}).strict();
+
+const stepsBlock = z.object({
+  type: z.literal('steps'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  items: z.array(z.object({ label: text, title: text, body: text }).strict()).min(1),
+}).strict();
+
+const serviceGridBlock = z.object({
+  type: z.literal('serviceGrid'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  intro: text.optional(),
+  items: z.array(z.object({ code: text.optional(), title: text, body: text, link: link.optional() }).strict()).min(1),
+}).strict();
+
+const faqBlock = z.object({
+  type: z.literal('faq'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  items: z.array(z.object({
+    q: text,
+    a: text.optional(),
+    rows: z.array(z.object({ k: text, v: text }).strict()).optional(),
+  }).strict().refine((f) => f.a || f.rows?.length, 'needs an answer (a) or rows')).min(1),
+}).strict();
+
+const ctaBandBlock = z.object({
+  type: z.literal('ctaBand'),
+  ...sectionFields,
+  eyebrow: text,
+  title: text,
+  body: text.optional(),
+  primaryCta: cta,
+  // Secondary link straight to the Calendly page (CAL_LINK).
+  calendlyCta: cta.optional(),
+  notes: z.array(z.object({ k: text, v: text }).strict()).optional(),
+}).strict();
+
+export const block = z.discriminatedUnion('type', [
+  heroBlock, statStripBlock, problemCardsBlock, engagementsBlock, fitBlock, proofResultsBlock,
+  brandStripBlock, caseStudyCardsBlock, stepsBlock, serviceGridBlock, faqBlock, ctaBandBlock,
+]);
+
+export const page = z.object({
+  slug: text,
+  status,
+  title: text.optional(),
+  description: text.optional(),
+  blocks: z.array(block).min(1),
+}).strict();
+
+export type Block = z.infer<typeof block>;
+// Without strictNullChecks zod marks every key optional, so match on an optional `type`.
+export type BlockOf<T extends Block['type']> = Extract<Block, { type?: T }>;
+export type Page = z.infer<typeof page>;

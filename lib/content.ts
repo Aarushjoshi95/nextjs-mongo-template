@@ -5,7 +5,10 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { parse } from 'yaml';
 import type { ZodError, ZodTypeAny } from 'zod';
-import { caseStudy, type CaseStudy, type PublishedCaseStudy } from '@/lib/schema';
+import { caseStudy, page, type Block, type CaseStudy, type Page, type PublishedCaseStudy } from '@/lib/schema';
+import { site, type SiteToken } from '@/config/site';
+import { brands } from '@/config/brands';
+import { headerNav, footerNav, legalNav } from '@/config/nav';
 
 const ROOT = process.cwd();
 const CONTENT_DIR = path.join(ROOT, 'content');
@@ -13,7 +16,7 @@ const PLACEHOLDER = '[PLACEHOLDER]';
 // Folders scanned for placeholder text besides content/.
 const PLACEHOLDER_DIRS = ['config'];
 
-type Loaded = { caseStudies: CaseStudy[]; errors: string[] };
+type Loaded = { caseStudies: CaseStudy[]; pages: Page[]; errors: string[] };
 
 const rel = (file: string) => path.relative(ROOT, file).replace(/\\/g, '/');
 
@@ -78,6 +81,97 @@ function scanPlaceholders(errors: string[]) {
 
 const publicFileExists = (src: string) => fs.existsSync(path.join(ROOT, 'public', src));
 
+/** Static routes under app/(site), e.g. /tools/revenue-impact-calculator (dynamic segments skipped). */
+function staticRoutes(): Set<string> {
+  const routes = new Set<string>();
+  const walk = (dir: string, route: string) => {
+    for (const e of fs.readdirSync(dir, { withFileTypes: true })) {
+      if (e.isDirectory() && !e.name.startsWith('[')) walk(path.join(dir, e.name), `${route}/${e.name}`);
+      else if (/^page\.(js|jsx|ts|tsx)$/.test(e.name)) routes.add(route || '/');
+    }
+  };
+  const app = path.join(ROOT, 'app', '(site)');
+  if (fs.existsSync(app)) walk(app, '');
+  return routes;
+}
+
+/** Every string inside a value, with its dotted path. */
+function strings(value: unknown, at = ''): [string, string][] {
+  if (typeof value === 'string') return [[at, value]];
+  if (Array.isArray(value)) return value.flatMap((v, i) => strings(v, `${at}.${i}`));
+  if (value && typeof value === 'object') return Object.entries(value).flatMap(([k, v]) => strings(v, at ? `${at}.${k}` : k));
+  return [];
+}
+
+/** Checks a page's blocks against case studies, brands, logos, {tokens} and anchor ids. */
+function checkBlocks(file: string, blocks: Block[], studies: CaseStudy[], errors: string[]) {
+  const where = (i: number, field: string) => `${rel(file)}: blocks.${i}.${field}`;
+  const study = (slug: string) => studies.find((c) => c.slug === slug);
+  const brandNames = (names: string[] | undefined, i: number, field: string) => {
+    for (const n of names || []) if (!brands.some((b) => b.name === n)) errors.push(`${where(i, field)}: unknown brand "${n}" (see config/brands.ts)`);
+  };
+  blocks.forEach((b, i) => {
+    for (const [at, str] of strings(b)) {
+      for (const [, token] of str.matchAll(/\{(\w+)\}/g)) {
+        const ok = token === 'count' ? at.endsWith('caption') : typeof site[token as SiteToken] === 'string';
+        if (!ok) errors.push(`${where(i, at)}: unknown token {${token}}`);
+      }
+    }
+    if (b.type === 'hero' && typeof b.aside === 'object') {
+      const s = study(b.aside.proofCard);
+      if (!s) errors.push(`${where(i, 'aside.proofCard')}: unknown case study "${b.aside.proofCard}"`);
+      else if (!s.card) errors.push(`${where(i, 'aside.proofCard')}: case study "${s.slug}" has no card`);
+    }
+    if (b.type === 'caseStudyCards') {
+      b.caseStudies.forEach((slug, j) => {
+        const s = study(slug);
+        if (!s) errors.push(`${where(i, `caseStudies.${j}`)}: unknown case study "${slug}"`);
+        else if (s.status !== 'published') errors.push(`${where(i, `caseStudies.${j}`)}: "${slug}" is not published`);
+        else if (!s.card) errors.push(`${where(i, `caseStudies.${j}`)}: case study "${slug}" has no card`);
+      });
+      brandNames(b.brandStrip?.brands, i, 'brandStrip.brands');
+    }
+    if (b.type === 'proofResults') {
+      b.caseStudies.forEach((slug, j) => {
+        const s = study(slug);
+        if (!s) errors.push(`${where(i, `caseStudies.${j}`)}: unknown case study "${slug}"`);
+        else if (!s.proof?.length) errors.push(`${where(i, `caseStudies.${j}`)}: case study "${slug}" has no proof tabs`);
+      });
+    }
+    if (b.type === 'brandStrip') brandNames(b.brands, i, 'brands');
+  });
+}
+
+/** Ids a page exposes as #anchors: block ids, plus the hero's #top. */
+function anchorIds(blocks: Block[]): Set<string> {
+  return new Set(blocks.flatMap((b) => [b.id, b.type === 'hero' ? 'top' : undefined]).filter(Boolean));
+}
+
+/** Internal links in content and config must resolve to a route, a content slug or a homepage anchor. */
+function checkLinks(pages: Page[], studies: CaseStudy[], errors: string[]) {
+  const routes = staticRoutes();
+  for (const c of studies) routes.add(`/case-studies/${c.slug}`);
+  const home = pages.find((p) => p.slug === 'home');
+  const homeIds = anchorIds(home?.blocks || []);
+  const resolves = (href: string, pageIds: Set<string>) => {
+    if (/^(https?:|mailto:|tel:)/.test(href)) return true;
+    if (href.startsWith('#')) return pageIds.has(href.slice(1));
+    const [route, hash] = href.split('#');
+    if (!routes.has(route)) return false;
+    // If home.mdx itself failed to load, its own error is the one to fix.
+    return !hash || (route === '/' && (!home || homeIds.has(hash)));
+  };
+  for (const p of pages) {
+    const ids = anchorIds(p.blocks);
+    for (const [at, str] of strings(p.blocks)) {
+      if (/\.href$/.test(at) && !resolves(str, ids)) errors.push(`content/pages/${p.slug}.mdx: blocks${at}: link "${str}" does not resolve`);
+    }
+  }
+  const navLinks = [...headerNav, ...footerNav.flatMap((g) => g.links), ...legalNav].filter((l) => !l.hidden);
+  if (site.announcement) navLinks.push({ label: 'announcement', href: site.announcement.href });
+  for (const l of navLinks) if (!resolves(l.href, homeIds)) errors.push(`config: link "${l.label}" → "${l.href}" does not resolve`);
+}
+
 let cache: Loaded | null = null;
 
 /** Loads all content and collects every error instead of stopping at the first one. */
@@ -98,9 +192,18 @@ export function loadContent(): Loaded {
     }
   }
 
+  const studies = caseStudyEntries.map((e) => e.data);
+  const pageEntries = loadDir<Page>('pages', page, errors);
+  for (const { file, data } of pageEntries) checkBlocks(file, data.blocks, studies, errors);
+  for (const b of brands) {
+    if (b.logo && !publicFileExists(b.logo)) errors.push(`config/brands.ts: logo not found for "${b.name}": public${b.logo}`);
+  }
+  const pages = pageEntries.map((e) => e.data);
+  checkLinks(pages, studies, errors);
+
   scanPlaceholders(errors);
 
-  cache = { caseStudies: caseStudyEntries.map((e) => e.data), errors };
+  cache = { caseStudies: studies, pages, errors };
   return cache;
 }
 
@@ -143,4 +246,14 @@ export function getNextCaseStudy(slug: string): PublishedCaseStudy | null {
   const idx = published.findIndex((c) => c.slug === slug);
   if (idx === -1) return null;
   return published[(idx + 1) % published.length];
+}
+
+// ---------------------------------------------------------------------------
+// Pages (block lists)
+// ---------------------------------------------------------------------------
+
+export function getPage(slug: string): Page {
+  const p = content().pages.find((x) => x.slug === slug);
+  if (!p) throw new Error(`content/pages/${slug}.mdx not found`);
+  return p;
 }

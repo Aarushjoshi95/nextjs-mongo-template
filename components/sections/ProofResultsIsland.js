@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState, useCallback } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight, Pause, Play } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'framer-motion';
-import { proofData, realSeries, niceTicks } from '@/lib/content/proofData';
+import { realSeries, niceTicks } from '@/lib/proofSeries';
 
 /* ------------------------------------------------------------------ */
 /*  Deterministic series builders (no Math.random => SSR-safe)         */
@@ -59,231 +59,49 @@ const axisK = (v) => (v === 0 ? '0' : `${v}K`);
 const fmtM = (v) => `${v.toFixed(1)}M`;
 const axisM = (v) => (v === 0 ? '0' : `${v}M`);
 
-const TABS = [
-  {
-    id: 'traya-revenue',
-    chapter: 'In-house',
-    client: 'Traya',
-    pill: 'Traya · Revenue',
-    sector: 'D2C hair-health brand',
-    metric: { value: 450, prefix: '$', suffix: 'K' },
-    body: 'attributable revenue built from $0 — D0 acquisition driven through SEO-led initiatives at a D2C hair-health brand.',
-    before: { label: 'Revenue · before', value: '$0' },
-    after: { label: 'Revenue · after', value: '$450K' },
-    chart: {
-      caption: 'Cumulative attributed revenue',
-      window: '24 months',
-      yTicks: [0, 150, 300, 450],
-      xEvery: 6,
-      fmt: fmtRevenue,
-      fmtAxis: axisRevenue,
-      dots: true,
-      series: buildFromAnchors({
-        before: 4,
-        anchors: [{ t: 0, v: 0, label: '$0 at kick-off' }, { t: 24, v: 450, label: '$450K' }],
-        curve: 2.2,
-        seed: 11,
-      }),
-    },
-  },
-  {
-    id: 'traya-traffic',
-    chapter: 'In-house',
-    client: 'Traya',
-    pill: 'Traya · Non-brand traffic',
-    sector: 'D2C hair-health brand',
-    metric: { value: 21, prefix: '', suffix: '×' },
-    body: 'non-brand organic traffic in 2 years, starting from scratch — an SEO engine returning 6×+ attributable ROI.',
-    before: { label: 'Clicks · before', value: '1K/day' },
-    after: { label: 'Clicks · after', value: '15K+/day' },
-    chart: {
-      caption: 'Daily clicks · Google Search Console',
-      window: '16 months',
-      yTicks: [0, 4, 8, 12, 16],
-      xEvery: 4,
-      fmt: fmtClicksDay,
-      fmtAxis: axisK,
-      dots: false,
-      series: buildFromAnchors({
-        before: 5,
-        step: 0.25,
-        anchors: [{ t: 0, v: 1, label: '1K/day' }, { t: 16, v: 15.4, label: '15K+/day' }],
-        curve: 1.9,
-        noise: 0.11,
-        beforeNoise: 0.09,
-        seed: 23,
-      }),
-    },
-  },
-  {
-    id: 'edtech-revenue',
-    chapter: 'Client',
-    client: 'EdTech',
-    pill: 'EdTech · Revenue',
-    sector: 'K-12 EdTech brand',
-    metric: { value: 700, prefix: '$', suffix: 'K+' },
-    body: 'revenue generated in 8 months from $0 — a client-facing SEO engagement with a K-12 EdTech brand.',
-    before: { label: 'Revenue · before', value: '$0' },
-    after: { label: 'Revenue · 8 mo', value: '$700K+' },
-    chart: {
-      caption: 'Cumulative attributed revenue',
-      window: '8 months',
-      yTicks: [0, 250, 500, 750],
-      xEvery: 2,
-      fmt: fmtRevenue,
-      fmtAxis: axisRevenue,
-      dots: true,
-      series: buildFromAnchors({
-        before: 3,
-        anchors: [{ t: 0, v: 0, label: '$0 at kick-off' }, { t: 8, v: 700, label: '$700K+' }],
-        curve: 1.8,
-        seed: 7,
-      }),
-    },
-  },
-  {
-    id: 'edtech-share',
-    chapter: 'Client',
-    client: 'EdTech',
-    pill: 'EdTech · Organic share',
-    sector: 'K-12 EdTech brand',
-    metric: { value: 20, prefix: '', suffix: '%' },
-    body: 'of net business came from the organic channel — built from a standing start inside 8 months.',
-    before: { label: 'Organic share · before', value: '0%' },
-    after: { label: 'Organic share · after', value: '20%' },
-    chart: {
-      caption: 'Daily clicks · Google Search Console',
-      window: '8 months',
-      yTicks: [0, 8, 16, 24],
-      xEvery: 2,
-      fmt: fmtClicksDay,
-      fmtAxis: axisK,
-      dots: false,
-      series: buildFromAnchors({
-        before: 3,
-        step: 0.125,
-        anchors: [{ t: 0, v: 0.15, label: '~0 at kick-off' }, { t: 8, v: 24, label: '24K/day' }],
-        curve: 2.4,
-        noise: 0.14,
-        beforeNoise: 0.35,
-        seed: 41,
-      }),
-    },
-  },
-  {
-    id: 'beauty-blog-clicks',
-    chapter: 'Client',
-    client: 'Beauty D2C',
-    pill: 'Beauty brand · Blog clicks',
-    sector: 'India’s leading beauty brand',
-    slug: 'd2c-beauty-brand-157-percent-growth',
-    metric: { value: 158, prefix: '+', suffix: '%' },
-    body: 'blog clicks quarter over quarter (78.7K → 203K) from a product-led SEO engine built on content, technical and link velocity — leads up 25–80%.',
-    before: { label: 'Blog clicks · quarter', value: '78.7K' },
-    after: { label: 'Blog clicks · quarter', value: '203K' },
-    chart: {
-      caption: 'Blog clicks · trailing 3 months (GSC, /blogs/)',
-      window: '6 months',
-      yTicks: [0, 75, 150, 225],
-      xEvery: 2,
-      fmt: fmtK,
-      fmtAxis: axisK,
-      dots: false,
-      series: buildFromAnchors({
-        before: 3,
-        step: 0.25,
-        anchors: [{ t: 0, v: 78.7, label: '78.7K / qtr' }, { t: 6, v: 203, label: '203K / qtr' }],
-        curve: 1.5,
-        noise: 0.05,
-        beforeNoise: 0.04,
-        seed: 59,
-      }),
-    },
-  },
-  {
-    id: 'luxury-nonbrand',
-    chapter: 'Client',
-    client: 'Luxury D2C',
-    pill: 'Luxury D2C · Non-brand traffic',
-    sector: 'India’s leading luxury D2C brand',
-    slug: 'luxury-d2c-48-percent-growth-6-months',
-    metric: { value: 53, prefix: '+', suffix: '%' },
-    body: 'non-brand traffic (260K → 397K/mo) by moving money pages from positions 30–40 into the top 5 — direct attributable revenue up 30% a month.',
-    before: { label: 'Non-brand · before', value: '260K/mo' },
-    after: { label: 'Non-brand · after', value: '397K/mo' },
-    chart: {
-      caption: 'Monthly non-brand sessions',
-      window: '6 months',
-      yTicks: [0, 150, 300, 450],
-      xEvery: 2,
-      fmt: fmtK,
-      fmtAxis: axisK,
-      dots: true,
-      series: buildFromAnchors({
-        before: 3,
-        step: 0.5,
-        anchors: [{ t: 0, v: 260, label: '260K / mo' }, { t: 6, v: 397, label: '397K / mo' }],
-        curve: 1.35,
-        noise: 0.02,
-        beforeNoise: 0.02,
-        seed: 73,
-      }),
-    },
-  },
-  {
-    id: 'publisher-discover',
-    chapter: 'Client',
-    client: 'Lifestyle publisher',
-    pill: 'Publisher · Google Discover',
-    sector: 'Lifestyle publisher, DR < 25',
-    slug: 'google-discover-1m-traffic-3-months',
-    metric: { value: 164, prefix: '', suffix: 'K' },
-    body: 'Discover clicks in 3 months (2.2M impressions) on a sub-DR-25 site — and quarterly search impressions up 414%, from 4.7M to 24.3M.',
-    before: { label: 'Impressions · Q1 ’22', value: '4.7M' },
-    after: { label: 'Impressions · Q1 ’23', value: '24.3M' },
-    chart: {
-      caption: 'Search impressions · trailing quarter (GSC)',
-      window: '12 months',
-      yTicks: [0, 10, 20, 30],
-      xEvery: 3,
-      fmt: fmtM,
-      fmtAxis: axisM,
-      dots: true,
-      series: buildFromAnchors({
-        before: 3,
-        step: 0.5,
-        anchors: [{ t: 0, v: 4.7, label: '4.7M · Q1 ’22' }, { t: 12, v: 24.3, label: '24.3M · Q1 ’23' }],
-        curve: 1.6,
-        noise: 0.03,
-        beforeNoise: 0.03,
-        seed: 97,
-      }),
-    },
-  },
-];
+// Formatter pairs (value, axis) by the `format` key in each proof tab.
+const FORMATS = {
+  revenue: [fmtRevenue, axisRevenue],
+  clicksDay: [fmtClicksDay, axisK],
+  k: [fmtK, axisK],
+  m: [fmtM, axisM],
+};
 
-// Every tab is anchored to the figures reported in its case study.
-TABS.forEach((t) => {
-  const last = t.chart.series[t.chart.series.length - 1];
-  t.chart.endLabel = t.chart.endLabel || (last.anchor ? last.anchor.label : t.chart.fmt(last.v));
-  t.chart.source = 'Anchored to reported figures';
-});
-
-// Swap in real numbers from lib/content/proofData.js wherever they exist.
-TABS.forEach((t) => {
-  const real = realSeries(proofData[t.id]);
-  if (!real) return;
-  const max = Math.max(...real.pts.map((p) => p.v));
-  t.chart = {
-    ...t.chart,
-    series: real.pts,
-    yTicks: niceTicks(max),
-    labels: real.labels,
-    endLabel: real.endLabel || t.chart.fmt(real.pts[real.pts.length - 1].v),
-    source: 'Actual figures',
-    real: true,
-  };
-});
+/**
+ * Turns proof tabs from content (plain data) into chart-ready tabs. Every tab is anchored
+ * to the figures reported in its case study; a tab's real `series` replaces the curve.
+ */
+function buildTabs(data) {
+  return data.map(({ chart: { curve, anchors, format, ...chart }, series: realData, ...tab }) => {
+    const [fmt, fmtAxis] = FORMATS[format];
+    const series = buildFromAnchors({ ...curve, anchors });
+    const last = series[series.length - 1];
+    const t = {
+      ...tab,
+      chart: {
+        ...chart,
+        fmt,
+        fmtAxis,
+        series,
+        endLabel: last.anchor ? last.anchor.label : fmt(last.v),
+        source: 'Anchored to reported figures',
+      },
+    };
+    const real = realSeries(realData);
+    if (!real) return t;
+    const max = Math.max(...real.pts.map((p) => p.v));
+    t.chart = {
+      ...t.chart,
+      series: real.pts,
+      yTicks: niceTicks(max),
+      labels: real.labels,
+      endLabel: real.endLabel || t.chart.fmt(real.pts[real.pts.length - 1].v),
+      source: 'Actual figures',
+      real: true,
+    };
+    return t;
+  });
+}
 
 /* ------------------------------------------------------------------ */
 /*  Hooks                                                              */
@@ -625,7 +443,8 @@ function GrowthChart({ tab, width, availHeight = 0, play, reduced, onScrub }) {
 /* ------------------------------------------------------------------ */
 const ROTATE_MS = 6500;
 
-export default function ProofResults() {
+export default function ProofResultsIsland({ id, eyebrow, title, intro, tabs, cta, footnote }) {
+  const TABS = useMemo(() => buildTabs(tabs), [tabs]);
   const [active, setActive] = useState(0);
   const [autoplay, setAutoplay] = useState(true); // turns off for good once a visitor picks a tab
   const [hovering, setHovering] = useState(false);
@@ -703,7 +522,7 @@ export default function ProofResults() {
 
   return (
     <section
-      id="results"
+      id={id}
       ref={sectionRef}
       className="relative overflow-clip section-y border-t border-line"
       data-testid="proof-results-section"
@@ -714,13 +533,15 @@ export default function ProofResults() {
       <div className="container-max relative">
         {/* heading */}
         <div className="max-w-3xl">
-          <span className="eyebrow mb-6">Receipts, not theory</span>
+          <span className="eyebrow mb-6">{eyebrow}</span>
           <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">
-            Proof, not just <span className="text-accent">theory</span>.
+            {title}
           </h2>
-          <p className="text-muted text-[17px] mt-5 max-w-2xl">
-            Seven chapters, in-house and client-side. Each one tied to a number the business could count — revenue, non-brand traffic or a channel built from zero.
-          </p>
+          {intro && (
+            <p className="text-muted text-[17px] mt-5 max-w-2xl">
+              {intro}
+            </p>
+          )}
         </div>
 
         {/* interactive area: hovering / focusing anything inside pauses the auto-rotation */}
@@ -865,7 +686,7 @@ export default function ProofResults() {
 
               {tab.slug && (
                 <Link href={`/case-studies/${tab.slug}`} className="link-underline mt-6 text-[14px] self-start" data-testid="proof-case-link">
-                  Read the full case study <ArrowRight className="w-3.5 h-3.5" />
+                  {tab.comingSoon ? 'Full case study coming soon' : 'Read the full case study'} <ArrowRight className="w-3.5 h-3.5" />
                 </Link>
               )}
             </motion.div>
@@ -900,11 +721,11 @@ export default function ProofResults() {
 
         {/* footer */}
         <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-4 mt-12 lg:mt-14 pt-7 border-t border-line">
-          <Link href="#proof" className="btn-primary" data-testid="proof-cta">
-            Read the case studies <ArrowRight className="w-4 h-4" />
+          <Link href={cta.href} className="btn-primary" data-testid="proof-cta">
+            {cta.label} <ArrowRight className="w-4 h-4" />
           </Link>
           <span className="text-[12px] leading-relaxed max-w-[52ch] text-muted">
-            Ringed markers are the figures reported in each case study (Google Search Console / analytics). The curve between markers is interpolated to show the shape of growth, not month-by-month actuals.
+            {footnote}
           </span>
         </div>
       </div>

@@ -3,14 +3,28 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { ArrowRight, ChevronLeft, ChevronRight } from 'lucide-react';
+import type { CaseStudyCard } from '@/lib/schema';
 
 /**
  * Swipeable, scroll-snap carousel for the homepage case-study cards.
  * Native horizontal scrolling (touch + trackpad) with arrow buttons and dot indicators.
  * Shows 1 card on mobile, 2 on large screens, matching the previous 2-column grid.
  */
-export default function CaseStudyCarousel({ cases = [] }) {
-  const trackRef = useRef(null);
+export type CarouselCase = {
+  slug: string;
+  tags: string[];
+  title: string;
+  headline: string;
+  headlineLabel: string;
+  beforeLabel: string;
+  beforeValue: string;
+  afterLabel: string;
+  afterValue: string;
+  chips: CaseStudyCard['chips'];
+};
+
+export default function CaseStudyCarousel({ cases = [] }: { cases: CarouselCase[] }) {
+  const trackRef = useRef<HTMLDivElement>(null);
   const [index, setIndex] = useState(0);
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(true);
@@ -18,7 +32,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
   const measure = useCallback(() => {
     const track = trackRef.current;
     if (!track) return;
-    const cards = Array.from(track.children);
+    const cards = Array.from(track.children) as HTMLElement[];
     if (!cards.length) return;
     const left = track.scrollLeft;
     let best = 0;
@@ -51,7 +65,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
     if (!track) return;
     const cards = track.children;
     const clamped = Math.max(0, Math.min(cards.length - 1, i));
-    const card = cards[clamped];
+    const card = cards[clamped] as HTMLElement;
     if (!card) return;
     const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
     track.scrollTo({ left: card.offsetLeft, behavior: reduced ? 'auto' : 'smooth' });
@@ -60,7 +74,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
   const step = (dir) => {
     const track = trackRef.current;
     if (!track) return;
-    const card = track.children[0];
+    const card = track.children[0] as HTMLElement;
     if (!card) return;
     const gap = parseFloat(getComputedStyle(track).columnGap || getComputedStyle(track).gap || '20') || 20;
     const reduced = typeof window !== 'undefined' && window.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
