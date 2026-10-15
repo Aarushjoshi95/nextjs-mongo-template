@@ -17,6 +17,8 @@ npm run start        # serve the production build
 
 There are no tests, lint or typecheck yet (Phase 4/5 add them). Until then `npm run build` and a manual browser check are the gate.
 
+**Never run `npm run build` while the dev server may be running.** Both write to `.next/`, so a build breaks the running dev server. Check first (e.g. a `next dev` process or port 3000 in use). If it is running, ask the user to stop it, or build into a separate folder instead.
+
 ### Package managers
 
 npm is used locally. Emergent hosting may still install with yarn, so `package.json` keeps `packageManager` (yarn) and `resolutions`. `overrides` mirrors the same pins for npm. **Change a pin in both places.** Keep both until the hosting decision is made, then delete the unused one.
