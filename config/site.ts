@@ -17,7 +17,7 @@ export const site = {
   sectors: ['edtech', 'D2C', 'BFSI', 'media'],
   experience: '8+ years',
   footerBlurb: 'AEO, GEO and organic growth for brands that want to be the answer, measured against leads and revenue.',
-  email: 'team@aarusjoshi.in',
+  email: 'team@aarushjoshi.in',
   linkedin: 'https://www.linkedin.com/in/aarushjoshi/',
   location: 'Bengaluru, India',
   areaServed: ['IN', 'US', 'GB', 'AE'],
