@@ -4,6 +4,7 @@ Personal site for Aarush (aarushjoshi.in), an SEO / organic growth advisor. Next
 
 - **PLAN.md**: the phased restructure plan. Source of truth for what is being done and in which order.
 - **ARCHITECTURE.md**: the current and target system. Read it before adding new files or folders.
+- **BUGS.md**: open bugs, launch checklist and open questions from the QA sweep. Read it at the start of every session.
 
 ## Commands
 
