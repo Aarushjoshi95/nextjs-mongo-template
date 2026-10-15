@@ -11,11 +11,11 @@ export default function Breadcrumb({ items, className = '' }: { items: Crumb[]; 
   return (
     <>
       <JsonLd data={jsonLd(breadcrumbSchema(items))} />
-      <nav aria-label="Breadcrumb" className={`flex items-center gap-1.5 text-[12.5px] text-muted ${className}`.trim()}>
+      <nav aria-label="Breadcrumb" className={`flex flex-wrap items-center gap-x-1.5 gap-y-1 text-[12.5px] text-muted ${className}`.trim()}>
         {items.map((it, i) =>
           i < items.length - 1 ? (
             <span key={it.url} className="contents">
-              <Link href={it.url} className="hover:text-ink">{it.name}</Link>
+              <Link href={it.url} className="whitespace-nowrap hover:text-ink">{it.name}</Link>
               <ChevronRight className="w-3.5 h-3.5" />
             </span>
           ) : (
