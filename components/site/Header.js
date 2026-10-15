@@ -4,15 +4,10 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { Menu, X } from 'lucide-react';
 import { BookButton } from '@/components/site/BookingModal';
+import { site } from '@/config/site';
+import { headerNav, visible } from '@/config/nav';
 
-const nav = [
-  { label: 'AI visibility services', href: '/#offers' },
-  { label: 'Case studies', href: '/#proof' },
-  { label: 'How it works', href: '/#how' },
-  { label: 'FAQ', href: '/#faq' },
-  { label: 'Free tools', href: '/tools' },
-  { label: 'About', href: '/#about' },
-];
+const nav = visible(headerNav);
 
 export default function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -30,11 +25,11 @@ export default function Header() {
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-black focus:text-white focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
       <header className={`sticky top-0 z-40 transition-all duration-200 ${scrolled ? 'backdrop-blur-md bg-paper/80 border-b border-line' : 'bg-transparent'}`}>
         <div className="container-max flex items-center justify-between h-16 lg:h-20">
-          <Link href="/#top" className="flex items-center gap-3 group" aria-label="Aarush home">
-            <span className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
+          <Link href="/#top" className="flex items-center gap-3 group" aria-label={`${site.name} home`}>
+            <span className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>{site.name[0]}</span>
             <span className="flex flex-col leading-tight">
-              <span className="text-[15px] font-semibold tracking-tight">Aarush</span>
-              <span className="text-[11px] text-muted -mt-0.5">AI Search Visibility</span>
+              <span className="text-[15px] font-semibold tracking-tight">{site.name}</span>
+              <span className="text-[11px] text-muted -mt-0.5">{site.tagline}</span>
             </span>
           </Link>
 

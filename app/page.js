@@ -8,10 +8,10 @@ import BrandWall from '@/components/site/BrandWall';
 import ProofResults from '@/components/site/ProofResults';
 import CaseStudyCarousel from '@/components/site/CaseStudyCarousel';
 import { BookButton, CAL_LINK } from '@/components/site/BookingModal';
+import { site, headlineStats } from '@/config/site';
 
+// Title and description inherit the site defaults built from config/site.
 export const metadata = {
-  title: 'Aarush · Get recommended when buyers ask AI',
-  description: 'AI search visibility for funded startups, D2C and edtech. I help brands show up, get cited and get chosen inside ChatGPT, Claude, Gemini, Perplexity and Google AI Overviews — tied to leads and revenue.',
   alternates: { canonical: '/' },
 };
 
@@ -73,6 +73,9 @@ const reportMetrics = [
 ];
 
 export default function HomePage() {
+  // The positioning line is the H1; its last word takes the accent colour.
+  const words = site.positioning.split(' ');
+  const lastWord = words.pop();
   return (
     <>
       <Header />
@@ -82,9 +85,9 @@ export default function HomePage() {
           <div className="container-max">
             <div className="grid lg:grid-cols-[1.1fr_1fr] gap-12 lg:gap-16 items-center">
               <div className="fade-in">
-                <span className="eyebrow mb-8">For funded startups, D2C and edtech brands</span>
+                <span className="eyebrow mb-8">For {site.audience}</span>
                 <h1 className="text-[clamp(40px,6.5vw,76px)] font-semibold leading-[1.03] tracking-[-0.025em] mb-7">
-                  Get recommended when buyers ask <span className="text-accent">AI</span>.
+                  {words.join(' ')} <span className="text-accent">{lastWord}</span>.
                 </h1>
                 <p className="text-[clamp(17px,1.5vw,20px)] text-muted max-w-xl leading-[1.6] mb-6">
                   I help brands show up, get cited and get chosen inside ChatGPT, Claude, Gemini, Perplexity and Google AI Overviews — and I tie that visibility back to leads and revenue.
@@ -96,7 +99,7 @@ export default function HomePage() {
                   <BookButton className="btn-primary" data-testid="hero-book-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
                   <Link href="#proof" className="btn-ghost">See the proof</Link>
                 </div>
-                <p className="text-[14px] text-muted mt-8 max-w-md">8+ years in organic growth. Now focused on one question: <span className="text-ink font-medium">when your buyer asks an AI, does it name you?</span></p>
+                <p className="text-[14px] text-muted mt-8 max-w-md">{site.experience} in organic growth. Now focused on one question: <span className="text-ink font-medium">when your buyer asks an AI, does it name you?</span></p>
               </div>
               <PromptDemo />
             </div>
@@ -107,15 +110,10 @@ export default function HomePage() {
         <section className="border-y border-line bg-surface">
           <div className="container-max py-14">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-4 md:divide-x md:divide-line">
-              {[
-                { v: '8+ yrs', l: 'organic growth across edtech, D2C, fintech' },
-                { v: '0 → $1Mn+', l: 'ARR built through organic' },
-                { v: '50Mn+', l: 'traffic added across clients' },
-                { v: '4 engines', l: 'tracked prompt by prompt: ChatGPT, Claude, Gemini, Perplexity' },
-              ].map((s, i) => (
+              {headlineStats.map((s, i) => (
                 <div key={i} className="md:px-8 first:md:pl-0">
-                  <div className="font-mono text-[clamp(28px,4vw,42px)] font-medium text-accent leading-none tracking-tight">{s.v}</div>
-                  <div className="text-[12px] uppercase tracking-[0.08em] text-muted mt-4 leading-snug max-w-[220px]">{s.l}</div>
+                  <div className="font-mono text-[clamp(28px,4vw,42px)] font-medium text-accent leading-none tracking-tight">{s.value}</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-muted mt-4 leading-snug max-w-[220px]">{s.label}</div>
                 </div>
               ))}
             </div>

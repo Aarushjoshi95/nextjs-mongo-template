@@ -1,7 +1,8 @@
 import { getPublishedCaseStudies } from '@/lib/content/caseStudies';
 import { tools } from '@/lib/content/tools';
+import { site } from '@/config/site';
 
-const SITE = 'https://aarushjoshi.in';
+const SITE = site.url;
 
 export default function sitemap() {
   const now = new Date();

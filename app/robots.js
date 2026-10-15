@@ -1,4 +1,6 @@
-const SITE = 'https://aarushjoshi.in';
+import { site } from '@/config/site';
+
+const SITE = site.url;
 
 export default function robots() {
   return {

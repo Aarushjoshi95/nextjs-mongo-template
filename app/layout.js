@@ -2,28 +2,29 @@ import './globals.css'
 import { Inter, Inter_Tight, JetBrains_Mono } from 'next/font/google'
 import { Providers } from './providers'
 import JsonLd from '@/components/site/JsonLd'
-import { jsonLd, personSchema, organizationSchema, websiteSchema } from '@/lib/seo'
+import { jsonLd, personSchema, organizationSchema, websiteSchema, SITE_TITLE } from '@/lib/seo'
+import { site } from '@/config/site'
 
 const inter = Inter({ subsets: ['latin'], weight: ['400', '500', '600', '700'], display: 'swap', variable: '--font-sans' })
 const interTight = Inter_Tight({ subsets: ['latin'], weight: ['500', '600', '700'], display: 'swap', variable: '--font-display' })
 const jetbrainsMono = JetBrains_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], display: 'swap', variable: '--font-mono' })
 
 export const metadata = {
-  metadataBase: new URL('https://aarushjoshi.in'),
+  metadataBase: new URL(site.url),
   title: {
-    default: 'Aarush · SEO that reports to revenue, not rankings',
-    template: '%s · Aarush',
+    default: SITE_TITLE,
+    template: `%s · ${site.name}`,
   },
-  description: 'Organic growth advisor with 8+ years across edtech, D2C and fintech. I treat organic as a P&L-accountable revenue channel.',
+  description: site.description,
   openGraph: {
     type: 'website',
-    title: 'Aarush · SEO that reports to revenue, not rankings',
-    description: 'Organic growth advisor. 8+ years across edtech, D2C and fintech.',
-    siteName: 'Aarush',
+    title: SITE_TITLE,
+    description: site.description,
+    siteName: site.name,
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Aarush · SEO that reports to revenue, not rankings',
+    title: SITE_TITLE,
   },
   alternates: { canonical: '/' },
   robots: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },

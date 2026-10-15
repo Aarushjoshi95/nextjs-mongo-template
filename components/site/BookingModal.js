@@ -3,6 +3,7 @@
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import { ArrowRight, ArrowUpRight, Check, Loader2 } from 'lucide-react';
 import { Dialog, DialogContent, DialogTitle, DialogDescription } from '@/components/ui/dialog';
+import { site } from '@/config/site';
 
 /** Calendly inline-embed URL, themed to the site and prefilled where possible. */
 function calendlyEmbedUrl({ name, email } = {}) {
@@ -42,7 +43,8 @@ function CalendlyInline({ name, email }) {
   );
 }
 
-export const CAL_LINK = 'https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call';
+// The Calendly URL lives in config/site; re-exported so CTAs keep importing it from here.
+export const CAL_LINK = site.calLink;
 
 // ---------- Context ----------
 const BookingContext = createContext({ open: false, openBooking: () => {}, closeBooking: () => {} });
