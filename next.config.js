@@ -6,6 +6,8 @@ const nextConfig = {
   output: 'standalone',
   // Pin the workspace root so a stray lockfile in a parent folder isn't picked up.
   outputFileTracingRoot: path.join(__dirname),
+  // Pages read content/ at build time; ship it with the standalone server in case a route renders at runtime.
+  outputFileTracingIncludes: { '/*': ['./content/**/*'] },
   images: {
     unoptimized: true,
     remotePatterns: [
