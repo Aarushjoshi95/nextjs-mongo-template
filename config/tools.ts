@@ -1,5 +1,14 @@
-// Registry of free tools. Used by the /tools hub, the header nav and per-tool pages.
-export const tools = [
+// Registry of free tools. Used by the /tools hub, the nav, per-tool pages, the sitemap and llms.txt.
+export type Tool = {
+  slug: string;
+  name: string;
+  short: string;
+  description: string;
+  tags: string[];
+  eyebrow?: string;
+};
+
+export const tools: Tool[] = [
   {
     slug: 'ai-visibility-checker',
     name: 'AI Visibility Checker',
@@ -36,6 +45,6 @@ export const tools = [
   },
 ];
 
-export function getTool(slug) {
+export function getTool(slug: string): Tool | null {
   return tools.find((t) => t.slug === slug) || null;
 }

@@ -1,5 +1,5 @@
 import { getPublishedCaseStudies } from '@/lib/content/caseStudies';
-import { tools } from '@/lib/content/tools';
+import { tools } from '@/config/tools';
 import { site } from '@/config/site';
 
 const SITE = site.url;

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BookButton } from '@/components/site/BookingModal';
-import { tools } from '@/lib/content/tools';
+import { tools } from '@/config/tools';
 import JsonLd from '@/components/site/JsonLd';
 import Breadcrumb from '@/components/site/Breadcrumb';
 import { jsonLd, toolSchema } from '@/lib/seo';

@@ -1,6 +1,6 @@
 import ToolShell from '@/components/tools/ToolShell';
 import CtrOpportunityCalculator from '@/components/tools/CtrOpportunityCalculator';
-import { getTool } from '@/lib/content/tools';
+import { getTool } from '@/config/tools';
 
 const tool = getTool('ctr-position-opportunity-calculator');
 

@@ -1,5 +1,5 @@
 // Header and footer links. The header and footer render these lists as-is.
-import { tools } from '@/lib/content/tools';
+import { tools } from '@/config/tools';
 
 export type NavLink = { label: string; href: string; hidden?: boolean };
 

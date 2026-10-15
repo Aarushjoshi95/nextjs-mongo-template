@@ -1,6 +1,6 @@
 import ToolShell from '@/components/tools/ToolShell';
 import VisibilityChecker from '@/components/tools/VisibilityChecker';
-import { getTool } from '@/lib/content/tools';
+import { getTool } from '@/config/tools';
 
 const tool = getTool('ai-visibility-checker');
 

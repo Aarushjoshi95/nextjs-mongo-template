@@ -1,6 +1,6 @@
 import ToolShell from '@/components/tools/ToolShell';
 import TrafficDropCalculator from '@/components/tools/TrafficDropCalculator';
-import { getTool } from '@/lib/content/tools';
+import { getTool } from '@/config/tools';
 
 const tool = getTool('traffic-drop-loss-calculator');
 

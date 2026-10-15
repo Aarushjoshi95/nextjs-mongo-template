@@ -25,7 +25,9 @@
         "recharts": "2.15.3",
         "tailwind-merge": "3.3.1",
         "tailwindcss-animate": "1.0.7",
-        "uuid": "11.1.1"
+        "uuid": "11.1.1",
+        "yaml": "2.8.3",
+        "zod": "3.23.8"
     },
     "devDependencies": {
         "@types/node": "22.9.0",
@@ -35,6 +37,7 @@
         "cross-env": "7.0.3",
         "postcss": "8.5.28",
         "tailwindcss": "3.4.1",
+        "tsx": "4.19.2",
         "typescript": "5.6.3"
     },
     "resolutions": {

@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { BookButton } from '@/components/site/BookingModal';
-import { tools } from '@/lib/content/tools';
+import { tools } from '@/config/tools';
 
 export const metadata = {
   title: 'Free SEO revenue tools & calculators',

@@ -1,6 +1,6 @@
 import ToolShell from '@/components/tools/ToolShell';
 import RevenueImpactCalculator from '@/components/tools/RevenueImpactCalculator';
-import { getTool } from '@/lib/content/tools';
+import { getTool } from '@/config/tools';
 
 const tool = getTool('revenue-impact-calculator');
 
