@@ -157,12 +157,13 @@ Six phases, each on its own branch cut from `rebuild` and merged back into it; t
 
 **Phase 3 — Content as files (1–2 days)**
 
-- [ ] Convert the five case studies to `content/case-studies/*.mdx` with validated frontmatter
-- [ ] Make homepage cards, ProofResults anchors and `llms.txt` read from the same case-study data
-- [ ] Build the shared block library in `components/sections/*`: hero (with proof card), brandStrip, comparisonTable, problemCards, serviceGrid, caseStudyCards, engagements, deliverableTable, steps, fit, faq, relatedConsulting, ctaBand. Each block takes props only and holds no copy
-- [ ] Move homepage copy (offers, FAQ, how-it-works) into `content/pages/home.mdx` as a block list; `app/page.js` renders those blocks and holds no copy. `ProofResults` and the visibility checker stay client islands inside their blocks
-- [ ] Content check in `lib/content.ts`, run as `prebuild`: validates frontmatter, block types and required fields; resolves case-study, consulting and logo references; fails the build on any `[PLACEHOLDER]` text in `content/` or `config/` (exact, case-sensitive match)
-- [ ] Generate `sitemap.ts` and `llms.txt` from content, not by hand
+- [x] Convert the five case studies to `content/case-studies/*.mdx` with validated frontmatter; add `status: published | coming-soon` (Traya and K-12 EdTech are coming-soon pages: noindex, out of the sitemap, badged in listings)
+- [x] Make homepage cards, ProofResults anchors and `llms.txt` read from the same case-study data (`card` and `proof` frontmatter)
+- [x] Build the shared block library in `components/sections/*`: hero (with proof card), statStrip, brandStrip, problemCards, serviceGrid, caseStudyCards, engagements, steps, fit, faq, proofResults, ctaBand. Each block takes props only and holds no copy. comparisonTable, deliverableTable and relatedConsulting move to Phase 4 with the consulting pages that need them
+- [x] Move homepage copy (offers, FAQ, how-it-works) into `content/pages/home.mdx` as a block list; `app/(site)/page.tsx` renders those blocks and holds no copy. `ProofResults` and the visibility checker stay client islands inside their blocks
+- [x] Content check in `lib/content.ts`, run as `prebuild` / `prebuild:isolated` (`npm run content:check`): validates frontmatter, block types and required fields; resolves case-study, brand, logo, `{token}` and internal-link references; fails the build on any `[PLACEHOLDER]` text in `content/` (published items) or `config/` (exact, case-sensitive match)
+- [x] Generate `sitemap.ts` and `llms.txt` from content, not by hand
+- [x] Route dead internal links: CTABand's `/hire-me` now opens the booking modal; the announcement bar links to the Traya coming-soon page
 
 **Phase 4 — Scale-ready extras (1–2 days)**
 

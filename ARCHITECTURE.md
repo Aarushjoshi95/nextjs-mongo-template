@@ -23,19 +23,23 @@ The phased to-do list lives in [PLAN.md](PLAN.md); this file describes the syste
 | API | One catch-all `app/api/[[...path]]/route.js`: enquiries, visibility check, admin reads |
 | Data | MongoDB: `enquiries`, `visibility_checks` |
 | AI | Gemini 2.5 Flash + "Jev" lead scoring via Emergent's proxy (`EMERGENT_LLM_KEY`) in `lib/ai.js`, `lib/jev.js` |
-| Content | JS objects in `lib/content/` (case studies, tools registry, proof data) plus copy hardcoded in pages/components |
-| SEO | `lib/seo.js` JSON-LD builders, `app/sitemap.js`, `app/robots.js`, `public/llms.txt`, per-page `metadata` |
+| Content | `content/case-studies/*.mdx` and `content/pages/home.mdx` (YAML frontmatter, validated with zod schemas in `lib/schema.ts` through `lib/content.ts`); `config/site.ts`, `config/nav.ts`, `config/tools.ts`, `config/brands.ts` |
+| SEO | `lib/seo.js` JSON-LD builders, `app/sitemap.ts` and `app/llms.txt/route.ts` generated from content, `app/robots.js`, per-page `metadata` |
 
-**Routes:** `/`, `/case-studies`, `/case-studies/[slug]`, `/tools`, four `/tools/*` pages, `/api/*`, `sitemap.xml`, `robots.txt`.
+**Routes:** `/`, `/case-studies`, `/case-studies/[slug]` (published and coming-soon), `/tools`, four `/tools/*` pages, `/privacy`, `/terms`, `/api/*`, `sitemap.xml`, `robots.txt`, `llms.txt`.
+
+**Homepage:** `app/(site)/page.tsx` renders the block list in `content/pages/home.mdx` through `components/sections/Blocks.tsx`. Client islands (ProofResults, case-study carousel, brand wall, FAQ accordion, PromptDemo) get their data as props from server blocks.
 
 **Rendering model:** pages are server components under `app/(site)/`, whose layout renders AnnouncementBar (when `site.announcement` is set), Header, `<main>` and Footer once. Interactivity lives in client islands (ProofResults, BookingModal, PromptDemo, carousels, FAQ, Header). The root layout wraps everything in `BookingProvider` so any CTA can open the booking modal.
 
 **Config:** `config/site.ts` (name, positioning, description, headline stats, contact, socials, Calendly URL) and `config/nav.ts` (header, footer and legal links) feed metadata, JSON-LD, hero, header and footer.
 
+**Content check:** `npm run content:check` (also run as `prebuild` and `prebuild:isolated`) loads everything through `lib/content.ts`. It fails on schema errors, unknown block types, unresolved case-study / brand / logo / `{token}` / internal-link references, non-empty MDX bodies, and `[PLACEHOLDER]` text in published content or `config/`. Coming-soon items need only `slug`, `title` and `status`.
+
 ### Known structural debt
 
-- Content is scattered across page files, components, `lib/content/*`, `lib/seo.js` and `public/llms.txt`, so figures drift.
-- `sitemap` and `llms.txt` are maintained by hand.
+- The case-study page template, tools pages and `lib/seo.js` are not yet on TypeScript; `components/sections/ProofResultsIsland.js` stays JS (about 900 lines of chart code).
+- The case-study page's Outcome paragraph is template copy shared by every case study.
 - AI features and hosting are coupled to Emergent.
 
 ## Target system
@@ -116,11 +120,13 @@ The homepage works the same way: `content/pages/home.mdx` lists its blocks, and 
 | Block (`type`) | Content it takes |
 | --- | --- |
 | `hero` | eyebrow, headline, subhead, primary CTA, optional proof card that points to a case-study slug |
-| `brandStrip` | logo names from `public/logos/` |
+| `statStrip` | none; renders the headline stats from `config/site` |
+| `brandStrip` | label, caption (`{count}`), optional brand names from `config/brands.ts` (logos in `public/logos/`) |
 | `comparisonTable` | column headers and rows |
 | `problemCards` | title and body, repeated |
 | `serviceGrid` | title, body, optional internal link, repeated |
-| `caseStudyCards` | list of case-study slugs; stats and client are read from the case-study file |
+| `caseStudyCards` | list of published case-study slugs (card numbers come from each file's `card`), optional brand strip |
+| `proofResults` | case-study slugs; renders every `proof` tab in those files, in order (interactive chart island) |
 | `engagements` | name, duration, what is included, repeated |
 | `deliverableTable` | deliverable, format, timing |
 | `steps` | ordered title and body |
