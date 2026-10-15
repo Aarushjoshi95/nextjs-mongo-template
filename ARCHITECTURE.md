@@ -17,7 +17,7 @@ The phased to-do list lives in [PLAN.md](PLAN.md); this file describes the syste
 | Layer | Today |
 | --- | --- |
 | Framework | Next.js 15.5 App Router, React 18, plain JavaScript, `output: 'standalone'` |
-| Styling | Tailwind 3.4 + `app/globals.css`: RGB colour tokens (`--ink`, `--line`, `--accent`…) and custom classes (`card-surface`, `eyebrow`, `btn-primary`) |
+| Styling | Tailwind 3.4 + `app/globals.css`: RGB colour tokens mapped to Tailwind colours (`paper`, `surface`, `ink`, `muted`, `line`, `accent`, `positive`) and custom classes (`card-surface`, `eyebrow`, `btn-primary`) |
 | Fonts | Inter, Inter Tight (headings), JetBrains Mono (numerals) |
 | Hosting | Emergent cloud container (`.emergent/`), behind Cloudflare |
 | API | One catch-all `app/api/[[...path]]/route.js`: enquiries, visibility check, admin reads |
@@ -28,13 +28,13 @@ The phased to-do list lives in [PLAN.md](PLAN.md); this file describes the syste
 
 **Routes:** `/`, `/case-studies`, `/case-studies/[slug]`, `/tools`, four `/tools/*` pages, `/api/*`, `sitemap.xml`, `robots.txt`.
 
-**Rendering model:** pages are server components. Interactivity lives in client islands (ProofResults, BookingModal, PromptDemo, carousels, FAQ, Header). The root layout wraps everything in `BookingProvider` so any CTA can open the booking modal.
+**Rendering model:** pages are server components under `app/(site)/`, whose layout renders AnnouncementBar (when `site.announcement` is set), Header, `<main>` and Footer once. Interactivity lives in client islands (ProofResults, BookingModal, PromptDemo, carousels, FAQ, Header). The root layout wraps everything in `BookingProvider` so any CTA can open the booking modal.
+
+**Config:** `config/site.ts` (name, positioning, description, headline stats, contact, socials, Calendly URL) and `config/nav.ts` (header, footer and legal links) feed metadata, JSON-LD, hero, header and footer.
 
 ### Known structural debt
 
-- No shared site layout: each page imports Header, Footer and AnnouncementBar itself.
 - Content is scattered across page files, components, `lib/content/*`, `lib/seo.js` and `public/llms.txt`, so figures drift.
-- Tailwind maps colours as `hsl(var(--x))` while tokens hold RGB, so code uses arbitrary `[rgb(var(--x))]` classes.
 - `sitemap` and `llms.txt` are maintained by hand.
 - AI features and hosting are coupled to Emergent.
 
@@ -160,7 +160,7 @@ Every PR runs build, lint, typecheck, content validation and a broken-link check
 ## Open decisions
 
 1. **Hosting:** stay on Emergent, or move to Vercel / Cloudflare Pages (needs own Gemini key and MongoDB Atlas). Until decided, `.emergent/`, yarn metadata in `package.json` and the Emergent AI proxy stay.
-2. **Positioning line:** "Get recommended when buyers ask AI" vs "SEO that reports to revenue, not rankings".
+2. **Positioning line:** "Get recommended when buyers ask AI" for now; it lives only in `config/site.ts`.
 3. **Repo visibility:** public or private.
 4. **Page mix:** rough split of case studies, articles, service pages, consulting pages and tools within the 100.
 5. **Services vs consulting:** what belongs on `/services` and what belongs on `/consulting`. Until `/services` exists, the nav's Services item points to a homepage anchor.

@@ -149,11 +149,11 @@ Six phases, each on its own branch cut from `rebuild` and merged back into it; t
 
 **Phase 2 — Shared layout, config and tokens (1–2 days)**
 
-- [ ] Create `config/site.ts` and `config/nav.ts`; pick one positioning line and use it in metadata, schema, hero and footer
-- [ ] Move Header, Footer and AnnouncementBar into a `(site)` route-group layout; strip them from every page
-- [ ] Fix Tailwind colour mapping to RGB tokens; replace `[rgb(var(--x))]` classes with semantic ones
-- [ ] Add real Privacy and Terms pages, real LinkedIn, consistent contact email
-- [ ] Set the nav in `config/nav.ts` to Services · Consulting · Case studies · Free tools · FAQ, with footer links read from the same file. Until their pages exist, Services and FAQ point to homepage anchors (confirm the anchors when Phase 2 starts)
+- [x] Create `config/site.ts` and `config/nav.ts`; pick one positioning line and use it in metadata, schema, hero and footer
+- [x] Move Header, Footer and AnnouncementBar into a `(site)` route-group layout; strip them from every page
+- [x] Fix Tailwind colour mapping to RGB tokens; replace `[rgb(var(--x))]` classes with semantic ones
+- [x] Add real Privacy and Terms pages, real LinkedIn, consistent contact email (pages are drafts: noindex, out of the sitemap until approved)
+- [x] Set the nav in `config/nav.ts` to Services · Consulting · Case studies · Free tools · FAQ, with footer links read from the same file. Services → `/#offers`, FAQ → `/#faq`; Consulting is `hidden` until Phase 4
 
 **Phase 3 — Content as files (1–2 days)**
 
@@ -201,7 +201,7 @@ After Phase 4, adding a case study, article, service page or consulting page is 
 
 1. **Hosting:** stay on Emergent, or move to Vercel / Cloudflare Pages (preview URLs per PR, no lock-in; needs own Gemini key and MongoDB Atlas)?
 2. **Who edits content?** Developers only → MDX in Git is enough.
-3. **Positioning:** "Get recommended when buyers ask AI" or "SEO that reports to revenue, not rankings"?
+3. **Positioning:** "Get recommended when buyers ask AI" chosen for now (Phase 2); may change, and lives only in `config/site.ts`.
 4. **Repo visibility:** public or private?
 5. **What the 100 pages are:** rough split of case studies, articles, service pages and tools.
 6. **Lead alerts:** Resend key and inbox still pending.
