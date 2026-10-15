@@ -9,7 +9,7 @@ export default function AnnouncementBar({ text, href }) {
   const [open, setOpen] = useState(true);
   if (!open) return null;
   return (
-    <div className="bg-ink text-paper text-[13px]">
+    <div className="bg-ink text-paper text-[13px]" data-testid="announcement-bar">
       <div className="container-max flex items-center justify-between py-2 gap-4">
         <Link href={href} className="flex items-center gap-2 hover:opacity-80 transition-opacity flex-1 min-w-0">
           <span className="inline-block w-1.5 h-1.5 rounded-full bg-positive shrink-0" />

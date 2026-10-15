@@ -23,7 +23,10 @@ export const site = {
   areaServed: ['IN', 'US', 'GB', 'AE'],
   calLink: 'https://calendly.com/aarushjoshi/seo-growth-strategy-30-mins-audit-call',
   // Site-wide strip above the header; null hides it.
-  announcement: null as { text: string; href: string } | null,
+  announcement: {
+    text: 'Traya: $0 → $450K attributable revenue from organic. Full breakdown coming soon.',
+    href: '/case-studies/traya-organic-zero-to-revenue',
+  } as { text: string; href: string } | null,
 } as const;
 
 /** Joins a list as "a, b, c and d". */

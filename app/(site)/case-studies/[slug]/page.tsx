@@ -7,6 +7,7 @@ import CaseStudyChart from '@/components/site/CaseStudyChart';
 import EvidenceGallery from '@/components/site/EvidenceGallery';
 import StickyTOC from '@/components/site/StickyTOC';
 import { getCaseStudy, getNextCaseStudy, getCaseStudies } from '@/lib/content';
+import type { CaseStudy } from '@/lib/schema';
 import JsonLd from '@/components/site/JsonLd';
 import Breadcrumb from '@/components/site/Breadcrumb';
 import { jsonLd, caseStudySchema } from '@/lib/seo';
@@ -21,6 +22,14 @@ export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const s = getCaseStudy(slug);
   if (!s) return {};
+  if (s.status === 'coming-soon') {
+    return {
+      title: s.title,
+      description: s.summary,
+      alternates: { canonical: `/case-studies/${s.slug}` },
+      robots: { index: false, follow: true },
+    };
+  }
   return {
     title: `${s.client} Case Study: ${s.title}`,
     description: s.summary,
@@ -43,6 +52,7 @@ export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
   const s = getCaseStudy(slug);
   if (!s) notFound();
+  if (s.status === 'coming-soon') return <ComingSoon s={s} />;
   const next = getNextCaseStudy(slug);
 
   return (
@@ -258,6 +268,46 @@ export default async function CaseStudyPage({ params }: Props) {
         </div>
 
         <CTABand question="Want a program that reports to revenue like this?" />
+    </>
+  );
+}
+
+/** Coming-soon case study: the known headline figures and a booking CTA. Noindex and out of the sitemap. */
+function ComingSoon({ s }: { s: CaseStudy }) {
+  const figures = s.stats?.length
+    ? s.stats
+    : (s.proof || []).map((t) => ({ value: `${t.metric.prefix}${t.metric.value}${t.metric.suffix}`, label: t.pill }));
+  return (
+    <>
+      <div className="container-max pt-8">
+        <Breadcrumb items={[{ name: 'Home', url: '/' }, { name: 'Case studies', url: '/case-studies' }, { name: s.client || s.title, url: `/case-studies/${s.slug}` }]} />
+      </div>
+
+      <section className="pt-10 pb-16 lg:pt-14 lg:pb-20">
+        <div className="container-max">
+          <div className="max-w-4xl">
+            <div className="flex flex-wrap items-center gap-4 mb-8">
+              <span className="eyebrow">Case Study{s.industry ? ` · ${s.industry}` : ''}</span>
+              <span className="pill pill-coming">Coming soon</span>
+            </div>
+            <h1 className="text-[clamp(36px,6vw,68px)] font-semibold leading-[1.05] tracking-[-0.025em] mb-6">{s.title}</h1>
+            {s.summary && <p className="text-[clamp(17px,1.6vw,20px)] text-muted leading-relaxed max-w-3xl mb-10">{s.summary}</p>}
+            <p className="text-[15px] text-muted leading-relaxed max-w-2xl pt-6 border-t border-line" data-testid="coming-soon-note">
+              <span className="text-ink font-medium">Full breakdown being prepared.</span> The context, approach and evidence behind these numbers are being written up. Book a call to hear the details first-hand.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {figures.length > 0 && (
+        <section className="border-y border-line bg-surface">
+          <div className="container-max py-14">
+            <StatStrip stats={figures.slice(0, 4)} columns={figures.length === 3 ? 3 : 4} />
+          </div>
+        </section>
+      )}
+
+      <CTABand question="Want a program that reports to revenue like this?" />
     </>
   );
 }

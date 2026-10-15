@@ -3,8 +3,8 @@ import { ArrowUpRight } from 'lucide-react';
 
 export function CaseStudyCard({ study, featured = false, index }) {
   const idx = String(index).padStart(2, '0');
-  const statusPill = study.status === 'coming-next' ? 'pill-coming' : 'pill-published';
-  const statusLabel = study.status === 'coming-next' ? 'Coming next' : 'Published';
+  const statusPill = study.status === 'coming-soon' ? 'pill-coming' : 'pill-published';
+  const statusLabel = study.status === 'coming-soon' ? 'Coming soon' : 'Published';
 
   if (featured) {
     return (
@@ -63,14 +63,17 @@ export function CaseStudyCard({ study, featured = false, index }) {
 export function PipelineCard({ study, index }) {
   const idx = String(index).padStart(2, '0');
   return (
-    <div className="card-surface p-6 lg:p-8">
-      <div className="flex items-center gap-3 mb-5">
-        <span className="index-numeral">{idx}</span>
-        <span className="pill pill-coming">Coming next</span>
+    <Link href={`/case-studies/${study.slug}`} className="card-surface block p-6 lg:p-8 group h-full" data-testid={`pipeline-card-${study.slug}`}>
+      <div className="flex items-center justify-between mb-5">
+        <div className="flex items-center gap-3">
+          <span className="index-numeral">{idx}</span>
+          <span className="pill pill-coming">Coming soon</span>
+        </div>
+        <ArrowUpRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
       </div>
-      <div className="text-[12px] uppercase tracking-[0.1em] text-muted mb-3">{study.scope}</div>
+      <div className="text-[12px] uppercase tracking-[0.1em] text-muted mb-3">{study.scope || study.industry}</div>
       <h3 className="text-[20px] font-semibold leading-[1.25] mb-3">{study.title}</h3>
       <p className="text-muted text-[14px]">{study.summary}</p>
-    </div>
+    </Link>
   );
 }
