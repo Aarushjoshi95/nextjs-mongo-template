@@ -63,9 +63,11 @@ New code follows the **target** layout. Existing code moves there in the phase t
 ## Working rules
 
 - **One phase per session and per branch** (`phase-N-name`). Plan first, get approval, then edit.
-- **Never push to `main`.** Open a PR per phase.
+- **Git base is `rebuild`.** Every phase branch is cut from `rebuild` and merges back into `rebuild`. PRs target `rebuild`.
+- **`main` is off-limits.** Never check out, commit to, merge into, rebase or push `main`.
+- **origin is the original `Aarushjoshi95/nextjs-mongo-template` repo, and Emergent deploys from `main`.** Anything that reaches `main` goes live, so keep all work on `rebuild` and its phase branches.
 - Before each commit, check `localhost:3000` at phone (375px) and desktop widths.
-- Run `npm run build` before each PR.
+- Run `npm run build` before each merge into `rebuild`.
 - **Never commit secrets.** `.env*` stays local (gitignored). Rotate any token that reaches Git.
 - Don't edit the site in Emergent while the restructure is in progress.
 - Keep `.emergent/` until the hosting decision is made.

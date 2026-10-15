@@ -1,6 +1,6 @@
 # aarushjoshi.in — Architecture Analysis & Rebuild Plan
 
-Source of truth for the restructure. Work one phase at a time, one branch and PR per phase.
+Source of truth for the restructure. Work one phase at a time, one branch per phase, merged back into `rebuild`.
 
 ## Summary
 
@@ -128,7 +128,7 @@ Design tokens move into `tailwind.config` as real colours, so components write `
 
 ## Phased plan
 
-Six phases, each one PR on its own branch; the live site keeps working after every merge.
+Six phases, each on its own branch cut from `rebuild` and merged back into it; the live site keeps working after every merge to `main`.
 
 **Phase 0 — Secure and set up (half a day)**
 
@@ -170,6 +170,7 @@ Six phases, each one PR on its own branch; the live site keeps working after eve
 
 - [ ] Define the type, spacing, radius and motion scales in the Tailwind config; remove remaining one-off sizes
 - [ ] Build `/styleguide` showing every section and component state; fix inconsistencies it exposes
+- [ ] Redesign the tool UIs (four calculators, `ToolShell`, AI visibility checker) to the new design system: tokens, shared classes and semantic colours only
 - [ ] Turn on Next.js image optimisation (currently disabled) and set image sizes per slot
 - [ ] Design proper 404, error and loading states, favicon set and OG templates
 - [ ] GitHub Actions on every PR: build, lint, typecheck, content validation, broken-link check
@@ -182,8 +183,10 @@ After Phase 4, adding a case study, article or service page is one MDX file. Add
 ## Working rules
 
 - One phase per session and per branch (`phase-N-name`); plan first, then edit.
-- Never push to `main` directly; open a PR.
-- Check `localhost:3000` at phone and desktop widths before each commit; run `npm run build` before each PR.
+- Git base is `rebuild`: each phase branches off `rebuild` and merges back into it. PRs target `rebuild`.
+- origin is the original `Aarushjoshi95/nextjs-mongo-template` repo, which Emergent deploys from `main`.
+- `main` is off-limits: never check out, commit to, merge into, rebase or push `main`.
+- Check `localhost:3000` at phone and desktop widths before each commit; run `npm run build` before each merge into `rebuild`.
 - Do not edit the site in Emergent while this plan is in progress.
 - Never commit secrets; `.env.local` stays local.
 
