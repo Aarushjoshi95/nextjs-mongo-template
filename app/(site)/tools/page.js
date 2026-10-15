@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import Header from '@/components/site/Header';
-import Footer from '@/components/site/Footer';
 import { BookButton } from '@/components/site/BookingModal';
 import { tools } from '@/lib/content/tools';
 
@@ -15,8 +13,6 @@ export const metadata = {
 export default function ToolsPage() {
   return (
     <>
-      <Header />
-      <main id="main">
         <section className="pt-14 lg:pt-20 pb-12">
           <div className="container-max">
             <div className="max-w-3xl">
@@ -64,8 +60,6 @@ export default function ToolsPage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
     </>
   );
 }

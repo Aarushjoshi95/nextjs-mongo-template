@@ -1,9 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ArrowRight, ArrowUpRight, Check, TrendingUp } from 'lucide-react';
-import Header from '@/components/site/Header';
-import AnnouncementBar from '@/components/site/AnnouncementBar';
-import Footer from '@/components/site/Footer';
 import CTABand from '@/components/site/CTABand';
 import { StatStrip } from '@/components/site/StatBlock';
 import CaseStudyChart from '@/components/site/CaseStudyChart';
@@ -48,9 +45,6 @@ export default async function CaseStudyPage({ params }) {
   return (
     <>
       <JsonLd data={jsonLd(caseStudySchema(s), breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Case studies', url: '/case-studies' }, { name: s.client, url: `/case-studies/${s.slug}` }]))} />
-      <AnnouncementBar />
-      <Header />
-      <main id="main">
         {/* Breadcrumb */}
         <div className="container-max pt-8">
           <nav className="text-[13px] text-muted" aria-label="Breadcrumb">
@@ -267,8 +261,6 @@ export default async function CaseStudyPage({ params }) {
         </div>
 
         <CTABand question="Want a program that reports to revenue like this?" />
-      </main>
-      <Footer />
     </>
   );
 }

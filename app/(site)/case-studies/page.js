@@ -1,7 +1,4 @@
 import Link from 'next/link';
-import Header from '@/components/site/Header';
-import AnnouncementBar from '@/components/site/AnnouncementBar';
-import Footer from '@/components/site/Footer';
 import CTABand from '@/components/site/CTABand';
 import { CaseStudyCard, PipelineCard } from '@/components/site/CaseStudyCard';
 import { getPublishedCaseStudies, getPipelineCaseStudies, getFeaturedCaseStudy } from '@/lib/content/caseStudies';
@@ -19,9 +16,6 @@ export default function CaseStudiesPage() {
 
   return (
     <>
-      <AnnouncementBar />
-      <Header />
-      <main id="main">
         <section className="section-y">
           <div className="container-max">
             <div className="max-w-3xl fade-in">
@@ -71,8 +65,6 @@ export default function CaseStudiesPage() {
         )}
 
         <CTABand />
-      </main>
-      <Footer />
     </>
   );
 }

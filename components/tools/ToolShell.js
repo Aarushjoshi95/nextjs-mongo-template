@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight, ChevronRight } from 'lucide-react';
-import Header from '@/components/site/Header';
-import Footer from '@/components/site/Footer';
 import { BookButton } from '@/components/site/BookingModal';
 import { tools } from '@/lib/content/tools';
 import JsonLd from '@/components/site/JsonLd';
@@ -18,8 +16,6 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
   return (
     <>
       <JsonLd data={jsonLd(toolSchema(tool), faqSchema, breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Free tools', url: '/tools' }, { name: tool.name, url: `/tools/${tool.slug}` }]))} />
-      <Header />
-      <main id="main">
         <section className="pt-8 lg:pt-12 pb-10">
           <div className="container-max">
             <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12.5px] text-muted mb-8">
@@ -106,8 +102,6 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
     </>
   );
 }

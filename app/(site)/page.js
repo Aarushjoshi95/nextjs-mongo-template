@@ -1,7 +1,5 @@
 import Link from 'next/link';
 import { ArrowRight, Check, X as XIcon } from 'lucide-react';
-import Header from '@/components/site/Header';
-import Footer from '@/components/site/Footer';
 import PromptDemo from '@/components/site/PromptDemo';
 import FAQ from '@/components/site/FAQ';
 import BrandWall from '@/components/site/BrandWall';
@@ -78,8 +76,6 @@ export default function HomePage() {
   const lastWord = words.pop();
   return (
     <>
-      <Header />
-      <main id="main">
         {/* HERO */}
         <section id="top" className="pt-14 lg:pt-20 pb-16 lg:pb-24">
           <div className="container-max">
@@ -301,8 +297,6 @@ export default function HomePage() {
             </div>
           </div>
         </section>
-      </main>
-      <Footer />
     </>
   );
 }
