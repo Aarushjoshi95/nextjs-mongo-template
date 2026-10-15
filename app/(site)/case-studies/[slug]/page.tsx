@@ -6,16 +6,18 @@ import { StatStrip } from '@/components/site/StatBlock';
 import CaseStudyChart from '@/components/site/CaseStudyChart';
 import EvidenceGallery from '@/components/site/EvidenceGallery';
 import StickyTOC from '@/components/site/StickyTOC';
-import { getCaseStudy, getNextCaseStudy, caseStudies } from '@/lib/content/caseStudies';
+import { getCaseStudy, getNextCaseStudy, getCaseStudies } from '@/lib/content';
 import JsonLd from '@/components/site/JsonLd';
 import Breadcrumb from '@/components/site/Breadcrumb';
 import { jsonLd, caseStudySchema } from '@/lib/seo';
 
 export function generateStaticParams() {
-  return caseStudies.map((c) => ({ slug: c.slug }));
+  return getCaseStudies().map((c) => ({ slug: c.slug }));
 }
 
-export async function generateMetadata({ params }) {
+type Props = { params: Promise<{ slug: string }> };
+
+export async function generateMetadata({ params }: Props) {
   const { slug } = await params;
   const s = getCaseStudy(slug);
   if (!s) return {};
@@ -37,7 +39,7 @@ const sections = [
   { id: 'lessons', label: 'Lessons' },
 ];
 
-export default async function CaseStudyPage({ params }) {
+export default async function CaseStudyPage({ params }: Props) {
   const { slug } = await params;
   const s = getCaseStudy(slug);
   if (!s) notFound();

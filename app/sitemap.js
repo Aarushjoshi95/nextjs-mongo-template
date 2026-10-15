@@ -1,4 +1,4 @@
-import { getPublishedCaseStudies } from '@/lib/content/caseStudies';
+import { getPublishedCaseStudies } from '@/lib/content';
 import { tools } from '@/config/tools';
 import { site } from '@/config/site';
 

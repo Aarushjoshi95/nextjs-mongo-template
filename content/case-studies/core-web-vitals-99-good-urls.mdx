@@ -1,0 +1,125 @@
+---
+slug: core-web-vitals-99-good-urls
+title: 99.1% Good URLs on mobile — and a 5× keyword lift to show for it
+client: New Website (Technical SEO)
+industry: Technical SEO
+status: published
+featured: false
+order: 5
+summary: A systematic Core Web Vitals + mobile usability rebuild that pushed Good URLs from ~60% to 99.1%, added 735,000 impressions and lifted ranking keywords from ~7,000 to 35,000+.
+role: SEO Lead
+duration: ~6 months
+scope: Core Web Vitals, mobile usability, performance engineering
+stats:
+  - value: 99.1%
+    label: Good URLs on mobile
+  - value: +735K
+    label: Impressions gained
+  - value: 5×
+    label: Ranking keywords (7K → 35K+)
+  - value: 1M+
+    label: Discover pageviews in Q1
+context:
+  - "A new site had mobile-first indexing working against it: Good URL percentage hovered near 60%, LCP/CLS/INP all failing on key templates, and mobile usability errors across the catalogue. Traffic was flat at 26,000 sessions a month."
+  - "The hard part: Core Web Vitals is where SEO stops being marketing and starts being engineering. The win depended on getting the right fixes shipped by developers who had ten other priorities — so every ticket had to be justified by exact business impact."
+pillars:
+  - title: Fix Core Web Vitals properly
+    body: LCP, CLS and INP addressed at the root — image pipeline, render-blocking resources, font-loading and JS execution.
+  - title: Mobile usability without compromises
+    body: Viewport, touch targets, font legibility and spacing — the small things that make a site actually usable on a phone.
+  - title: Instrument the recovery
+    body: GSC + PageSpeed Insights + Mobile-Friendly Test on a weekly audit cadence — catch regressions before they cost traffic.
+actions:
+  - Compressed and lazy-loaded images, migrated to WebP, cut LCP below 2.5s.
+  - Added width/height attributes to every image and iframe to eliminate CLS.
+  - "Used font-display: swap and size-adjust to kill font-driven layout shifts."
+  - Minimised third-party scripts and deferred non-critical JavaScript to improve FID/INP.
+  - Fixed viewport meta, scaling and horizontal scroll on every template.
+  - Enlarged touch targets and spacing on all interactive elements; minimum 16px fonts.
+  - Minified HTML/CSS/JS and migrated to a high-performance HTTP/2 server.
+  - Set up a weekly audit cadence with GSC, PageSpeed Insights and the Mobile-Friendly Test.
+chart:
+  title: Good URLs on mobile (% of indexed URLs)
+  note: "Source: GSC Core Web Vitals report."
+  series:
+    - x: M0
+      y: 60
+    - x: M1
+      y: 68
+    - x: M2
+      y: 78
+    - x: M3
+      y: 87
+    - x: M4
+      y: 93
+    - x: M5
+      y: 97
+    - x: M6
+      y: 99
+beforeAfter:
+  - metric: Good URLs on mobile
+    before: ~60%
+    after: 99.1%
+    delta: +39 pts
+  - metric: Monthly traffic
+    before: 26,000
+    after: 150K+ / quarter
+    delta: 5.8×
+  - metric: Ranking keywords
+    before: ~7,000
+    after: 35,000+
+    delta: 5×
+  - metric: Google Discover pageviews
+    before: minimal
+    after: 1M+ in Q1
+    delta: ↑↑
+  - metric: Domain Rating
+    before: "32"
+    after: "37"
+    delta: "+5"
+  - metric: Impressions gained
+    before: baseline
+    after: +735,000
+    delta: +735K
+timeline:
+  - phase: M0
+    period: Diagnose
+    detail: Full CWV audit, template-level bottleneck map, dev ticket pack.
+  - phase: M1–M2
+    period: Image + layout
+    detail: WebP pipeline, lazy loading, image dimensions, CLS fixes.
+  - phase: M3–M4
+    period: JS + fonts
+    detail: "Defer non-critical JS, font-display: swap, HTTP/2 migration."
+  - phase: M5–M6
+    period: Instrument
+    detail: Weekly audits, regression alerts, mobile usability sweep.
+lessons:
+  - Core Web Vitals is engineering work. Treat it like a dev project, not an SEO task list.
+  - Every CWV fix needs a business case or it dies in standup. Bring the impact math.
+  - Instrumentation is the difference between a fix that holds and a fix that silently regresses.
+testimonial: null
+publishedAt: 2022-04-28
+card:
+  title: 99.1% Good URLs on mobile — and a 5× keyword lift
+  tags:
+    - Technical SEO
+    - Core Web Vitals
+    - Mobile-first
+  headline:
+    value: 99.1%
+    label: Good URLs on mobile
+  before:
+    label: Good URLs
+    value: ~60%
+  after:
+    label: Good URLs
+    value: 99.1%
+  chips:
+    - k: +735K
+      v: impressions gained
+    - k: 5×
+      v: ranking keywords
+    - k: +1M
+      v: Discover pageviews Q1
+---

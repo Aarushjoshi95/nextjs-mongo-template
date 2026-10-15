@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import CTABand from '@/components/site/CTABand';
 import { CaseStudyCard, PipelineCard } from '@/components/site/CaseStudyCard';
-import { getPublishedCaseStudies, getPipelineCaseStudies, getFeaturedCaseStudy } from '@/lib/content/caseStudies';
+import { getPublishedCaseStudies, getPipelineCaseStudies, getFeaturedCaseStudy } from '@/lib/content';
 
 export const metadata = {
   title: 'Case Studies',
