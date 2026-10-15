@@ -149,7 +149,7 @@ export default function TrafficDropCalculator() {
           <div className="overflow-x-auto -mx-5 sm:-mx-7 px-5 sm:px-7">
             <table className="w-full text-[13px] tabular-nums" data-testid="months-table">
               <thead>
-                <tr className="text-left text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] border-b border-[rgb(var(--line))]">
+                <tr className="text-left text-[11px] uppercase tracking-wider text-muted border-b border-line">
                   <th className="py-2 pr-3 font-medium">Month</th>
                   <th className="py-2 px-3 font-medium text-right">Traffic</th>
                   <th className="py-2 px-3 font-medium text-right">Revenue</th>
@@ -159,7 +159,7 @@ export default function TrafficDropCalculator() {
               </thead>
               <tbody>
                 {r.months.map((m) => (
-                  <tr key={m.month} className="border-b border-[rgb(var(--line))]/70 last:border-0">
+                  <tr key={m.month} className="border-b border-line/70 last:border-0">
                     <td className="py-2 pr-3 font-mono">{m.month}</td>
                     <td className="py-2 px-3 text-right font-mono">{fmtNum(m.traffic, currency)}</td>
                     <td className="py-2 px-3 text-right font-mono">{fmtMoney(m.revenue, currency)}</td>

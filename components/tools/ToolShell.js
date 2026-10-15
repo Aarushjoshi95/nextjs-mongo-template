@@ -22,17 +22,17 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
       <main id="main">
         <section className="pt-8 lg:pt-12 pb-10">
           <div className="container-max">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12.5px] text-[rgb(var(--muted))] mb-8">
-              <Link href="/" className="hover:text-[rgb(var(--ink))]">Home</Link>
+            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12.5px] text-muted mb-8">
+              <Link href="/" className="hover:text-ink">Home</Link>
               <ChevronRight className="w-3.5 h-3.5" />
-              <Link href="/tools" className="hover:text-[rgb(var(--ink))]">Free tools</Link>
+              <Link href="/tools" className="hover:text-ink">Free tools</Link>
               <ChevronRight className="w-3.5 h-3.5" />
-              <span className="text-[rgb(var(--ink))]">{tool.name}</span>
+              <span className="text-ink">{tool.name}</span>
             </nav>
             <div className="max-w-3xl">
               <span className="eyebrow mb-6">Free tool · No signup</span>
               <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.05] tracking-tight mb-5">{tool.name}</h1>
-              <p className="text-[rgb(var(--muted))] text-[17px] leading-relaxed">{tool.description}</p>
+              <p className="text-muted text-[17px] leading-relaxed">{tool.description}</p>
               <div className="flex flex-wrap gap-1.5 mt-5">
                 {tool.tags.map((t) => <span key={t} className="pill text-[11px]">{t}</span>)}
               </div>
@@ -45,7 +45,7 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
         </section>
 
         {(how.length > 0 || faq.length > 0) && (
-          <section className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+          <section className="section-y border-t border-line bg-surface">
             <div className="container-max grid lg:grid-cols-2 gap-12">
               {how.length > 0 && (
                 <div>
@@ -53,8 +53,8 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
                   <ol className="space-y-5">
                     {how.map((h, i) => (
                       <li key={i} className="flex gap-4">
-                        <span className="font-mono text-[13px] text-[rgb(var(--accent))] mt-1 shrink-0">0{i + 1}</span>
-                        <p className="text-[15px] leading-relaxed"><strong>{h.k}</strong> <span className="text-[rgb(var(--muted))]">{h.v}</span></p>
+                        <span className="font-mono text-[13px] text-accent mt-1 shrink-0">0{i + 1}</span>
+                        <p className="text-[15px] leading-relaxed"><strong>{h.k}</strong> <span className="text-muted">{h.v}</span></p>
                       </li>
                     ))}
                   </ol>
@@ -67,7 +67,7 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
                     {faq.map((f, i) => (
                       <div key={i}>
                         <dt className="text-[15px] font-semibold tracking-tight mb-1.5">{f.q}</dt>
-                        <dd className="text-[14.5px] text-[rgb(var(--muted))] leading-relaxed">{f.a}</dd>
+                        <dd className="text-[14.5px] text-muted leading-relaxed">{f.a}</dd>
                       </div>
                     ))}
                   </dl>
@@ -77,28 +77,28 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
           </section>
         )}
 
-        <section className="section-y border-t border-[rgb(var(--line))]">
+        <section className="section-y border-t border-line">
           <div className="container-max grid lg:grid-cols-[1.2fr_1fr] gap-12 items-start">
             <div>
               <span className="eyebrow mb-6">Want this done on your real numbers?</span>
               <h2 className="text-[clamp(28px,4vw,44px)] font-semibold leading-[1.07] tracking-tight mb-5">Most of these calculators started as the first slide of a client deck.</h2>
-              <p className="text-[rgb(var(--muted))] text-[17px] leading-relaxed mb-7 max-w-xl">If you want the cluster model built from your GSC and GA4 data — and tied to AI search visibility, not just rankings — book a 30-minute discovery call.</p>
+              <p className="text-muted text-[17px] leading-relaxed mb-7 max-w-xl">If you want the cluster model built from your GSC and GA4 data — and tied to AI search visibility, not just rankings — book a 30-minute discovery call.</p>
               <div className="flex flex-wrap gap-3">
                 <BookButton className="btn-primary" data-testid="tool-book-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
                 <Link href="/tools" className="btn-ghost">All free tools</Link>
               </div>
             </div>
             <div>
-              <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))] block mb-4">Other tools</span>
+              <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-muted block mb-4">Other tools</span>
               <ul className="space-y-3">
                 {others.map((t) => (
                   <li key={t.slug}>
                     <Link href={`/tools/${t.slug}`} className="card-surface p-5 flex items-center justify-between gap-4 group">
                       <span>
                         <span className="block text-[15px] font-semibold tracking-tight">{t.name}</span>
-                        <span className="block text-[12.5px] text-[rgb(var(--muted))] mt-1">{t.short}</span>
+                        <span className="block text-[12.5px] text-muted mt-1">{t.short}</span>
                       </span>
-                      <ArrowRight className="w-4 h-4 text-[rgb(var(--muted))] group-hover:text-[rgb(var(--accent))] group-hover:translate-x-0.5 transition" />
+                      <ArrowRight className="w-4 h-4 text-muted group-hover:text-accent group-hover:translate-x-0.5 transition" />
                     </Link>
                   </li>
                 ))}

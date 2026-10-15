@@ -22,14 +22,14 @@ export function useCurrency(defaultCode = 'INR') {
 
 export function CurrencyToggle({ value, onChange }) {
   return (
-    <div className="inline-flex rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--surface))] p-0.5" role="group" aria-label="Currency" data-testid="currency-toggle">
+    <div className="inline-flex rounded-full border border-line bg-surface p-0.5" role="group" aria-label="Currency" data-testid="currency-toggle">
       {Object.values(CURRENCIES).map((c) => (
         <button
           key={c.code}
           type="button"
           onClick={() => onChange(c.code)}
           data-testid={`currency-${c.code.toLowerCase()}`}
-          className={`px-3 py-1 text-[12px] font-mono rounded-full transition ${value === c.code ? 'bg-[rgb(var(--ink))] text-white' : 'text-[rgb(var(--muted))] hover:text-[rgb(var(--ink))]'}`}
+          className={`px-3 py-1 text-[12px] font-mono rounded-full transition ${value === c.code ? 'bg-ink text-white' : 'text-muted hover:text-ink'}`}
           aria-pressed={value === c.code}
         >
           {c.label}
@@ -41,18 +41,18 @@ export function CurrencyToggle({ value, onChange }) {
 
 // --- Inputs -------------------------------------------------------------------
 export const inputCls =
-  'w-full min-w-0 h-10 rounded-md border border-[rgb(var(--line))] bg-[rgb(var(--surface))] px-2.5 text-[13px] font-mono tabular-nums text-[rgb(var(--ink))] placeholder:text-[rgb(var(--muted))]/60 focus:outline-none focus:ring-2 focus:ring-[rgb(var(--accent))]/40 focus:border-[rgb(var(--accent))] transition';
+  'w-full min-w-0 h-10 rounded-md border border-line bg-surface px-2.5 text-[13px] font-mono tabular-nums text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent/40 focus:border-accent transition';
 
 export function Field({ label, hint, suffix, prefix, children, className = '' }) {
   return (
     <label className={`block ${className}`}>
-      <span className="block text-[12px] font-medium text-[rgb(var(--ink))] mb-1.5">{label}</span>
+      <span className="block text-[12px] font-medium text-ink mb-1.5">{label}</span>
       <span className="relative block">
-        {prefix ? <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-[rgb(var(--muted))] font-mono pointer-events-none">{prefix}</span> : null}
+        {prefix ? <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-[13px] text-muted font-mono pointer-events-none">{prefix}</span> : null}
         {children}
-        {suffix ? <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[12px] text-[rgb(var(--muted))] font-mono pointer-events-none">{suffix}</span> : null}
+        {suffix ? <span className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[12px] text-muted font-mono pointer-events-none">{suffix}</span> : null}
       </span>
-      {hint ? <span className="block text-[11.5px] text-[rgb(var(--muted))] mt-1.5 leading-snug">{hint}</span> : null}
+      {hint ? <span className="block text-[11.5px] text-muted mt-1.5 leading-snug">{hint}</span> : null}
     </label>
   );
 }
@@ -79,12 +79,12 @@ export function TextInput({ value, onChange, className = '', ...rest }) {
 
 // --- Output -------------------------------------------------------------------
 export function Stat({ label, value, sub, accent = false, tone, testId }) {
-  const color = tone === 'neg' ? 'text-red-600' : tone === 'pos' ? 'text-[rgb(var(--positive))]' : accent ? 'text-[rgb(var(--accent))]' : 'text-[rgb(var(--ink))]';
+  const color = tone === 'neg' ? 'text-red-600' : tone === 'pos' ? 'text-positive' : accent ? 'text-accent' : 'text-ink';
   return (
-    <div className={`rounded-lg border p-4 ${accent ? 'border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.04]' : 'border-[rgb(var(--line))] bg-[rgb(var(--surface))]'}`} data-testid={testId}>
-      <div className="text-[11px] uppercase tracking-[0.08em] text-[rgb(var(--muted))] mb-2">{label}</div>
+    <div className={`rounded-lg border p-4 ${accent ? 'border-accent/30 bg-accent/[0.04]' : 'border-line bg-surface'}`} data-testid={testId}>
+      <div className="text-[11px] uppercase tracking-[0.08em] text-muted mb-2">{label}</div>
       <div className={`font-mono text-[clamp(20px,2.2vw,28px)] font-medium leading-none tabular-nums ${color}`}>{value}</div>
-      {sub ? <div className="text-[12px] text-[rgb(var(--muted))] mt-2 leading-snug">{sub}</div> : null}
+      {sub ? <div className="text-[12px] text-muted mt-2 leading-snug">{sub}</div> : null}
     </div>
   );
 }
@@ -95,7 +95,7 @@ export function Panel({ title, eyebrow, children, className = '', actions }) {
       {(title || eyebrow || actions) && (
         <div className="flex flex-wrap items-start justify-between gap-3 mb-5">
           <div>
-            {eyebrow ? <span className="text-[11px] uppercase tracking-[0.12em] font-mono text-[rgb(var(--muted))] block mb-1.5">{eyebrow}</span> : null}
+            {eyebrow ? <span className="text-[11px] uppercase tracking-[0.12em] font-mono text-muted block mb-1.5">{eyebrow}</span> : null}
             {title ? <h2 className="text-[20px] font-semibold tracking-tight" style={{ fontFamily: 'var(--font-display)' }}>{title}</h2> : null}
           </div>
           {actions ? <div className="flex flex-wrap gap-2">{actions}</div> : null}
@@ -109,8 +109,8 @@ export function Panel({ title, eyebrow, children, className = '', actions }) {
 export function SmallButton({ children, onClick, icon: Icon, variant = 'ghost', className = '', ...rest }) {
   const base = 'inline-flex items-center gap-1.5 h-8 px-3 rounded-full text-[12.5px] font-medium transition disabled:opacity-50';
   const styles = variant === 'solid'
-    ? 'bg-[rgb(var(--ink))] text-white hover:bg-[rgb(var(--accent))]'
-    : 'border border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink))] hover:border-[rgb(var(--ink))]/40';
+    ? 'bg-ink text-white hover:bg-accent'
+    : 'border border-line bg-surface text-ink hover:border-ink/40';
   return (
     <button type="button" onClick={onClick} className={`${base} ${styles} ${className}`} {...rest}>
       {Icon ? <Icon className="w-3.5 h-3.5" /> : null}
@@ -174,6 +174,6 @@ export function ExportButton({ onClick, label = 'Export CSV' }) {
 export function Callout({ children, tone = 'info', testId }) {
   const cls = tone === 'warn'
     ? 'border-amber-300/60 bg-amber-50 text-amber-900'
-    : 'border-[rgb(var(--accent))]/25 bg-[rgb(var(--accent))]/[0.04] text-[rgb(var(--ink))]';
+    : 'border-accent/25 bg-accent/[0.04] text-ink';
   return <div className={`rounded-lg border p-4 text-[14px] leading-relaxed ${cls}`} data-testid={testId}>{children}</div>;
 }

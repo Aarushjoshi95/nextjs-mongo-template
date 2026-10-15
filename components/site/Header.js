@@ -28,19 +28,19 @@ export default function Header() {
   return (
     <>
       <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:bg-black focus:text-white focus:px-3 focus:py-2 focus:rounded">Skip to content</a>
-      <header className={`sticky top-0 z-40 transition-all duration-200 ${scrolled ? 'backdrop-blur-md bg-[rgb(var(--bg))]/80 border-b border-[rgb(var(--line))]' : 'bg-transparent'}`}>
+      <header className={`sticky top-0 z-40 transition-all duration-200 ${scrolled ? 'backdrop-blur-md bg-paper/80 border-b border-line' : 'bg-transparent'}`}>
         <div className="container-max flex items-center justify-between h-16 lg:h-20">
           <Link href="/#top" className="flex items-center gap-3 group" aria-label="Aarush home">
-            <span className="w-9 h-9 rounded-full bg-[rgb(var(--ink))] text-[rgb(var(--bg))] flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
+            <span className="w-9 h-9 rounded-full bg-ink text-paper flex items-center justify-center font-semibold text-lg" style={{ fontFamily: 'var(--font-display)' }}>A</span>
             <span className="flex flex-col leading-tight">
               <span className="text-[15px] font-semibold tracking-tight">Aarush</span>
-              <span className="text-[11px] text-[rgb(var(--muted))] -mt-0.5">AI Search Visibility</span>
+              <span className="text-[11px] text-muted -mt-0.5">AI Search Visibility</span>
             </span>
           </Link>
 
           <nav className="hidden lg:flex items-center gap-7" aria-label="Primary">
             {nav.map((item) => (
-              <Link key={item.href} href={item.href} className="text-[14px] text-[rgb(var(--ink))] hover:text-[rgb(var(--accent))] transition-colors">{item.label}</Link>
+              <Link key={item.href} href={item.href} className="text-[14px] text-ink hover:text-accent transition-colors">{item.label}</Link>
             ))}
           </nav>
 
@@ -53,7 +53,7 @@ export default function Header() {
         </div>
 
         {mobileOpen && (
-          <div className="lg:hidden border-t border-[rgb(var(--line))] bg-[rgb(var(--bg))]">
+          <div className="lg:hidden border-t border-line bg-paper">
             <nav className="container-max py-4 flex flex-col gap-1" aria-label="Mobile">
               {nav.map((item) => (
                 <Link key={item.href} href={item.href} onClick={() => setMobileOpen(false)} className="block py-2 text-[15px]">{item.label}</Link>

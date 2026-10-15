@@ -59,21 +59,21 @@ export default function BrandWall() {
   return (
     <div data-testid="brand-wall">
       <div className="flex flex-wrap items-end justify-between gap-4 mb-6">
-        <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))]">Trusted by growth teams at</span>
-        <span className="text-[12px] text-[rgb(var(--muted))]">{brands.length} brands · D2C, edtech, BFSI, enterprise, media · India, US, UK, UAE</span>
+        <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-muted">Trusted by growth teams at</span>
+        <span className="text-[12px] text-muted">{brands.length} brands · D2C, edtech, BFSI, enterprise, media · India, US, UK, UAE</span>
       </div>
       <ul className="grid grid-cols-2 lg:grid-cols-4 gap-3">
         {brands.map((b) => (
           <li
             key={b.name}
-            className="group card-surface p-4 sm:p-5 flex flex-col justify-between gap-4 min-h-[112px] hover:border-[rgb(var(--ink))]/30 hover:-translate-y-0.5"
+            className="group card-surface p-4 sm:p-5 flex flex-col justify-between gap-4 min-h-[112px] hover:border-ink/30 hover:-translate-y-0.5"
             data-testid={`brand-${b.name.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
           >
             <BrandMark brand={b} />
             <span className="min-w-0 leading-tight flex items-end justify-between gap-3">
               <span className="min-w-0">
                 <span className="block text-[14px] font-semibold tracking-tight leading-tight" style={{ fontFamily: 'var(--font-display)' }}>{b.name}</span>
-                <span className="block text-[11.5px] text-[rgb(var(--muted))] mt-1 truncate">{b.sector}</span>
+                <span className="block text-[11.5px] text-muted mt-1 truncate">{b.sector}</span>
               </span>
               <span aria-hidden className="shrink-0 mb-1 w-1.5 h-1.5 rounded-full opacity-0 group-hover:opacity-100 transition" style={{ backgroundColor: b.color }} />
             </span>

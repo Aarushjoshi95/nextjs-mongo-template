@@ -29,7 +29,7 @@ export default function CaseStudiesPage() {
               <h1 className="text-[clamp(40px,6vw,72px)] font-semibold leading-[1.05] tracking-tight mb-6">
                 Proof, with operating detail.
               </h1>
-              <p className="text-[clamp(17px,1.5vw,20px)] text-[rgb(var(--muted))] max-w-2xl leading-relaxed">
+              <p className="text-[clamp(17px,1.5vw,20px)] text-muted max-w-2xl leading-relaxed">
                 No vanity screenshots. Each study shows the decisions, the trade-offs and the numbers that moved — so you can judge whether the thinking fits your situation.
               </p>
             </div>
@@ -37,7 +37,7 @@ export default function CaseStudiesPage() {
             {/* Filter chips */}
             <div className="mt-12 flex flex-wrap gap-2">
               {['All', 'Edtech', 'D2C', 'SaaS', 'Technical SEO', 'GEO'].map((f, i) => (
-                <button key={f} className={`pill ${i === 0 ? 'bg-[rgb(var(--ink))] text-[rgb(var(--bg))] border-[rgb(var(--ink))]' : ''}`}>{f}</button>
+                <button key={f} className={`pill ${i === 0 ? 'bg-ink text-paper border-ink' : ''}`}>{f}</button>
               ))}
             </div>
           </div>
@@ -55,7 +55,7 @@ export default function CaseStudiesPage() {
         </section>
 
         {pipeline.length > 0 && (
-          <section className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+          <section className="section-y border-t border-line bg-surface">
             <div className="container-max">
               <div className="max-w-2xl mb-12">
                 <span className="eyebrow mb-6">In the pipeline</span>

@@ -67,7 +67,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
     track.scrollBy({ left: dir * (card.offsetWidth + gap), behavior: reduced ? 'auto' : 'smooth' });
   };
 
-  const iconBtn = 'w-10 h-10 inline-flex items-center justify-center rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink))] transition-colors hover:border-[rgb(var(--ink))] disabled:opacity-35 disabled:hover:border-[rgb(var(--line))] disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2';
+  const iconBtn = 'w-10 h-10 inline-flex items-center justify-center rounded-full border border-line bg-surface text-ink transition-colors hover:border-ink disabled:opacity-35 disabled:hover:border-line disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2';
 
   return (
     <div data-testid="case-carousel">
@@ -93,22 +93,22 @@ export default function CaseStudyCarousel({ cases = [] }) {
             </div>
             <h3 className="text-[22px] font-semibold leading-[1.2] tracking-tight mb-6">{c.title}</h3>
             <div className="flex items-baseline gap-3 mb-6">
-              <span className="font-mono text-[36px] font-medium text-[rgb(var(--accent))] leading-none">{c.headline}</span>
-              <span className="text-[13px] text-[rgb(var(--muted))]">{c.headlineLabel}</span>
+              <span className="font-mono text-[36px] font-medium text-accent leading-none">{c.headline}</span>
+              <span className="text-[13px] text-muted">{c.headlineLabel}</span>
             </div>
             <div className="grid grid-cols-2 gap-3 mb-6">
-              <div className="rounded-md border border-[rgb(var(--line))] p-4">
-                <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] mb-1">{c.beforeLabel} · Before</div>
+              <div className="rounded-md border border-line p-4">
+                <div className="text-[11px] uppercase tracking-wider text-muted mb-1">{c.beforeLabel} · Before</div>
                 <div className="font-mono text-[20px]">{c.beforeValue}</div>
               </div>
-              <div className="rounded-md border border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05] p-4">
-                <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--accent))] mb-1">{c.afterLabel} · After</div>
-                <div className="font-mono text-[20px] text-[rgb(var(--accent))]">{c.afterValue}</div>
+              <div className="rounded-md border border-accent/30 bg-accent/[0.05] p-4">
+                <div className="text-[11px] uppercase tracking-wider text-accent mb-1">{c.afterLabel} · After</div>
+                <div className="font-mono text-[20px] text-accent">{c.afterValue}</div>
               </div>
             </div>
-            <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-[rgb(var(--muted))] mb-6">
+            <div className="flex flex-wrap gap-x-6 gap-y-2 text-[13px] text-muted mb-6">
               {c.chips.map((ch, j) => (
-                <div key={j} className="flex items-baseline gap-2"><span className="font-mono text-[rgb(var(--ink))] font-medium">{ch.k}</span>{ch.v}</div>
+                <div key={j} className="flex items-baseline gap-2"><span className="font-mono text-ink font-medium">{ch.k}</span>{ch.v}</div>
               ))}
             </div>
             <span className="link-underline mt-auto text-[14px]">Read the breakdown <ArrowRight className="w-3.5 h-3.5" /></span>
@@ -119,7 +119,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
       {/* controls */}
       <div className="mt-6 flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))]" data-testid="case-carousel-counter">
+          <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted" data-testid="case-carousel-counter">
             {String(index + 1).padStart(2, '0')} / {String(cases.length).padStart(2, '0')}
           </span>
           <div className="flex items-center gap-1.5" role="tablist" aria-label="Go to case study">
@@ -132,7 +132,7 @@ export default function CaseStudyCarousel({ cases = [] }) {
                 aria-label={`Case study ${i + 1}`}
                 onClick={() => scrollToCard(i)}
                 data-testid={`case-dot-${i}`}
-                className={`h-1.5 rounded-full transition-all duration-300 ${i === index ? 'w-6 bg-[rgb(var(--ink))]' : 'w-1.5 bg-[rgb(var(--line))] hover:bg-[rgb(var(--muted))]'}`}
+                className={`h-1.5 rounded-full transition-all duration-300 ${i === index ? 'w-6 bg-ink' : 'w-1.5 bg-line hover:bg-muted'}`}
               />
             ))}
           </div>

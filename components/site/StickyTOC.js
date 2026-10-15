@@ -22,13 +22,13 @@ export default function StickyTOC({ sections }) {
   return (
     <aside className="hidden lg:block">
       <nav className="sticky top-28" aria-label="On this page">
-        <div className="text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] mb-4">On this page</div>
+        <div className="text-[11px] uppercase tracking-[0.12em] text-muted mb-4">On this page</div>
         <ul className="space-y-2.5">
           {sections.map((s) => (
             <li key={s.id}>
               <a
                 href={`#${s.id}`}
-                className={`block text-[13px] transition-colors ${active === s.id ? 'text-[rgb(var(--accent))] font-medium' : 'text-[rgb(var(--muted))] hover:text-[rgb(var(--ink))]'}`}
+                className={`block text-[13px] transition-colors ${active === s.id ? 'text-accent font-medium' : 'text-muted hover:text-ink'}`}
               >
                 {s.label}
               </a>

@@ -699,26 +699,26 @@ export default function ProofResults() {
     e.currentTarget.parentElement?.querySelectorAll('[role="tab"]')[next]?.focus();
   };
 
-  const iconBtn = 'shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--surface))] text-[rgb(var(--ink))] hover:border-[rgb(var(--ink))] transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2';
+  const iconBtn = 'shrink-0 w-9 h-9 inline-flex items-center justify-center rounded-full border border-line bg-surface text-ink hover:border-ink transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2';
 
   return (
     <section
       id="results"
       ref={sectionRef}
-      className="relative overflow-clip section-y border-t border-[rgb(var(--line))]"
+      className="relative overflow-clip section-y border-t border-line"
       data-testid="proof-results-section"
     >
       {/* soft accent glow, same treatment as the booking modal */}
-      <div aria-hidden className="pointer-events-none absolute -top-40 right-[-10%] w-[560px] h-[560px] rounded-full bg-[rgb(var(--accent))]/[0.06] blur-3xl" />
+      <div aria-hidden className="pointer-events-none absolute -top-40 right-[-10%] w-[560px] h-[560px] rounded-full bg-accent/[0.06] blur-3xl" />
 
       <div className="container-max relative">
         {/* heading */}
         <div className="max-w-3xl">
           <span className="eyebrow mb-6">Receipts, not theory</span>
           <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">
-            Proof, not just <span className="text-[rgb(var(--accent))]">theory</span>.
+            Proof, not just <span className="text-accent">theory</span>.
           </h2>
-          <p className="text-[rgb(var(--muted))] text-[17px] mt-5 max-w-2xl">
+          <p className="text-muted text-[17px] mt-5 max-w-2xl">
             Seven chapters, in-house and client-side. Each one tied to a number the business could count — revenue, non-brand traffic or a channel built from zero.
           </p>
         </div>
@@ -757,19 +757,19 @@ export default function ProofResults() {
                     onClick={() => pickTab(i)}
                     onKeyDown={onTabKey}
                     data-testid={`proof-tab-${t.id}`}
-                    className={`relative overflow-hidden shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[rgb(var(--accent))] focus-visible:ring-offset-2 ${
+                    className={`relative overflow-hidden shrink-0 inline-flex items-center gap-2 rounded-full px-4 py-2 text-[14px] font-medium transition-all duration-200 border focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 ${
                       isActive
-                        ? 'bg-[rgb(var(--ink))] border-[rgb(var(--ink))] text-[rgb(var(--bg))]'
-                        : 'bg-[rgb(var(--surface))] border-[rgb(var(--line))] text-[rgb(var(--muted))] hover:border-[rgb(var(--ink))] hover:text-[rgb(var(--ink))]'
+                        ? 'bg-ink border-ink text-paper'
+                        : 'bg-surface border-line text-muted hover:border-ink hover:text-ink'
                     }`}
                   >
-                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-[rgb(var(--accent))]' : 'bg-[rgb(var(--line))]'}`} />
+                    <span className={`w-1.5 h-1.5 rounded-full ${isActive ? 'bg-accent' : 'bg-line'}`} />
                     {t.pill}
                     {isActive && autoplay && !reduced && (
                       <span
                         key={`${active}-${cycle}`}
                         aria-hidden
-                        className="absolute left-0 bottom-0 h-[2px] bg-[rgb(var(--accent))]"
+                        className="absolute left-0 bottom-0 h-[2px] bg-accent"
                         style={{ animation: `proof-progress ${ROTATE_MS}ms linear forwards`, animationPlayState: rotating ? 'running' : 'paused' }}
                         data-testid="proof-tab-progress"
                       />
@@ -796,7 +796,7 @@ export default function ProofResults() {
 
           {/* position + counter */}
           <div className="mt-3 flex items-center gap-3">
-            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))]" data-testid="proof-counter">
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-muted" data-testid="proof-counter">
               {String(active + 1).padStart(2, '0')} / {String(TABS.length).padStart(2, '0')}
             </span>
             <div className="flex items-center gap-1.5" aria-hidden>
@@ -806,7 +806,7 @@ export default function ProofResults() {
                   type="button"
                   tabIndex={-1}
                   onClick={() => pickTab(i)}
-                  className={`h-1.5 rounded-full transition-all duration-300 ${i === active ? 'w-6 bg-[rgb(var(--ink))]' : 'w-1.5 bg-[rgb(var(--line))] hover:bg-[rgb(var(--muted))]'}`}
+                  className={`h-1.5 rounded-full transition-all duration-300 ${i === active ? 'w-6 bg-ink' : 'w-1.5 bg-line hover:bg-muted'}`}
                 />
               ))}
             </div>
@@ -827,17 +827,17 @@ export default function ProofResults() {
                 <span className={`pill ${tab.chapter === 'Client' ? 'pill-coming' : ''}`}>
                   {tab.chapter} · {tab.client}
                 </span>
-                <span className="text-[12px] text-[rgb(var(--muted))]">{tab.sector}</span>
+                <span className="text-[12px] text-muted">{tab.sector}</span>
               </div>
 
               <div className="mt-7">
-                <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] h-4" data-testid="proof-metric-caption">
+                <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted h-4" data-testid="proof-metric-caption">
                   {scrub ? `Reading \u00b7 ${scrubWhen}` : ''}
                 </div>
                 <div
                   className={`font-mono font-medium leading-none tracking-[-0.04em] mt-1 whitespace-nowrap ${
                     metricText.length <= 5 ? 'text-[clamp(50px,5.6vw,72px)]' : metricText.length <= 8 ? 'text-[clamp(40px,4.4vw,56px)]' : 'text-[clamp(30px,3.2vw,42px)]'
-                  } ${scrub && scrub.t <= 0 ? 'text-[rgb(var(--ink))]' : 'text-[rgb(var(--accent))]'}`}
+                  } ${scrub && scrub.t <= 0 ? 'text-ink' : 'text-accent'}`}
                   data-testid="proof-metric"
                   aria-live="polite"
                 >
@@ -845,21 +845,21 @@ export default function ProofResults() {
                 </div>
               </div>
 
-              <p className="text-[15px] leading-relaxed mt-5 text-[rgb(var(--muted))]">
+              <p className="text-[15px] leading-relaxed mt-5 text-muted">
                 {tab.body}
               </p>
 
               <div className="grid grid-cols-2 gap-3 mt-auto pt-7">
-                <div className="rounded-md border border-[rgb(var(--line))] p-4">
-                  <div className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] leading-tight mb-1">{tab.before.label}</div>
+                <div className="rounded-md border border-line p-4">
+                  <div className="text-[11px] uppercase tracking-wider text-muted leading-tight mb-1">{tab.before.label}</div>
                   <div className="font-mono text-[18px]">{tab.before.value}</div>
                 </div>
-                <div className={`rounded-md border p-4 transition-colors ${scrub ? 'border-[rgb(var(--ink))] bg-[rgb(var(--ink))] text-[rgb(var(--bg))]' : 'border-[rgb(var(--accent))]/30 bg-[rgb(var(--accent))]/[0.05]'}`} data-testid="proof-after-box">
-                  <div className={`text-[11px] uppercase tracking-wider leading-tight mb-1 ${scrub ? 'text-[rgb(var(--bg))]/60' : 'text-[rgb(var(--accent))]'}`}>
+                <div className={`rounded-md border p-4 transition-colors ${scrub ? 'border-ink bg-ink text-paper' : 'border-accent/30 bg-accent/[0.05]'}`} data-testid="proof-after-box">
+                  <div className={`text-[11px] uppercase tracking-wider leading-tight mb-1 ${scrub ? 'text-paper/60' : 'text-accent'}`}>
                     {scrub ? `Live \u00b7 ${scrubWhen}` : tab.after.label}
                   </div>
-                  <div className={`font-mono text-[18px] ${scrub ? '' : 'text-[rgb(var(--accent))]'}`}>{scrub ? tab.chart.fmt(scrub.v) : tab.after.value}</div>
-                  {scrub && scrubDelta && <div className="font-mono text-[11px] mt-1 text-[rgb(var(--bg))]/70">{scrubDelta}</div>}
+                  <div className={`font-mono text-[18px] ${scrub ? '' : 'text-accent'}`}>{scrub ? tab.chart.fmt(scrub.v) : tab.after.value}</div>
+                  {scrub && scrubDelta && <div className="font-mono text-[11px] mt-1 text-paper/70">{scrubDelta}</div>}
                 </div>
               </div>
 
@@ -875,12 +875,12 @@ export default function ProofResults() {
               <div className="flex flex-wrap items-center justify-between gap-x-6 gap-y-2 mb-3">
                 <div className="text-[13px] font-medium">
                   {tab.chart.caption}
-                  <span className="font-mono text-[11px] ml-2 uppercase tracking-[0.08em] text-[rgb(var(--muted))]">{tab.chart.window}</span>
+                  <span className="font-mono text-[11px] ml-2 uppercase tracking-[0.08em] text-muted">{tab.chart.window}</span>
                 </div>
-                <div className="flex items-center gap-4 text-[11.5px] text-[rgb(var(--muted))]">
-                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--muted))]/60" />Before</span>
-                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-[rgb(var(--accent))]" />With the SEO engine</span>
-                  <span className="inline-flex items-center gap-1.5"><span className="inline-flex w-3 h-3 rounded-full border-[1.5px] border-[rgb(var(--ink))] items-center justify-center"><span className="w-1 h-1 rounded-full bg-[rgb(var(--accent))]" /></span>Reported figure</span>
+                <div className="flex items-center gap-4 text-[11.5px] text-muted">
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-muted/60" />Before</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-block w-4 h-0.5 rounded-full bg-accent" />With the SEO engine</span>
+                  <span className="inline-flex items-center gap-1.5"><span className="inline-flex w-3 h-3 rounded-full border-[1.5px] border-ink items-center justify-center"><span className="w-1 h-1 rounded-full bg-accent" /></span>Reported figure</span>
                 </div>
               </div>
 
@@ -890,7 +890,7 @@ export default function ProofResults() {
                 )}
               </div>
 
-              <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t border-[rgb(var(--line))] font-mono text-[10.5px] tracking-[0.04em] text-[rgb(var(--muted))]">
+              <div className="flex items-center justify-between gap-4 mt-3 pt-3 border-t border-line font-mono text-[10.5px] tracking-[0.04em] text-muted">
                 <span>Drag along the curve — the headline number follows</span>
                 <span className="hidden sm:inline">{tab.chart.source}</span>
               </div>
@@ -899,11 +899,11 @@ export default function ProofResults() {
         </div>
 
         {/* footer */}
-        <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-4 mt-12 lg:mt-14 pt-7 border-t border-[rgb(var(--line))]">
+        <div className="flex flex-wrap items-center justify-between gap-x-7 gap-y-4 mt-12 lg:mt-14 pt-7 border-t border-line">
           <Link href="#proof" className="btn-primary" data-testid="proof-cta">
             Read the case studies <ArrowRight className="w-4 h-4" />
           </Link>
-          <span className="text-[12px] leading-relaxed max-w-[52ch] text-[rgb(var(--muted))]">
+          <span className="text-[12px] leading-relaxed max-w-[52ch] text-muted">
             Ringed markers are the figures reported in each case study (Google Search Console / analytics). The curve between markers is interpolated to show the shape of growth, not month-by-month actuals.
           </span>
         </div>

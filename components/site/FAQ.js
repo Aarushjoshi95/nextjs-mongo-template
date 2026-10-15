@@ -42,21 +42,21 @@ const faqs = [
 export default function FAQ() {
   const [open, setOpen] = useState(0);
   return (
-    <div className="divide-y divide-[rgb(var(--line))] border-y border-[rgb(var(--line))]">
+    <div className="divide-y divide-line border-y border-line">
       {faqs.map((f, i) => (
         <div key={i}>
           <button onClick={() => setOpen(open === i ? -1 : i)} className="w-full flex items-center justify-between py-6 text-left group" aria-expanded={open === i}>
             <span className="text-[18px] lg:text-[22px] font-semibold tracking-tight pr-4">{f.q}</span>
-            {open === i ? <Minus className="w-5 h-5 shrink-0 text-[rgb(var(--muted))]" /> : <Plus className="w-5 h-5 shrink-0 text-[rgb(var(--muted))] group-hover:text-[rgb(var(--ink))]" />}
+            {open === i ? <Minus className="w-5 h-5 shrink-0 text-muted" /> : <Plus className="w-5 h-5 shrink-0 text-muted group-hover:text-ink" />}
           </button>
           {open === i && (
-            <div className="pb-7 text-[16px] text-[rgb(var(--muted))] leading-relaxed max-w-3xl">
+            <div className="pb-7 text-[16px] text-muted leading-relaxed max-w-3xl">
               {f.a && <p>{f.a}</p>}
               {f.rows && (
                 <div className="grid sm:grid-cols-[160px_1fr] gap-x-6 gap-y-3">
                   {f.rows.map((r, j) => (
                     <Fragment key={j}>
-                      <div className="font-mono text-[13px] uppercase tracking-wider text-[rgb(var(--ink))]">{r.k}</div>
+                      <div className="font-mono text-[13px] uppercase tracking-wider text-ink">{r.k}</div>
                       <div>{r.v}</div>
                     </Fragment>
                   ))}

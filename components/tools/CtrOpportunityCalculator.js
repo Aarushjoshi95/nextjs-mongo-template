@@ -104,29 +104,29 @@ export default function CtrOpportunityCalculator() {
           <SmallButton icon={Plus} variant="solid" onClick={addKw} data-testid="add-keyword">Add row</SmallButton>
         </>}>
           {showPaste ? (
-            <div className="mb-5 rounded-lg border border-dashed border-[rgb(var(--line))] p-4" data-testid="paste-panel">
-              <p className="text-[13px] text-[rgb(var(--muted))] mb-2">One keyword per line: <code className="font-mono text-[12px]">keyword, monthly searches, current position</code>. Tabs or commas both work (paste straight from Sheets).</p>
+            <div className="mb-5 rounded-lg border border-dashed border-line p-4" data-testid="paste-panel">
+              <p className="text-[13px] text-muted mb-2">One keyword per line: <code className="font-mono text-[12px]">keyword, monthly searches, current position</code>. Tabs or commas both work (paste straight from Sheets).</p>
               <textarea value={paste} onChange={(e) => setPaste(e.target.value)} rows={5} className={`${inputCls} h-auto py-2 font-mono text-[13px]`} placeholder={'data science roadmap, 12000, 8\nml projects, 9000, 11'} data-testid="paste-textarea" />
               <div className="flex gap-2 mt-3"><SmallButton variant="solid" onClick={applyPaste} data-testid="apply-paste">Add keywords</SmallButton><SmallButton onClick={() => setShowPaste(false)}>Cancel</SmallButton></div>
             </div>
           ) : null}
           <div className="space-y-2">
-            <div className="hidden md:grid grid-cols-[1.6fr_1fr_0.8fr_0.8fr_auto] gap-3 text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] px-1">
+            <div className="hidden md:grid grid-cols-[1.6fr_1fr_0.8fr_0.8fr_auto] gap-3 text-[11px] uppercase tracking-wider text-muted px-1">
               <span>Keyword</span><span>Searches / mo</span><span>Current pos.</span><span>Target pos.</span><span className="w-10" />
             </div>
             {state.keywords.map((k, i) => (
-              <div key={k.id} className="grid grid-cols-2 md:grid-cols-[1.6fr_1fr_0.8fr_0.8fr_auto] gap-3 items-center rounded-lg border border-[rgb(var(--line))] md:border-0 p-3 md:p-0 bg-[rgb(var(--bg))] md:bg-transparent" data-testid={`kw-row-${i}`}>
+              <div key={k.id} className="grid grid-cols-2 md:grid-cols-[1.6fr_1fr_0.8fr_0.8fr_auto] gap-3 items-center rounded-lg border border-line md:border-0 p-3 md:p-0 bg-paper md:bg-transparent" data-testid={`kw-row-${i}`}>
                 <TextInput value={k.kw} onChange={(v) => setKw(k.id, { kw: v })} placeholder="keyword" className="col-span-2 md:col-span-1" data-testid={`kw-name-${i}`} />
                 <NumberInput value={k.vol} onChange={(v) => setKw(k.id, { vol: v })} step="100" aria-label="Monthly searches" data-testid={`kw-vol-${i}`} />
                 <div className="flex items-center gap-2">
                   <NumberInput value={k.pos} onChange={(v) => setKw(k.id, { pos: v })} step="1" min={1} max={100} aria-label="Current position" data-testid={`kw-pos-${i}`} />
-                  <span className="md:hidden text-[11px] text-[rgb(var(--muted))] shrink-0">now</span>
+                  <span className="md:hidden text-[11px] text-muted shrink-0">now</span>
                 </div>
                 <div className="flex items-center gap-2 col-span-2 md:col-span-1">
                   <NumberInput value={k.target ?? ''} onChange={(v) => setKw(k.id, { target: v === '' ? undefined : v })} placeholder={String(state.targetPos)} step="1" min={1} max={100} aria-label="Target position" data-testid={`kw-target-${i}`} />
-                  <button type="button" onClick={() => removeKw(k.id)} className="md:hidden h-10 w-10 shrink-0 rounded-md border border-[rgb(var(--line))] flex items-center justify-center text-[rgb(var(--muted))] hover:text-red-600" aria-label="Remove keyword"><Trash2 className="w-4 h-4" /></button>
+                  <button type="button" onClick={() => removeKw(k.id)} className="md:hidden h-10 w-10 shrink-0 rounded-md border border-line flex items-center justify-center text-muted hover:text-red-600" aria-label="Remove keyword"><Trash2 className="w-4 h-4" /></button>
                 </div>
-                <button type="button" onClick={() => removeKw(k.id)} className="hidden md:flex h-10 w-10 rounded-md border border-[rgb(var(--line))] items-center justify-center text-[rgb(var(--muted))] hover:text-red-600 hover:border-red-300 transition" aria-label={`Remove ${k.kw}`} data-testid={`kw-remove-${i}`}><Trash2 className="w-4 h-4" /></button>
+                <button type="button" onClick={() => removeKw(k.id)} className="hidden md:flex h-10 w-10 rounded-md border border-line items-center justify-center text-muted hover:text-red-600 hover:border-red-300 transition" aria-label={`Remove ${k.kw}`} data-testid={`kw-remove-${i}`}><Trash2 className="w-4 h-4" /></button>
               </div>
             ))}
           </div>
@@ -144,27 +144,27 @@ export default function CtrOpportunityCalculator() {
               <NumberInput value={state.value} onChange={set('value')} step="100" prefix data-testid="input-value" />
             </Field>
           </div>
-          <div className="mt-5 rounded-lg border border-[rgb(var(--line))] p-4 flex flex-wrap items-center gap-4" data-testid="aio-panel">
+          <div className="mt-5 rounded-lg border border-line p-4 flex flex-wrap items-center gap-4" data-testid="aio-panel">
             <label className="flex items-center gap-3 cursor-pointer select-none">
-              <input type="checkbox" checked={!!state.aio} onChange={(e) => set('aio')(e.target.checked)} className="h-4 w-4 accent-[rgb(var(--accent))]" data-testid="aio-toggle" />
+              <input type="checkbox" checked={!!state.aio} onChange={(e) => set('aio')(e.target.checked)} className="h-4 w-4 accent-accent" data-testid="aio-toggle" />
               <span className="text-[14px] font-medium">SERP shows an AI Overview</span>
             </label>
             <div className="flex items-center gap-2 ml-auto">
-              <span className="text-[12.5px] text-[rgb(var(--muted))]">Organic CTR haircut</span>
+              <span className="text-[12.5px] text-muted">Organic CTR haircut</span>
               <NumberInput value={state.aioHaircut} onChange={set('aioHaircut')} step="5" max={100} suffix="%" className="w-24" disabled={!state.aio} data-testid="aio-haircut" />
             </div>
-            <p className="w-full text-[12px] text-[rgb(var(--muted))] leading-snug">Studies in 2024–25 put the organic CTR loss under an AI Overview at roughly 20–60% depending on query type. Applies to both current and target CTR — the gap closes, which is the point.</p>
+            <p className="w-full text-[12px] text-muted leading-snug">Studies in 2024–25 put the organic CTR loss under an AI Overview at roughly 20–60% depending on query type. Applies to both current and target CTR — the gap closes, which is the point.</p>
           </div>
           {showCurve ? (
             <div className="mt-5" data-testid="curve-editor">
               <div className="flex items-center justify-between mb-3">
-                <span className="text-[12px] text-[rgb(var(--muted))]">Organic CTR % by position (1–20). Positions 21–30 use 0.35%, 31–50 0.15%, beyond 0.05%.</span>
+                <span className="text-[12px] text-muted">Organic CTR % by position (1–20). Positions 21–30 use 0.35%, 31–50 0.15%, beyond 0.05%.</span>
                 <SmallButton onClick={() => set('curve')(DEFAULT_CTR_CURVE)}>Reset curve</SmallButton>
               </div>
               <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
                 {r.curve.map((v, i) => (
                   <label key={i} className="block">
-                    <span className="block text-[10px] font-mono text-[rgb(var(--muted))] mb-1">#{i + 1}</span>
+                    <span className="block text-[10px] font-mono text-muted mb-1">#{i + 1}</span>
                     <input type="number" step="0.1" min={0} max={100} value={(state.curve || DEFAULT_CTR_CURVE)[i]} onChange={(e) => setCurveAt(i, e.target.value)} className={`${inputCls} h-9 px-2 text-[12px]`} />
                   </label>
                 ))}
@@ -204,7 +204,7 @@ export default function CtrOpportunityCalculator() {
           <div className="overflow-x-auto -mx-5 sm:-mx-7 px-5 sm:px-7">
             <table className="w-full text-[13px] tabular-nums" data-testid="keyword-table">
               <thead>
-                <tr className="text-left text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] border-b border-[rgb(var(--line))]">
+                <tr className="text-left text-[11px] uppercase tracking-wider text-muted border-b border-line">
                   <th className="py-2 pr-3 font-medium">Keyword</th>
                   <th className="py-2 px-3 font-medium text-right">Pos.</th>
                   <th className="py-2 px-3 font-medium text-right">CTR</th>
@@ -214,10 +214,10 @@ export default function CtrOpportunityCalculator() {
               </thead>
               <tbody>
                 {r.rows.map((k) => (
-                  <tr key={k.id} className="border-b border-[rgb(var(--line))]/70 last:border-0">
-                    <td className="py-2.5 pr-3 font-medium max-w-[180px] truncate">{k.kw || <span className="text-[rgb(var(--muted))]">(blank)</span>}</td>
-                    <td className="py-2.5 px-3 text-right font-mono">{k.pos} <span className="text-[rgb(var(--muted))]">→</span> {k.target}</td>
-                    <td className="py-2.5 px-3 text-right font-mono">{fmtPct(k.curCtr)} <span className="text-[rgb(var(--muted))]">→</span> {fmtPct(k.tgtCtr)}</td>
+                  <tr key={k.id} className="border-b border-line/70 last:border-0">
+                    <td className="py-2.5 pr-3 font-medium max-w-[180px] truncate">{k.kw || <span className="text-muted">(blank)</span>}</td>
+                    <td className="py-2.5 px-3 text-right font-mono">{k.pos} <span className="text-muted">→</span> {k.target}</td>
+                    <td className="py-2.5 px-3 text-right font-mono">{fmtPct(k.curCtr)} <span className="text-muted">→</span> {fmtPct(k.tgtCtr)}</td>
                     <td className={`py-2.5 px-3 text-right font-mono ${k.inc < 0 ? 'text-red-600' : ''}`}>{k.inc >= 0 ? '+' : ''}{fmtNum(k.inc, currency)}</td>
                     <td className={`py-2.5 pl-3 text-right font-mono ${k.incRev < 0 ? 'text-red-600' : ''}`}>{fmtMoney(k.incRev, currency)}</td>
                   </tr>

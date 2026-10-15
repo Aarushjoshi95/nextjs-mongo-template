@@ -24,7 +24,7 @@ function highlight(text, brand) {
   const parts = text.split(new RegExp(`(${esc})`, 'ig'));
   return parts.map((p, i) =>
     p.toLowerCase() === brand.toLowerCase()
-      ? <mark key={i} className="bg-[rgb(var(--accent))]/15 text-[rgb(var(--accent))] font-medium px-1 py-0.5 rounded">{p}</mark>
+      ? <mark key={i} className="bg-accent/15 text-accent font-medium px-1 py-0.5 rounded">{p}</mark>
       : <span key={i}>{p}</span>,
   );
 }
@@ -79,28 +79,28 @@ export default function VisibilityChecker({ compact = false }) {
         </button>
       </form>
       <div className="flex flex-wrap items-center gap-2 mt-3">
-        <span className="text-[11px] text-[rgb(var(--muted))]">Try:</span>
+        <span className="text-[11px] text-muted">Try:</span>
         {EXAMPLES.map((ex) => (
-          <button key={ex.brand} type="button" onClick={() => useExample(ex)} className="pill text-[11px] hover:border-[rgb(var(--ink))]/40 transition" data-testid={`vc-example-${ex.brand.toLowerCase().replace(/\s+/g, '-')}`}>{ex.brand}</button>
+          <button key={ex.brand} type="button" onClick={() => useExample(ex)} className="pill text-[11px] hover:border-ink/40 transition" data-testid={`vc-example-${ex.brand.toLowerCase().replace(/\s+/g, '-')}`}>{ex.brand}</button>
         ))}
       </div>
 
       {error ? <p className="mt-4 text-[13.5px] text-red-600" data-testid="vc-error">{error}</p> : null}
 
       {loading ? (
-        <div className="mt-5 border-t border-[rgb(var(--line))] pt-5 space-y-2 animate-pulse" data-testid="vc-loading">
-          <div className="h-3 rounded bg-[rgb(var(--line))] w-11/12" />
-          <div className="h-3 rounded bg-[rgb(var(--line))] w-9/12" />
-          <div className="h-3 rounded bg-[rgb(var(--line))] w-10/12" />
-          <p className="text-[11.5px] text-[rgb(var(--muted))] pt-2">Asking Gemini as a buyer would, then scoring the answer… usually 5–15 seconds.</p>
+        <div className="mt-5 border-t border-line pt-5 space-y-2 animate-pulse" data-testid="vc-loading">
+          <div className="h-3 rounded bg-line w-11/12" />
+          <div className="h-3 rounded bg-line w-9/12" />
+          <div className="h-3 rounded bg-line w-10/12" />
+          <p className="text-[11.5px] text-muted pt-2">Asking Gemini as a buyer would, then scoring the answer… usually 5–15 seconds.</p>
         </div>
       ) : null}
 
       {result ? (
-        <div className="mt-5 border-t border-[rgb(var(--line))] pt-5" data-testid="vc-result">
+        <div className="mt-5 border-t border-line pt-5" data-testid="vc-result">
           <div className="flex flex-wrap items-center gap-2 mb-4">
             <span className={`pill text-[11px] ${result.mentioned ? 'pill-published' : ''}`} data-testid="vc-mentioned">
-              <span className={`inline-block w-2 h-2 rounded-full ${result.mentioned ? 'bg-[rgb(var(--positive))]' : 'bg-[rgb(var(--muted))]/40'}`} />
+              <span className={`inline-block w-2 h-2 rounded-full ${result.mentioned ? 'bg-positive' : 'bg-muted/40'}`} />
               {result.mentioned ? 'Named in the answer' : 'Not mentioned'}
             </span>
             {result.aiScored ? (
@@ -110,21 +110,21 @@ export default function VisibilityChecker({ compact = false }) {
                 <span className="pill text-[11px] font-mono" data-testid="vc-score">Visibility {result.visibilityScore}/100</span>
               </>
             ) : null}
-            <span className="ml-auto text-[11px] font-mono text-[rgb(var(--muted))]">Gemini 2.5 Flash</span>
+            <span className="ml-auto text-[11px] font-mono text-muted">Gemini 2.5 Flash</span>
           </div>
-          <div className="text-[12px] font-mono text-[rgb(var(--muted))] mb-3 break-words">prompt › {result.buyerPrompt}</div>
+          <div className="text-[12px] font-mono text-muted mb-3 break-words">prompt › {result.buyerPrompt}</div>
           <div className={`text-[14.5px] leading-relaxed whitespace-pre-wrap ${compact ? 'max-h-56 overflow-y-auto pr-1' : ''}`} data-testid="vc-answer">{highlight(result.answer, result.brand)}</div>
           <div className="mt-4 flex flex-wrap items-center gap-2">
-            <span className="text-[11px] uppercase tracking-wider text-[rgb(var(--muted))]">{result.competitors?.length ? 'Named instead / alongside:' : 'No competitors named'}</span>
+            <span className="text-[11px] uppercase tracking-wider text-muted">{result.competitors?.length ? 'Named instead / alongside:' : 'No competitors named'}</span>
             {(result.competitors || []).map((c) => <span key={c} className="pill text-[11px]" data-testid="vc-competitor">{c}</span>)}
           </div>
           {!result.mentioned ? (
-            <p className="mt-4 text-[13px] text-[rgb(var(--ink))] flex gap-2"><Sparkles className="w-4 h-4 text-[rgb(var(--accent))] shrink-0 mt-0.5" />This is the gap. The brands above are being shortlisted for your buyer’s question and you are not. The audit maps this across 100–300 prompts and four engines.</p>
+            <p className="mt-4 text-[13px] text-ink flex gap-2"><Sparkles className="w-4 h-4 text-accent shrink-0 mt-0.5" />This is the gap. The brands above are being shortlisted for your buyer’s question and you are not. The audit maps this across 100–300 prompts and four engines.</p>
           ) : null}
         </div>
       ) : null}
 
-      <p className="text-[11px] text-[rgb(var(--muted))] mt-5 pt-4 border-t border-[rgb(var(--line))]">One live Gemini answer, scored for mention, stance and shortlist odds. Answers vary run to run — treat it as an observation, not a ranking. Limited to 10 checks per 10 minutes.</p>
+      <p className="text-[11px] text-muted mt-5 pt-4 border-t border-line">One live Gemini answer, scored for mention, stance and shortlist odds. Answers vary run to run — treat it as an observation, not a ranking. Limited to 10 checks per 10 minutes.</p>
     </div>
   );
 }

@@ -23,10 +23,10 @@ function CalendlyInline({ name, email }) {
   const [loaded, setLoaded] = useState(false);
   const src = useMemo(() => calendlyEmbedUrl({ name, email }), [name, email]);
   return (
-    <div className="relative rounded-xl border border-[rgb(var(--line))] overflow-hidden bg-white" data-testid="booking-calendly">
+    <div className="relative rounded-xl border border-line overflow-hidden bg-white" data-testid="booking-calendly">
       {!loaded && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-[rgb(var(--muted))] text-[13px]">
-          <span className="w-8 h-8 rounded-full border-2 border-[rgb(var(--line))] border-t-[rgb(var(--accent))] animate-spin" />
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-3 text-muted text-[13px]">
+          <span className="w-8 h-8 rounded-full border-2 border-line border-t-accent animate-spin" />
           Loading calendar…
         </div>
       )}
@@ -101,8 +101,8 @@ const WHAT_YOU_GET = [
 
 const initialForm = { firstName: '', lastName: '', email: '', company: '', country: 'India', countryCode: '+91', phone: '', source: '', message: '', website_url: '' };
 
-const fieldLabel = 'block font-mono text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] mb-1.5';
-const fieldInput = 'w-full bg-transparent border-0 border-b border-[rgb(var(--line))] focus:border-[rgb(var(--ink))] focus:outline-none focus:ring-0 py-2 text-[15px] placeholder:text-[rgb(var(--muted))]/60 rounded-none transition-colors';
+const fieldLabel = 'block font-mono text-[11px] uppercase tracking-[0.12em] text-muted mb-1.5';
+const fieldInput = 'w-full bg-transparent border-0 border-b border-line focus:border-ink focus:outline-none focus:ring-0 py-2 text-[15px] placeholder:text-muted/60 rounded-none transition-colors';
 const fieldError = 'text-[12px] text-red-600 mt-1';
 
 function validate(f) {
@@ -166,29 +166,29 @@ export function BookingDialog({ open, onOpenChange }) {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-[1040px] w-[calc(100vw-2rem)] p-0 gap-0 overflow-hidden rounded-2xl border-[rgb(var(--line))] bg-[rgb(var(--surface))] max-h-[calc(100vh-2rem)] overflow-y-auto" data-testid="booking-dialog">
+      <DialogContent className="max-w-[1040px] w-[calc(100vw-2rem)] p-0 gap-0 overflow-hidden rounded-2xl border-line bg-surface max-h-[calc(100vh-2rem)] overflow-y-auto" data-testid="booking-dialog">
         <div className="grid lg:grid-cols-[0.9fr_1.1fr]">
           {/* LEFT — pitch */}
-          <div className="relative p-7 sm:p-9 lg:p-11 bg-[rgb(var(--bg))] border-b lg:border-b-0 lg:border-r border-[rgb(var(--line))] overflow-hidden">
-            <div aria-hidden className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-[rgb(var(--accent))]/[0.08] blur-3xl" />
-            <div aria-hidden className="absolute bottom-0 -left-20 w-60 h-60 rounded-full bg-[rgb(var(--accent))]/[0.06] blur-3xl" />
+          <div className="relative p-7 sm:p-9 lg:p-11 bg-paper border-b lg:border-b-0 lg:border-r border-line overflow-hidden">
+            <div aria-hidden className="absolute -top-24 -right-24 w-72 h-72 rounded-full bg-accent/[0.08] blur-3xl" />
+            <div aria-hidden className="absolute bottom-0 -left-20 w-60 h-60 rounded-full bg-accent/[0.06] blur-3xl" />
             <div className="relative">
               <span className="eyebrow mb-6">Discovery call · 30 minutes</span>
               <DialogTitle className="text-[clamp(28px,3.4vw,40px)] font-semibold leading-[1.05] tracking-[-0.02em]">
-                Ask, and find out if AI <span className="text-[rgb(var(--accent))]">recommends</span> you.
+                Ask, and find out if AI <span className="text-accent">recommends</span> you.
               </DialogTitle>
-              <DialogDescription className="text-[15px] text-[rgb(var(--muted))] leading-relaxed mt-5 max-w-md">
+              <DialogDescription className="text-[15px] text-muted leading-relaxed mt-5 max-w-md">
                 I will reach out within one working day to understand who you sell to and what you have already tried, so the call is specific to your category, not a template.
               </DialogDescription>
               <div className="hidden lg:block mt-10">
                 <div className="text-[13px] font-semibold tracking-tight mb-5">What you get in the 30 minutes</div>
-                <ul className="divide-y divide-[rgb(var(--line))]">
+                <ul className="divide-y divide-line">
                   {WHAT_YOU_GET.map((w, i) => (
                     <li key={i} className="py-3.5 flex gap-3">
-                      <span className="font-mono text-[12px] text-[rgb(var(--accent))] mt-0.5">0{i + 1}</span>
+                      <span className="font-mono text-[12px] text-accent mt-0.5">0{i + 1}</span>
                       <div>
                         <div className="text-[13px] font-semibold uppercase tracking-[0.04em]">{w.h}</div>
-                        <div className="text-[13px] text-[rgb(var(--muted))] mt-1 leading-relaxed">{w.b}</div>
+                        <div className="text-[13px] text-muted mt-1 leading-relaxed">{w.b}</div>
                       </div>
                     </li>
                   ))}
@@ -199,7 +199,7 @@ export function BookingDialog({ open, onOpenChange }) {
 
           {/* RIGHT — form / calendar */}
           <div className="p-7 sm:p-9 lg:p-11">
-            <div className="inline-flex p-1 rounded-full border border-[rgb(var(--line))] bg-[rgb(var(--bg))] mb-7" role="tablist" aria-label="How would you like to book?">
+            <div className="inline-flex p-1 rounded-full border border-line bg-paper mb-7" role="tablist" aria-label="How would you like to book?">
               {[{ id: 'form', label: 'Tell me about you' }, { id: 'calendar', label: 'Pick a time' }].map((t) => (
                 <button
                   key={t.id}
@@ -208,7 +208,7 @@ export function BookingDialog({ open, onOpenChange }) {
                   aria-selected={view === t.id}
                   onClick={() => setView(t.id)}
                   data-testid={`booking-view-${t.id}`}
-                  className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${view === t.id ? 'bg-[rgb(var(--ink))] text-[rgb(var(--bg))]' : 'text-[rgb(var(--muted))] hover:text-[rgb(var(--ink))]'}`}
+                  className={`px-4 py-1.5 rounded-full text-[13px] font-medium transition-colors ${view === t.id ? 'bg-ink text-paper' : 'text-muted hover:text-ink'}`}
                 >
                   {t.label}
                 </button>
@@ -218,15 +218,15 @@ export function BookingDialog({ open, onOpenChange }) {
             {view === 'calendar' ? (
               <div data-testid="booking-calendar-view">
                 <h3 className="text-[24px] font-semibold tracking-tight">Pick a 30-minute slot.</h3>
-                <p className="text-[14px] text-[rgb(var(--muted))] mt-2 mb-5">Times show in your timezone. You will get a calendar invite with the video link.</p>
+                <p className="text-[14px] text-muted mt-2 mb-5">Times show in your timezone. You will get a calendar invite with the video link.</p>
                 <CalendlyInline name={[form.firstName, form.lastName].filter(Boolean).join(' ')} email={form.email} />
-                <p className="text-[12px] text-[rgb(var(--muted))] mt-4">Calendar not loading? <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="underline underline-offset-2 hover:text-[rgb(var(--ink))]" data-testid="booking-cal-fallback">Open it in a new tab</a>.</p>
+                <p className="text-[12px] text-muted mt-4">Calendar not loading? <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="underline underline-offset-2 hover:text-ink" data-testid="booking-cal-fallback">Open it in a new tab</a>.</p>
               </div>
             ) : status === 'success' ? (
               <div className="h-full flex flex-col justify-center min-h-[420px]" data-testid="booking-success">
-                <span className="w-12 h-12 rounded-full bg-[rgb(var(--positive))]/15 text-[rgb(var(--positive))] flex items-center justify-center mb-6"><Check className="w-6 h-6" /></span>
+                <span className="w-12 h-12 rounded-full bg-positive/15 text-positive flex items-center justify-center mb-6"><Check className="w-6 h-6" /></span>
                 <h3 className="text-[28px] font-semibold tracking-tight leading-tight">Thanks, {form.firstName}. You are on my list.</h3>
-                <p className="text-[rgb(var(--muted))] text-[15px] leading-relaxed mt-4 max-w-md">I will reach out at <span className="text-[rgb(var(--ink))] font-medium">{form.email}</span> within one working day. Before we talk, I will run your top buying prompts across the four engines.</p>
+                <p className="text-muted text-[15px] leading-relaxed mt-4 max-w-md">I will reach out at <span className="text-ink font-medium">{form.email}</span> within one working day. Before we talk, I will run your top buying prompts across the four engines.</p>
                 <div className="mt-8 flex flex-wrap gap-3">
                   <button type="button" onClick={() => setView('calendar')} className="btn-primary" data-testid="booking-pick-slot">Pick a slot now<ArrowUpRight className="w-4 h-4" /></button>
                   <button type="button" className="btn-ghost" onClick={() => onOpenChange(false)}>Close</button>
@@ -237,7 +237,7 @@ export function BookingDialog({ open, onOpenChange }) {
                 <h3 className="text-[24px] font-semibold tracking-tight">Book your discovery call.</h3>
                 <div className="flex flex-wrap gap-2 mt-3 mb-8">
                   {['Not a deck', 'Not a pitch', 'Not a generic audit report'].map((t) => (
-                    <span key={t} className="pill text-[11px] uppercase tracking-[0.08em] font-mono border-[rgb(var(--accent))]/30 text-[rgb(var(--accent))] bg-[rgb(var(--accent))]/[0.05]">{t}</span>
+                    <span key={t} className="pill text-[11px] uppercase tracking-[0.08em] font-mono border-accent/30 text-accent bg-accent/[0.05]">{t}</span>
                   ))}
                 </div>
 
@@ -283,11 +283,11 @@ export function BookingDialog({ open, onOpenChange }) {
                       <input id="bk-phone" name="phone" type="tel" inputMode="numeric" value={form.phone} onChange={set('phone')} className={fieldInput} placeholder="98765 43210" autoComplete="tel-national" data-testid="booking-phone" />
                       {errors.phone && <p className={fieldError}>{errors.phone}</p>}
                     </div>
-                    <p className="col-span-2 text-[12px] text-[rgb(var(--muted))] -mt-2">I call first to understand your setup, so the prompt set is built around your business and not a template.</p>
+                    <p className="col-span-2 text-[12px] text-muted -mt-2">I call first to understand your setup, so the prompt set is built around your business and not a template.</p>
                   </div>
                   <div className="sm:col-span-2">
                     <label htmlFor="bk-source" className={fieldLabel}>How did you hear about me?*</label>
-                    <select id="bk-source" name="source" value={form.source} onChange={set('source')} className={`${fieldInput} ${!form.source ? 'text-[rgb(var(--muted))]/70' : ''}`} data-testid="booking-source">
+                    <select id="bk-source" name="source" value={form.source} onChange={set('source')} className={`${fieldInput} ${!form.source ? 'text-muted/70' : ''}`} data-testid="booking-source">
                       <option value="">Select one</option>
                       {SOURCES.map((s) => <option key={s} value={s}>{s}</option>)}
                     </select>
@@ -305,8 +305,8 @@ export function BookingDialog({ open, onOpenChange }) {
                 <button type="submit" disabled={status === 'submitting'} className="btn-primary w-full mt-8 disabled:opacity-60 disabled:cursor-not-allowed" data-testid="booking-submit">
                   {status === 'submitting' ? <><Loader2 className="w-4 h-4 animate-spin" />Sending…</> : <>Request my discovery call<ArrowRight className="w-4 h-4" /></>}
                 </button>
-                <p className="text-center text-[12px] text-[rgb(var(--muted))] mt-4">
-                  Prefer to skip the form? <button type="button" onClick={() => setView('calendar')} className="underline underline-offset-2 hover:text-[rgb(var(--ink))]" data-testid="booking-cal-link">Pick a slot on my calendar</button>.
+                <p className="text-center text-[12px] text-muted mt-4">
+                  Prefer to skip the form? <button type="button" onClick={() => setView('calendar')} className="underline underline-offset-2 hover:text-ink" data-testid="booking-cal-link">Pick a slot on my calendar</button>.
                 </p>
               </form>
             )}

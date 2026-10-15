@@ -112,7 +112,7 @@ export default function RevenueImpactCalculator() {
             <Field label="Monthly visits to the section you are modelling (e.g. /blog)" hint="From GA4 or GSC. Clusters below carve this up; anything unallocated becomes “Everything else”.">
               <NumberInput value={state.total} onChange={(v) => setState((s) => ({ ...s, total: v }))} step="100" data-testid="input-total-traffic" />
             </Field>
-            <div className="text-[12.5px] text-[rgb(var(--muted))] sm:pb-2.5 font-mono tabular-nums">
+            <div className="text-[12.5px] text-muted sm:pb-2.5 font-mono tabular-nums">
               {fmtNum(r.allocated, currency)} / {fmtNum(num(state.total), currency)} allocated
             </div>
           </div>
@@ -120,10 +120,10 @@ export default function RevenueImpactCalculator() {
         </Panel>
 
         <Panel eyebrow="Step 2" title="Intent clusters" actions={<SmallButton icon={Plus} variant="solid" onClick={addCluster} data-testid="add-cluster">Add cluster</SmallButton>}>
-          <p className="text-[13.5px] text-[rgb(var(--muted))] -mt-2 mb-5 leading-relaxed">Group pages by the job the reader is doing — a “roadmap” reader is closer to buying than a “free project ideas” reader. Give each cluster its own conversion rate and value per conversion (lead value, AOV or LTV).</p>
+          <p className="text-[13.5px] text-muted -mt-2 mb-5 leading-relaxed">Group pages by the job the reader is doing — a “roadmap” reader is closer to buying than a “free project ideas” reader. Give each cluster its own conversion rate and value per conversion (lead value, AOV or LTV).</p>
           <div className="space-y-3">
             {state.clusters.map((c, i) => (
-              <div key={c.id} className="rounded-lg border border-[rgb(var(--line))] p-4 bg-[rgb(var(--bg))]" data-testid={`cluster-row-${i}`}>
+              <div key={c.id} className="rounded-lg border border-line p-4 bg-paper" data-testid={`cluster-row-${i}`}>
                 <div className="grid grid-cols-2 md:grid-cols-[1.3fr_1fr_0.9fr_1.1fr_auto] gap-3 items-end">
                   <Field label="Cluster" className="col-span-2 md:col-span-1">
                     <TextInput value={c.name} onChange={(v) => setCluster(c.id, { name: v })} placeholder="e.g. Roadmap" data-testid={`cluster-name-${i}`} />
@@ -137,22 +137,22 @@ export default function RevenueImpactCalculator() {
                   <Field label="Value / conv." prefix={currency === 'INR' ? '₹' : '$'}>
                     <NumberInput value={c.value} onChange={(v) => setCluster(c.id, { value: v })} step="100" prefix="x" data-testid={`cluster-value-${i}`} />
                   </Field>
-                  <button type="button" onClick={() => removeCluster(c.id)} className="h-10 w-10 rounded-md border border-[rgb(var(--line))] flex items-center justify-center text-[rgb(var(--muted))] hover:text-red-600 hover:border-red-300 transition justify-self-end" aria-label={`Remove ${c.name}`} data-testid={`cluster-remove-${i}`}>
+                  <button type="button" onClick={() => removeCluster(c.id)} className="h-10 w-10 rounded-md border border-line flex items-center justify-center text-muted hover:text-red-600 hover:border-red-300 transition justify-self-end" aria-label={`Remove ${c.name}`} data-testid={`cluster-remove-${i}`}>
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
               </div>
             ))}
             {r.rows.some((x) => x.isOther) ? (
-              <div className="rounded-lg border border-dashed border-[rgb(var(--line))] p-4" data-testid="other-row">
+              <div className="rounded-lg border border-dashed border-line p-4" data-testid="other-row">
                 <div className="grid grid-cols-2 md:grid-cols-[1.3fr_1fr_0.9fr_1.1fr_auto] gap-3 items-end">
                   <div className="col-span-2 md:col-span-1">
                     <span className="block text-[12px] font-medium mb-1.5">Everything else</span>
-                    <span className="block text-[12px] text-[rgb(var(--muted))] leading-snug">Unallocated traffic, usually low-intent informational pages.</span>
+                    <span className="block text-[12px] text-muted leading-snug">Unallocated traffic, usually low-intent informational pages.</span>
                   </div>
                   <div>
                     <span className="block text-[12px] font-medium mb-1.5">Visits / mo</span>
-                    <div className="h-10 flex items-center font-mono text-[14px] tabular-nums text-[rgb(var(--muted))]">{fmtNum(r.rows.find((x) => x.isOther).traffic, currency)}</div>
+                    <div className="h-10 flex items-center font-mono text-[14px] tabular-nums text-muted">{fmtNum(r.rows.find((x) => x.isOther).traffic, currency)}</div>
                   </div>
                   <Field label="Conv. rate" suffix="%">
                     <NumberInput value={state.other.cvr} onChange={(v) => setOther({ cvr: v })} step="0.1" max={100} suffix="%" data-testid="other-cvr" />
@@ -178,11 +178,11 @@ export default function RevenueImpactCalculator() {
                   type="range" min={-100} max={200} step={5}
                   value={row.uplift}
                   onChange={(e) => (row.isOther ? setOther({ uplift: num(e.target.value) }) : setCluster(row.id, { uplift: num(e.target.value) }))}
-                  className="w-full accent-[rgb(var(--accent))] col-span-2 sm:col-span-1 order-3 sm:order-2"
+                  className="w-full accent-accent col-span-2 sm:col-span-1 order-3 sm:order-2"
                   aria-label={`Traffic change for ${row.name}`}
                   data-testid={`uplift-slider-${i}`}
                 />
-                <span className={`font-mono text-[13px] tabular-nums text-right order-2 sm:order-3 ${row.uplift > 0 ? 'text-[rgb(var(--positive))]' : row.uplift < 0 ? 'text-red-600' : 'text-[rgb(var(--muted))]'}`}>{row.uplift > 0 ? '+' : ''}{row.uplift}%</span>
+                <span className={`font-mono text-[13px] tabular-nums text-right order-2 sm:order-3 ${row.uplift > 0 ? 'text-positive' : row.uplift < 0 ? 'text-red-600' : 'text-muted'}`}>{row.uplift > 0 ? '+' : ''}{row.uplift}%</span>
               </div>
             ))}
           </div>
@@ -228,7 +228,7 @@ export default function RevenueImpactCalculator() {
           <div className="overflow-x-auto -mx-5 sm:-mx-7 px-5 sm:px-7">
             <table className="w-full text-[13px] tabular-nums" data-testid="cluster-table">
               <thead>
-                <tr className="text-left text-[11px] uppercase tracking-wider text-[rgb(var(--muted))] border-b border-[rgb(var(--line))]">
+                <tr className="text-left text-[11px] uppercase tracking-wider text-muted border-b border-line">
                   <th className="py-2 pr-3 font-medium">Cluster</th>
                   <th className="py-2 px-3 font-medium text-right">Traffic</th>
                   <th className="py-2 px-3 font-medium text-right">Conv.</th>
@@ -239,9 +239,9 @@ export default function RevenueImpactCalculator() {
               </thead>
               <tbody>
                 {r.rows.map((row) => (
-                  <tr key={row.id} className="border-b border-[rgb(var(--line))]/70 last:border-0">
-                    <td className="py-2.5 pr-3 font-medium">{row.name}{row.id === r.best?.id && r.rows.length > 1 ? <span className="ml-2 pill text-[10px] text-[rgb(var(--accent))] border-[rgb(var(--accent))]/30">Highest value</span> : null}</td>
-                    <td className="py-2.5 px-3 text-right font-mono">{fmtNum(row.traffic, currency)} <span className="text-[rgb(var(--muted))]">({fmtPct(row.trafficShare, 0)})</span></td>
+                  <tr key={row.id} className="border-b border-line/70 last:border-0">
+                    <td className="py-2.5 pr-3 font-medium">{row.name}{row.id === r.best?.id && r.rows.length > 1 ? <span className="ml-2 pill text-[10px] text-accent border-accent/30">Highest value</span> : null}</td>
+                    <td className="py-2.5 px-3 text-right font-mono">{fmtNum(row.traffic, currency)} <span className="text-muted">({fmtPct(row.trafficShare, 0)})</span></td>
                     <td className="py-2.5 px-3 text-right font-mono">{fmtNum(row.conv, currency, 1)}</td>
                     <td className="py-2.5 px-3 text-right font-mono">{fmtMoney(row.rev, currency)}</td>
                     <td className="py-2.5 px-3 text-right font-mono">{fmtPct(row.revShare, 0)}</td>
@@ -250,7 +250,7 @@ export default function RevenueImpactCalculator() {
                 ))}
               </tbody>
               <tfoot>
-                <tr className="border-t-2 border-[rgb(var(--ink))]/80 font-semibold">
+                <tr className="border-t-2 border-ink/80 font-semibold">
                   <td className="py-2.5 pr-3">Total</td>
                   <td className="py-2.5 px-3 text-right font-mono">{fmtNum(r.totals.traffic, currency)}</td>
                   <td className="py-2.5 px-3 text-right font-mono">{fmtNum(r.totals.conv, currency, 1)}</td>

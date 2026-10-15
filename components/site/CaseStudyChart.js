@@ -28,7 +28,7 @@ export default function CaseStudyChart({ title, series, note }) {
           </AreaChart>
         </ResponsiveContainer>
       </div>
-      {note && <p className="text-[12px] text-[rgb(var(--muted))] mt-4 font-mono">{note}</p>}
+      {note && <p className="text-[12px] text-muted mt-4 font-mono">{note}</p>}
     </div>
   );
 }

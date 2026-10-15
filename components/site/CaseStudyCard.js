@@ -15,16 +15,16 @@ export function CaseStudyCard({ study, featured = false, index }) {
             <span className={`pill ${statusPill}`}>{statusLabel}</span>
             <span className="pill">{study.industry}</span>
           </div>
-          <ArrowUpRight className="w-6 h-6 text-[rgb(var(--muted))] group-hover:text-[rgb(var(--accent))] group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
+          <ArrowUpRight className="w-6 h-6 text-muted group-hover:text-accent group-hover:-translate-y-0.5 group-hover:translate-x-0.5 transition-all" />
         </div>
         <h2 className="text-[clamp(28px,4vw,42px)] font-semibold leading-[1.1] tracking-tight mb-4 max-w-3xl">{study.title}</h2>
-        <p className="text-[rgb(var(--muted))] text-[17px] mb-10 max-w-2xl">{study.summary}</p>
+        <p className="text-muted text-[17px] mb-10 max-w-2xl">{study.summary}</p>
         {study.stats?.length > 0 && (
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 md:divide-x md:divide-[rgb(var(--line))] mb-6">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-y-6 gap-x-4 md:divide-x md:divide-line mb-6">
             {study.stats.slice(0, 4).map((s, i) => (
               <div key={i} className="md:px-6 first:md:pl-0">
-                <div className="font-mono text-[clamp(28px,4vw,40px)] font-medium text-[rgb(var(--accent))] leading-none">{s.value}</div>
-                <div className="text-[12px] uppercase tracking-[0.1em] text-[rgb(var(--muted))] mt-3">{s.label}</div>
+                <div className="font-mono text-[clamp(28px,4vw,40px)] font-medium text-accent leading-none">{s.value}</div>
+                <div className="text-[12px] uppercase tracking-[0.1em] text-muted mt-3">{s.label}</div>
               </div>
             ))}
           </div>
@@ -41,17 +41,17 @@ export function CaseStudyCard({ study, featured = false, index }) {
           <span className="index-numeral">{idx}</span>
           <span className={`pill ${statusPill}`}>{statusLabel}</span>
         </div>
-        <ArrowUpRight className="w-5 h-5 text-[rgb(var(--muted))] group-hover:text-[rgb(var(--accent))] transition-colors" />
+        <ArrowUpRight className="w-5 h-5 text-muted group-hover:text-accent transition-colors" />
       </div>
-      <div className="text-[12px] uppercase tracking-[0.1em] text-[rgb(var(--muted))] mb-3">{study.industry}</div>
+      <div className="text-[12px] uppercase tracking-[0.1em] text-muted mb-3">{study.industry}</div>
       <h3 className="text-[22px] font-semibold leading-[1.2] tracking-tight mb-3">{study.title}</h3>
-      <p className="text-[rgb(var(--muted))] text-[15px] mb-6 line-clamp-3">{study.summary}</p>
+      <p className="text-muted text-[15px] mb-6 line-clamp-3">{study.summary}</p>
       {study.stats?.length > 0 && (
-        <div className="flex gap-6 pt-6 border-t border-[rgb(var(--line))]">
+        <div className="flex gap-6 pt-6 border-t border-line">
           {study.stats.slice(0, 2).map((s, i) => (
             <div key={i}>
-              <div className="font-mono text-[22px] font-medium text-[rgb(var(--accent))] leading-none">{s.value}</div>
-              <div className="text-[11px] uppercase tracking-[0.1em] text-[rgb(var(--muted))] mt-2">{s.label}</div>
+              <div className="font-mono text-[22px] font-medium text-accent leading-none">{s.value}</div>
+              <div className="text-[11px] uppercase tracking-[0.1em] text-muted mt-2">{s.label}</div>
             </div>
           ))}
         </div>
@@ -68,9 +68,9 @@ export function PipelineCard({ study, index }) {
         <span className="index-numeral">{idx}</span>
         <span className="pill pill-coming">Coming next</span>
       </div>
-      <div className="text-[12px] uppercase tracking-[0.1em] text-[rgb(var(--muted))] mb-3">{study.scope}</div>
+      <div className="text-[12px] uppercase tracking-[0.1em] text-muted mb-3">{study.scope}</div>
       <h3 className="text-[20px] font-semibold leading-[1.25] mb-3">{study.title}</h3>
-      <p className="text-[rgb(var(--muted))] text-[14px]">{study.summary}</p>
+      <p className="text-muted text-[14px]">{study.summary}</p>
     </div>
   );
 }

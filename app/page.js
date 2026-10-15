@@ -84,9 +84,9 @@ export default function HomePage() {
               <div className="fade-in">
                 <span className="eyebrow mb-8">For funded startups, D2C and edtech brands</span>
                 <h1 className="text-[clamp(40px,6.5vw,76px)] font-semibold leading-[1.03] tracking-[-0.025em] mb-7">
-                  Get recommended when buyers ask <span className="text-[rgb(var(--accent))]">AI</span>.
+                  Get recommended when buyers ask <span className="text-accent">AI</span>.
                 </h1>
-                <p className="text-[clamp(17px,1.5vw,20px)] text-[rgb(var(--muted))] max-w-xl leading-[1.6] mb-6">
+                <p className="text-[clamp(17px,1.5vw,20px)] text-muted max-w-xl leading-[1.6] mb-6">
                   I help brands show up, get cited and get chosen inside ChatGPT, Claude, Gemini, Perplexity and Google AI Overviews — and I tie that visibility back to leads and revenue.
                 </p>
                 <div className="flex flex-wrap gap-2 mb-9">
@@ -96,7 +96,7 @@ export default function HomePage() {
                   <BookButton className="btn-primary" data-testid="hero-book-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
                   <Link href="#proof" className="btn-ghost">See the proof</Link>
                 </div>
-                <p className="text-[14px] text-[rgb(var(--muted))] mt-8 max-w-md">8+ years in organic growth. Now focused on one question: <span className="text-[rgb(var(--ink))] font-medium">when your buyer asks an AI, does it name you?</span></p>
+                <p className="text-[14px] text-muted mt-8 max-w-md">8+ years in organic growth. Now focused on one question: <span className="text-ink font-medium">when your buyer asks an AI, does it name you?</span></p>
               </div>
               <PromptDemo />
             </div>
@@ -104,9 +104,9 @@ export default function HomePage() {
         </section>
 
         {/* PROOF STRIP */}
-        <section className="border-y border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+        <section className="border-y border-line bg-surface">
           <div className="container-max py-14">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-4 md:divide-x md:divide-[rgb(var(--line))]">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-y-10 gap-x-4 md:divide-x md:divide-line">
               {[
                 { v: '8+ yrs', l: 'organic growth across edtech, D2C, fintech' },
                 { v: '0 → $1Mn+', l: 'ARR built through organic' },
@@ -114,8 +114,8 @@ export default function HomePage() {
                 { v: '4 engines', l: 'tracked prompt by prompt: ChatGPT, Claude, Gemini, Perplexity' },
               ].map((s, i) => (
                 <div key={i} className="md:px-8 first:md:pl-0">
-                  <div className="font-mono text-[clamp(28px,4vw,42px)] font-medium text-[rgb(var(--accent))] leading-none tracking-tight">{s.v}</div>
-                  <div className="text-[12px] uppercase tracking-[0.08em] text-[rgb(var(--muted))] mt-4 leading-snug max-w-[220px]">{s.l}</div>
+                  <div className="font-mono text-[clamp(28px,4vw,42px)] font-medium text-accent leading-none tracking-tight">{s.v}</div>
+                  <div className="text-[12px] uppercase tracking-[0.08em] text-muted mt-4 leading-snug max-w-[220px]">{s.l}</div>
                 </div>
               ))}
             </div>
@@ -128,25 +128,25 @@ export default function HomePage() {
             <div className="max-w-3xl mb-14">
               <span className="eyebrow mb-6">The search box moved</span>
               <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Your buyers still search. They just ask a model first.</h2>
-              <p className="text-[rgb(var(--muted))] text-[18px] mt-6 max-w-2xl leading-relaxed">A shortlist used to come from ten blue links. Now it comes from one generated answer that names three or four brands. If you are not in that answer, you are not in the deal — and your analytics will not tell you.</p>
+              <p className="text-muted text-[18px] mt-6 max-w-2xl leading-relaxed">A shortlist used to come from ten blue links. Now it comes from one generated answer that names three or four brands. If you are not in that answer, you are not in the deal — and your analytics will not tell you.</p>
             </div>
             <div className="grid md:grid-cols-2 gap-5">
               <div className="card-surface p-8">
                 <span className="eyebrow mb-5">How you are measured today</span>
                 <h3 className="text-[24px] font-semibold tracking-tight mb-5">Rankings, sessions, CTR</h3>
-                <ul className="space-y-3 text-[15px] text-[rgb(var(--muted))]">
-                  <li className="flex gap-3"><span className="text-[rgb(var(--muted))] mt-2 w-1 h-1 rounded-full bg-current shrink-0" />Position 1 can sit under an AI answer that never mentions you</li>
-                  <li className="flex gap-3"><span className="text-[rgb(var(--muted))] mt-2 w-1 h-1 rounded-full bg-current shrink-0" />AI-referred visits land as &ldquo;direct&rdquo;, with no UTM</li>
-                  <li className="flex gap-3"><span className="text-[rgb(var(--muted))] mt-2 w-1 h-1 rounded-full bg-current shrink-0" />Competitors get cited from Reddit, reviews and listicles you never touched</li>
+                <ul className="space-y-3 text-[15px] text-muted">
+                  <li className="flex gap-3"><span className="text-muted mt-2 w-1 h-1 rounded-full bg-current shrink-0" />Position 1 can sit under an AI answer that never mentions you</li>
+                  <li className="flex gap-3"><span className="text-muted mt-2 w-1 h-1 rounded-full bg-current shrink-0" />AI-referred visits land as &ldquo;direct&rdquo;, with no UTM</li>
+                  <li className="flex gap-3"><span className="text-muted mt-2 w-1 h-1 rounded-full bg-current shrink-0" />Competitors get cited from Reddit, reviews and listicles you never touched</li>
                 </ul>
               </div>
-              <div className="card-surface p-8 border-[rgb(var(--accent))]/30">
+              <div className="card-surface p-8 border-accent/30">
                 <span className="eyebrow mb-5">What actually decides the shortlist</span>
                 <h3 className="text-[24px] font-semibold tracking-tight mb-5">Mentions, citations, recommendation share</h3>
-                <ul className="space-y-3 text-[15px] text-[rgb(var(--ink))]">
-                  <li className="flex gap-3"><span className="text-[rgb(var(--accent))] mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />Which prompts your buyers ask, and who gets named in each</li>
-                  <li className="flex gap-3"><span className="text-[rgb(var(--accent))] mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />Which sources the engines trust when they describe your category</li>
-                  <li className="flex gap-3"><span className="text-[rgb(var(--accent))] mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />How AI-referred visitors convert once they reach you</li>
+                <ul className="space-y-3 text-[15px] text-ink">
+                  <li className="flex gap-3"><span className="text-accent mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />Which prompts your buyers ask, and who gets named in each</li>
+                  <li className="flex gap-3"><span className="text-accent mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />Which sources the engines trust when they describe your category</li>
+                  <li className="flex gap-3"><span className="text-accent mt-2 w-1.5 h-1.5 rounded-full bg-current shrink-0" />How AI-referred visitors convert once they reach you</li>
                 </ul>
               </div>
             </div>
@@ -154,7 +154,7 @@ export default function HomePage() {
         </section>
 
         {/* OFFERS */}
-        <section id="offers" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+        <section id="offers" className="section-y border-t border-line bg-surface">
           <div className="container-max">
             <div className="max-w-2xl mb-14">
               <span className="eyebrow mb-6">Ways to work together</span>
@@ -162,11 +162,11 @@ export default function HomePage() {
             </div>
             <div className="grid md:grid-cols-3 gap-5">
               {offers.map((o) => (
-                <div key={o.title} className={`card-surface p-8 flex flex-col ${o.highlight ? 'border-[rgb(var(--accent))]/40 bg-[rgb(var(--accent))]/[0.03]' : ''}`}>
-                  <span className="text-[11px] uppercase tracking-[0.12em] font-mono text-[rgb(var(--muted))] mb-5">{o.tag}</span>
+                <div key={o.title} className={`card-surface p-8 flex flex-col ${o.highlight ? 'border-accent/40 bg-accent/[0.03]' : ''}`}>
+                  <span className="text-[11px] uppercase tracking-[0.12em] font-mono text-muted mb-5">{o.tag}</span>
                   <h3 className="text-[24px] font-semibold tracking-tight mb-4">{o.title}</h3>
-                  <p className="text-[rgb(var(--muted))] text-[15px] leading-relaxed mb-5 flex-1">{o.body}</p>
-                  <p className="text-[14px] text-[rgb(var(--ink))] mb-6"><strong>Best for:</strong> {o.fit}</p>
+                  <p className="text-muted text-[15px] leading-relaxed mb-5 flex-1">{o.body}</p>
+                  <p className="text-[14px] text-ink mb-6"><strong>Best for:</strong> {o.fit}</p>
                   <BookButton className="link-underline mt-auto self-start">{o.cta} <ArrowRight className="w-3.5 h-3.5" /></BookButton>
                 </div>
               ))}
@@ -175,7 +175,7 @@ export default function HomePage() {
         </section>
 
         {/* FIT CHECK */}
-        <section className="section-y border-t border-[rgb(var(--line))]">
+        <section className="section-y border-t border-line">
           <div className="container-max">
             <div className="max-w-2xl mb-14">
               <span className="eyebrow mb-6">Fit check</span>
@@ -186,7 +186,7 @@ export default function HomePage() {
                 <h3 className="text-[20px] font-semibold tracking-tight mb-6">A good fit if</h3>
                 <ul className="space-y-4">
                   {['Your buyers research before they buy (courses, health, finance, SaaS)','You already have organic traffic and a site that ranks for something','You can ship page and schema changes within a few weeks','You trust your GA4 and CRM data enough to attribute leads'].map((t) => (
-                    <li key={t} className="flex gap-3 text-[15px]"><Check className="w-5 h-5 text-[rgb(var(--positive))] shrink-0 mt-0.5" />{t}</li>
+                    <li key={t} className="flex gap-3 text-[15px]"><Check className="w-5 h-5 text-positive shrink-0 mt-0.5" />{t}</li>
                   ))}
                 </ul>
               </div>
@@ -194,7 +194,7 @@ export default function HomePage() {
                 <h3 className="text-[20px] font-semibold tracking-tight mb-6">Not a fit if</h3>
                 <ul className="space-y-4">
                   {['You want a guaranteed mention by a date. Nobody can promise that honestly.','You need local footfall SEO for physical stores','You are looking for a content calendar vendor','The site is under a month old with no brand presence anywhere'].map((t) => (
-                    <li key={t} className="flex gap-3 text-[15px] text-[rgb(var(--muted))]"><XIcon className="w-5 h-5 shrink-0 mt-0.5" />{t}</li>
+                    <li key={t} className="flex gap-3 text-[15px] text-muted"><XIcon className="w-5 h-5 shrink-0 mt-0.5" />{t}</li>
                   ))}
                 </ul>
               </div>
@@ -206,24 +206,24 @@ export default function HomePage() {
         <ProofResults />
 
         {/* CASE STUDIES */}
-        <section id="proof" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+        <section id="proof" className="section-y border-t border-line bg-surface">
           <div className="container-max">
             <div className="max-w-3xl mb-12">
               <span className="eyebrow mb-6">Brands &amp; breakdowns</span>
-              <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Growth teams I&rsquo;ve worked with, building <span className="text-[rgb(var(--accent))]">greater outcomes</span>.</h2>
-              <p className="text-[rgb(var(--muted))] text-[17px] mt-5 max-w-2xl">From D2C beauty to enterprise and edtech. Below the brands: the case studies, each showing the constraint, what changed, and the business number it moved.</p>
+              <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Growth teams I&rsquo;ve worked with, building <span className="text-accent">greater outcomes</span>.</h2>
+              <p className="text-muted text-[17px] mt-5 max-w-2xl">From D2C beauty to enterprise and edtech. Below the brands: the case studies, each showing the constraint, what changed, and the business number it moved.</p>
             </div>
             <BrandWall />
             <div className="flex items-center gap-4 mt-16 mb-8">
-              <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-[rgb(var(--muted))] shrink-0">Case studies</span>
-              <span className="h-px flex-1 bg-[rgb(var(--line))]" />
+              <span className="text-[11px] uppercase tracking-[0.14em] font-mono text-muted shrink-0">Case studies</span>
+              <span className="h-px flex-1 bg-line" />
             </div>
             <CaseStudyCarousel cases={cases} />
           </div>
         </section>
 
         {/* HOW IT WORKS */}
-        <section id="how" className="section-y border-t border-[rgb(var(--line))]">
+        <section id="how" className="section-y border-t border-line">
           <div className="container-max">
             <div className="max-w-2xl mb-14">
               <span className="eyebrow mb-6">How it works</span>
@@ -236,10 +236,10 @@ export default function HomePage() {
                 { phase: 'Months 2–3 · Prove', h: 'Track share of voice and leads', b: 'Weekly share of voice per engine, plus AI-referred sessions and leads joined to your CRM. Visibility you can take to the board.' },
               ].map((s, i) => (
                 <div key={i}>
-                  <div className="font-mono text-[72px] font-medium text-[rgb(var(--accent))]/20 leading-none mb-5">0{i+1}</div>
-                  <div className="text-[11px] uppercase tracking-[0.12em] text-[rgb(var(--muted))] font-mono mb-3">{s.phase}</div>
+                  <div className="font-mono text-[72px] font-medium text-accent/20 leading-none mb-5">0{i+1}</div>
+                  <div className="text-[11px] uppercase tracking-[0.12em] text-muted font-mono mb-3">{s.phase}</div>
                   <h3 className="text-[22px] font-semibold tracking-tight mb-3">{s.h}</h3>
-                  <p className="text-[rgb(var(--muted))] text-[15px] leading-relaxed max-w-sm">{s.b}</p>
+                  <p className="text-muted text-[15px] leading-relaxed max-w-sm">{s.b}</p>
                 </div>
               ))}
             </div>
@@ -247,19 +247,19 @@ export default function HomePage() {
         </section>
 
         {/* WHAT I REPORT */}
-        <section className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+        <section className="section-y border-t border-line bg-surface">
           <div className="container-max">
             <div className="max-w-2xl mb-14">
               <span className="eyebrow mb-6">What I report</span>
               <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.07] tracking-tight">Four numbers, every week.</h2>
-              <p className="text-[rgb(var(--muted))] text-[17px] mt-5">Most AI visibility reports stop at &ldquo;you were mentioned&rdquo;. I report the chain from answer to revenue.</p>
+              <p className="text-muted text-[17px] mt-5">Most AI visibility reports stop at &ldquo;you were mentioned&rdquo;. I report the chain from answer to revenue.</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
               {reportMetrics.map((m) => (
                 <div key={m.code} className="card-surface p-6">
-                  <code className="text-[12px] text-[rgb(var(--accent))] font-mono">{m.code}</code>
+                  <code className="text-[12px] text-accent font-mono">{m.code}</code>
                   <h3 className="text-[20px] font-semibold tracking-tight mt-3 mb-3">{m.title}</h3>
-                  <p className="text-[14px] text-[rgb(var(--muted))] leading-relaxed">{m.body}</p>
+                  <p className="text-[14px] text-muted leading-relaxed">{m.body}</p>
                 </div>
               ))}
             </div>
@@ -267,7 +267,7 @@ export default function HomePage() {
         </section>
 
         {/* FAQ */}
-        <section id="faq" className="section-y border-t border-[rgb(var(--line))]">
+        <section id="faq" className="section-y border-t border-line">
           <div className="container-max">
             <div className="max-w-2xl mb-10">
               <span className="eyebrow mb-6">Common questions</span>
@@ -278,12 +278,12 @@ export default function HomePage() {
         </section>
 
         {/* BOOK */}
-        <section id="book" className="section-y border-t border-[rgb(var(--line))] bg-[rgb(var(--surface))]">
+        <section id="book" className="section-y border-t border-line bg-surface">
           <div className="container-max">
             <div className="max-w-3xl">
               <span className="eyebrow mb-6">Book a discovery call</span>
               <h2 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.05] tracking-tight mb-6">Find out what ChatGPT says about you before your buyers do.</h2>
-              <p className="text-[rgb(var(--muted))] text-[18px] mb-8 max-w-2xl">30 minutes. You leave with a read on where you stand across four engines, whether or not we work together.</p>
+              <p className="text-muted text-[18px] mb-8 max-w-2xl">30 minutes. You leave with a read on where you stand across four engines, whether or not we work together.</p>
               <div className="flex flex-wrap items-center gap-3">
                 <BookButton className="btn-primary" data-testid="book-section-button">Book a discovery call<ArrowRight className="w-4 h-4" /></BookButton>
                 <a href={CAL_LINK} target="_blank" rel="noreferrer noopener" className="btn-ghost">Or pick a slot directly</a>
@@ -295,8 +295,8 @@ export default function HomePage() {
                   { k: 'After.', v: 'If it fits, I scope a written audit. No obligation.' },
                 ].map((s, i) => (
                   <li key={i} className="">
-                    <div className="font-mono text-[13px] text-[rgb(var(--accent))] mb-3">0{i+1}</div>
-                    <p className="text-[15px]"><strong>{s.k}</strong> <span className="text-[rgb(var(--muted))]">{s.v}</span></p>
+                    <div className="font-mono text-[13px] text-accent mb-3">0{i+1}</div>
+                    <p className="text-[15px]"><strong>{s.k}</strong> <span className="text-muted">{s.v}</span></p>
                   </li>
                 ))}
               </ol>
