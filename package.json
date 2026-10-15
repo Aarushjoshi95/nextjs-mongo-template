@@ -8,6 +8,8 @@
         "dev:no-reload": "next dev --hostname 0.0.0.0 --port 3000",
         "dev:webpack": "next dev --hostname 0.0.0.0 --port 3000",
         "build": "next build",
+        "build:isolated": "cross-env NEXT_DIST_DIR=.next-build next build",
+        "start:isolated": "cross-env NEXT_DIST_DIR=.next-build next start",
         "start": "next start"
     },
     "dependencies": {

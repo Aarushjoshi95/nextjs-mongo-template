@@ -13,11 +13,13 @@ npm run dev          # http://localhost:3000, no heap cap
 npm run dev:capped   # same with a 512 MB heap cap (Emergent container); OOMs locally on calculator pages
 npm run build        # must pass before every PR
 npm run start        # serve the production build
+npm run build:isolated   # same build into .next-build/; safe while the dev server runs
+npm run start:isolated   # serve that build (add -- -p 3100 if 3000 is taken)
 ```
 
 There are no tests, lint or typecheck yet (Phase 4/5 add them). Until then `npm run build` and a manual browser check are the gate.
 
-**Never run `npm run build` while the dev server may be running.** Both write to `.next/`, so a build breaks the running dev server. Check first (e.g. a `next dev` process or port 3000 in use). If it is running, ask the user to stop it, or build into a separate folder instead.
+**Never run `npm run build` while the dev server may be running.** Both write to `.next/`, so a build breaks the running dev server. Check first (e.g. a `next dev` process or port 3000 in use). If it is running, ask the user to stop it, or use `npm run build:isolated` instead.
 
 ### Package managers
 

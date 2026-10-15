@@ -1,6 +1,8 @@
 const path = require('path');
 
 const nextConfig = {
+  // NEXT_DIST_DIR lets a build run without touching the dev server's .next (npm run build:isolated).
+  distDir: process.env.NEXT_DIST_DIR || '.next',
   output: 'standalone',
   // Pin the workspace root so a stray lockfile in a parent folder isn't picked up.
   outputFileTracingRoot: path.join(__dirname),
