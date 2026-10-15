@@ -8,7 +8,8 @@ import EvidenceGallery from '@/components/site/EvidenceGallery';
 import StickyTOC from '@/components/site/StickyTOC';
 import { getCaseStudy, getNextCaseStudy, caseStudies } from '@/lib/content/caseStudies';
 import JsonLd from '@/components/site/JsonLd';
-import { jsonLd, caseStudySchema, breadcrumbSchema } from '@/lib/seo';
+import Breadcrumb from '@/components/site/Breadcrumb';
+import { jsonLd, caseStudySchema } from '@/lib/seo';
 
 export function generateStaticParams() {
   return caseStudies.map((c) => ({ slug: c.slug }));
@@ -44,16 +45,10 @@ export default async function CaseStudyPage({ params }) {
 
   return (
     <>
-      <JsonLd data={jsonLd(caseStudySchema(s), breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Case studies', url: '/case-studies' }, { name: s.client, url: `/case-studies/${s.slug}` }]))} />
+      <JsonLd data={jsonLd(caseStudySchema(s))} />
         {/* Breadcrumb */}
         <div className="container-max pt-8">
-          <nav className="text-[13px] text-muted" aria-label="Breadcrumb">
-            <Link href="/" className="hover:text-ink">Home</Link>
-            <span className="mx-2">/</span>
-            <Link href="/case-studies" className="hover:text-ink">Case Studies</Link>
-            <span className="mx-2">/</span>
-            <span className="text-ink">{s.client}</span>
-          </nav>
+          <Breadcrumb items={[{ name: 'Home', url: '/' }, { name: 'Case studies', url: '/case-studies' }, { name: s.client, url: `/case-studies/${s.slug}` }]} />
         </div>
 
         {/* Hero */}

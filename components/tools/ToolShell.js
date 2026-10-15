@@ -1,9 +1,10 @@
 import Link from 'next/link';
-import { ArrowRight, ChevronRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { BookButton } from '@/components/site/BookingModal';
 import { tools } from '@/lib/content/tools';
 import JsonLd from '@/components/site/JsonLd';
-import { jsonLd, toolSchema, breadcrumbSchema } from '@/lib/seo';
+import Breadcrumb from '@/components/site/Breadcrumb';
+import { jsonLd, toolSchema } from '@/lib/seo';
 
 // Server-rendered chrome for every tool page: header, breadcrumb, intro, the
 // client calculator (children), a "how to read this" block and a soft CTA.
@@ -15,16 +16,10 @@ export default function ToolShell({ tool, children, how = [], faq = [] }) {
   } : null;
   return (
     <>
-      <JsonLd data={jsonLd(toolSchema(tool), faqSchema, breadcrumbSchema([{ name: 'Home', url: '/' }, { name: 'Free tools', url: '/tools' }, { name: tool.name, url: `/tools/${tool.slug}` }]))} />
+      <JsonLd data={jsonLd(toolSchema(tool), faqSchema)} />
         <section className="pt-8 lg:pt-12 pb-10">
           <div className="container-max">
-            <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-[12.5px] text-muted mb-8">
-              <Link href="/" className="hover:text-ink">Home</Link>
-              <ChevronRight className="w-3.5 h-3.5" />
-              <Link href="/tools" className="hover:text-ink">Free tools</Link>
-              <ChevronRight className="w-3.5 h-3.5" />
-              <span className="text-ink">{tool.name}</span>
-            </nav>
+            <Breadcrumb className="mb-8" items={[{ name: 'Home', url: '/' }, { name: 'Free tools', url: '/tools' }, { name: tool.name, url: `/tools/${tool.slug}` }]} />
             <div className="max-w-3xl">
               <span className="eyebrow mb-6">Free tool · No signup</span>
               <h1 className="text-[clamp(32px,5vw,56px)] font-semibold leading-[1.05] tracking-tight mb-5">{tool.name}</h1>
